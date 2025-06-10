@@ -1,0 +1,79 @@
+# =============================
+# .gitignore para projetos Swift (iOS/macOS)
+# =============================
+
+# -------- macOS --------
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+
+# -------- Xcode --------
+# Build e dados derivados
+build/
+DerivedData/
+
+# Projetos e workspaces
+*.xcworkspace
+*.xcuserstate
+*.xcscmblueprint
+
+# Configurações específicas de usuário
+xcuserdata/
+*.xcodeproj/*.xcuserdatad
+*.xcodeproj/project.xcworkspace/
+
+# Arquivos temporários do Xcode
+*.moved-aside
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+
+# Playgrounds
+timeline.xctimeline
+playground.xcworkspace/
+
+# -------- Swift Package Manager --------
+.build/
+.swiftpm/
+Packages/
+.package.resolved
+
+# -------- Cocoapods --------
+Pods/
+
+# -------- Carthage --------
+Carthage/Build/
+Carthage/Checkouts/
+
+# -------- Fastlane --------
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/
+
+# -------- AppCenter --------
+appcenter-post-clone.sh
+
+# -------- SwiftLint --------
+.swiftlint.tmp/
+swiftlint.report
+
+# -------- Outros IDEs --------
+.idea/
+.vscode/
+
+# -------- Arquivos Gerais --------
+*.hmap
+*.ipa
+*.log
+*.swp
+
+# Pasta de artefatos do SPM
+.artifacts/
+
+# Fim do arquivo
