@@ -1,0 +1,16 @@
+PODS:
+  - YACalendar (0.0.3)
+
+DEPENDENCIES:
+  - YACalendar
+
+SPEC REPOS:
+  trunk:
+    - YACalendar
+
+SPEC CHECKSUMS:
+  YACalendar: 4e6fefda3c384c71d71db094bc7335013e3f4561
+
+PODFILE CHECKSUM: 544c2383b594e300d47cdcdd50b98ef0b7ee88bb
+
+COCOAPODS: 1.16.2
