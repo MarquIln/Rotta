@@ -79,6 +79,10 @@
 			isa = PBXGroup;
 			children = (
 				5294CB802DF896A5000E60FE /* Rotta */,
+<<<<<<< HEAD
+=======
+				5294CB7F2DF896A5000E60FE /* Products */,
+>>>>>>> develop
 			);
 			sourceTree = "<group>";
 		};
@@ -89,11 +93,17 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5294CBAB2DF896A6000E60FE /* Build configuration list for PBXNativeTarget "Rotta" */;
 			buildPhases = (
+<<<<<<< HEAD
 				CE4FB5D9A88ED29B1B259F15 /* [CP] Check Pods Manifest.lock */,
 				5294CB7A2DF896A5000E60FE /* Sources */,
 				5294CB7B2DF896A5000E60FE /* Frameworks */,
 				5294CB7C2DF896A5000E60FE /* Resources */,
 				E8FDF7EC404541F56358EBEF /* [CP] Embed Pods Frameworks */,
+=======
+				5294CB7A2DF896A5000E60FE /* Sources */,
+				5294CB7B2DF896A5000E60FE /* Frameworks */,
+				5294CB7C2DF896A5000E60FE /* Resources */,
+>>>>>>> develop
 			);
 			buildRules = (
 			);
@@ -111,7 +121,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5294CBB02DF896A6000E60FE /* Build configuration list for PBXNativeTarget "RottaTests" */;
 			buildPhases = (
+<<<<<<< HEAD
 				DE135A7A8D5B9FFF7E49270A /* [CP] Check Pods Manifest.lock */,
+=======
+>>>>>>> develop
 				5294CB942DF896A6000E60FE /* Sources */,
 				5294CB952DF896A6000E60FE /* Frameworks */,
 				5294CB962DF896A6000E60FE /* Resources */,
@@ -130,11 +143,17 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5294CBB32DF896A6000E60FE /* Build configuration list for PBXNativeTarget "RottaUITests" */;
 			buildPhases = (
+<<<<<<< HEAD
 				47C53ACBABA87126F918B609 /* [CP] Check Pods Manifest.lock */,
 				5294CB9E2DF896A6000E60FE /* Sources */,
 				5294CB9F2DF896A6000E60FE /* Frameworks */,
 				5294CBA02DF896A6000E60FE /* Resources */,
 				4EBE8936BD2B2A27FEFA6CBB /* [CP] Embed Pods Frameworks */,
+=======
+				5294CB9E2DF896A6000E60FE /* Sources */,
+				5294CB9F2DF896A6000E60FE /* Frameworks */,
+				5294CBA02DF896A6000E60FE /* Resources */,
+>>>>>>> develop
 			);
 			buildRules = (
 			);
@@ -214,6 +233,7 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+<<<<<<< HEAD
 /* Begin PBXShellScriptBuildPhase section */
 		47C53ACBABA87126F918B609 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -325,6 +345,8 @@
 		};
 /* End PBXShellScriptBuildPhase section */
 
+=======
+>>>>>>> develop
 /* Begin PBXSourcesBuildPhase section */
 		5294CB7A2DF896A5000E60FE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
