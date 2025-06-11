@@ -1,9 +1,3 @@
-//
-//  AppDelegate.swift
-//  Rotta
-//
-//  Created by Marcos on 10/06/25.
-//
 
 import UIKit
 import CoreData

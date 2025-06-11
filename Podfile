@@ -4,8 +4,9 @@
 target 'Rotta' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
-  
-  pod 'YACalendar'
+
+pod 'YACalendar'
+
   # Pods for Rotta
 
   target 'RottaTests' do
