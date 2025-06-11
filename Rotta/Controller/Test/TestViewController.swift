@@ -6,7 +6,7 @@
 //
 
 import UIKit
-var strings = ["calendário", "Ranking", "Infos"]
+var strings = ["Calendário", "Ranking", "Infos"]
 
 class TestController: UIViewController {
     lazy var component: SegmentedControll = {
@@ -20,7 +20,7 @@ class TestController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
-        view.backgroundColor = .systemGray2
+        view.backgroundColor = .background
     }
 }
 

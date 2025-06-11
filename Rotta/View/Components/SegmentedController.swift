@@ -1,19 +1,14 @@
-//
-//  segmentedController.swift
-//  Rotta
-//
-//  Created by Isadora Ferreira Guerra on 10/06/25.
-//
 import UIKit
 
 class SegmentedControll: UIView {
     var items: [String]
     var selectedIndex: Int = 0 {
         didSet {
-            //            updateIndicator(animated: true)
+            updateIndicator(animated: true)
         }
     }
-    private var indicatorLeading: NSLayoutConstraint!
+
+    private var indicatorCenterX: NSLayoutConstraint!
     var didSelectSegment: ((Int) -> Void)?
 
     lazy var buttons: [UIButton] = {
@@ -22,7 +17,6 @@ class SegmentedControll: UIView {
             let button = UIButton(type: .system)
             button.tag = i
             button.setTitle(title, for: .normal)
-            button.setTitleColor(.gray, for: .normal)
             button.titleLabel?.font = .systemFont(ofSize: 14, weight: .regular)
             button.translatesAutoresizingMaskIntoConstraints = false
             button.addTarget(self, action: #selector(tap(_:)), for: .touchUpInside)
@@ -31,53 +25,55 @@ class SegmentedControll: UIView {
         return array
     }()
 
-    lazy var configureStackView: UIStackView = {
+    lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
         stackView.spacing = 0
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
 
-    //visualizacao do selecionado
     lazy var indicatorView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = 16
-        view.backgroundColor = .blue
+        view.backgroundColor = .yellowPrimary
         return view
     }()
-
-    private lazy var stackView = UIStackView()
-    private lazy var labels = [UILabel]()
 
     init(items: [String]) {
         self.items = items
         super.init(frame: .zero)
         configureSegments()
         setup()
-        updateIndicator(animated: false)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
+    private func configureSegments() {
+        for btn in buttons {
+            stackView.addArrangedSubview(btn)
+        }
+    }
+
     func updateIndicator(animated: Bool) {
         layoutIfNeeded()
         let segmentWidth = bounds.width / CGFloat(items.count)
-        let newLeading =
-            segmentWidth * CGFloat(selectedIndex) + (segmentWidth - 10) / 2
-        indicatorLeading.constant = newLeading
+        indicatorCenterX.constant = segmentWidth * (CGFloat(selectedIndex) + 0.5)
 
-        let animBlock = { self.layoutIfNeeded() }
+        let animBlock = {
+            self.layoutIfNeeded()
+        }
 
         if animated {
             UIView.animate(
                 withDuration: 0.25,
                 delay: 0,
-                usingSpringWithDamping: 0.7,
-                initialSpringVelocity: 0.8,
+                usingSpringWithDamping: 0.8,
+                initialSpringVelocity: 0.5,
                 options: [.curveEaseInOut],
                 animations: animBlock,
                 completion: nil
@@ -88,30 +84,23 @@ class SegmentedControll: UIView {
 
         for (i, btn) in buttons.enumerated() {
             btn.setTitleColor(i == selectedIndex ? .black : .gray, for: .normal)
-            btn.titleLabel?.font = .systemFont(
-                ofSize: 14,
-                weight: i == selectedIndex ? .semibold : .regular
-            )
+            btn.titleLabel?.font = .systemFont(ofSize: 14, weight: i == selectedIndex ? .semibold : .regular)
+            btn.backgroundColor = .clear
         }
     }
-
-    private func configureSegments() {
-        stackView.axis = .horizontal
-        stackView.distribution = .fillEqually
-        stackView.spacing = 0
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-
-        for btn in buttons {
-            stackView.addArrangedSubview(btn)
-        }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        updateIndicator(animated: false)
     }
+
 
     @objc private func tap(_ btn: UIButton) {
         let idx = btn.tag
         guard idx != selectedIndex else { return }
         selectedIndex = idx
         updateIndicator(animated: true)
-        didSelectSegment?(idx)  // aqui você conta ao VC que trocou
+        didSelectSegment?(idx)
     }
 
     @objc private func handleTap(_ gesture: UITapGestureRecognizer) {
@@ -127,43 +116,27 @@ extension SegmentedControll: ViewCodeProtocol {
         addSubviews()
         setupConstraints()
     }
+
     func addSubviews() {
-        addSubview(indicatorView)
+        addSubview(indicatorView) // deve vir antes do stackView
         addSubview(stackView)
     }
+
     func setupConstraints() {
+        let segmentWidthMultiplier = 1.0 / CGFloat(items.count)
+
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: topAnchor),
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            
-            indicatorView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 2),
-            indicatorView.bottomAnchor.constraint(equalTo: stackView.bottomAnchor, constant: -2),
+
+            indicatorView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: segmentWidthMultiplier, constant: -12),
+            indicatorView.topAnchor.constraint(equalTo: topAnchor, constant: 4),
+            indicatorView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4)
         ])
 
-        // Indicator constraints
-        let widthConstraint = indicatorView.widthAnchor.constraint(
-            equalTo: widthAnchor,
-            multiplier: 1.0 / CGFloat(items.count),
-            constant: -16
-        )
-        let heightConstraint = indicatorView.heightAnchor.constraint(
-            equalToConstant: 4
-        )
-        indicatorLeading = indicatorView.leadingAnchor.constraint(
-            equalTo: leadingAnchor,
-            constant: 8
-        )
-
-        NSLayoutConstraint.activate([
-            widthConstraint,
-            heightConstraint,
-            indicatorLeading,
-            indicatorView.bottomAnchor.constraint(
-                equalTo: bottomAnchor,
-                constant: -2
-            ),
-        ])
+        indicatorCenterX = indicatorView.centerXAnchor.constraint(equalTo: leadingAnchor)
+        indicatorCenterX.isActive = true
     }
 }
