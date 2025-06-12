@@ -17,7 +17,6 @@ class SegmentedControll: UIView {
             let button = UIButton(type: .system)
             button.tag = i
             button.setTitle(title, for: .normal)
-            button.titleLabel?.font = .systemFont(ofSize: 14, weight: .regular)
             button.translatesAutoresizingMaskIntoConstraints = false
             button.addTarget(self, action: #selector(tap(_:)), for: .touchUpInside)
             array.append(button)
@@ -84,7 +83,7 @@ class SegmentedControll: UIView {
 
         for (i, btn) in buttons.enumerated() {
             btn.setTitleColor(i == selectedIndex ? .black : .gray, for: .normal)
-            btn.titleLabel?.font = .systemFont(ofSize: 14, weight: i == selectedIndex ? .semibold : .regular)
+            btn.titleLabel?.font = i == selectedIndex ? Fonts.FootnoteEmphasized : Fonts.FootnoteRegular
             btn.backgroundColor = .clear
         }
     }

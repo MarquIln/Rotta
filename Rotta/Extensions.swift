@@ -6,7 +6,7 @@
 //
 import UIKit
 extension UIView {
-    func addGradient(colors: [CGColor]? = nil) {
+    func addGradientCardInfos(colors: [CGColor]? = nil) {
         self.layer.sublayers?.removeAll(where: { $0 is CAGradientLayer })
 
         let gradientLayer = CAGradientLayer()
@@ -15,10 +15,10 @@ extension UIView {
         gradientLayer.endPoint   = CGPoint(x: 0.5, y: 1.0)
 
         gradientLayer.colors = colors ?? [
-            (UIColor(named: "start") ?? .clear).withAlphaComponent(0.3).cgColor,
+            (UIColor(named: "start") ?? .clear).withAlphaComponent(0.2).cgColor,
             (UIColor(named: "end") ?? .black).withAlphaComponent(1.0).cgColor
         ]
-        gradientLayer.locations = [0.5, 1.0]
+        gradientLayer.locations = [0.4, 0.9]
         self.layer.insertSublayer(gradientLayer, at: 0)
     }
 }

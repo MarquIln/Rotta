@@ -17,13 +17,13 @@ class CardInfosButton: UIButton {
         cardTitleLabel.text = title
         cardSubtitleLabel.text = subtitle
         setup()
-        updateGradient()
+        addGradientCardInfos()
     }
     
     lazy var cardTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 17, weight: .medium)
-        label.textColor = .blue
+        label.font = .systemFont(ofSize: 40, weight: .medium)
+        label.text = title
         label.textColor = .label
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -31,8 +31,11 @@ class CardInfosButton: UIButton {
     
     lazy var cardSubtitleLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 17, weight: .medium)
+        label.font = .systemFont(ofSize: 17 )
         label.textColor = .label
+        label.font = Fonts.BodyRegular
+        label.numberOfLines = 2
+        label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -40,7 +43,10 @@ class CardInfosButton: UIButton {
     lazy var stackTitleSubtitle: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [cardTitleLabel, cardSubtitleLabel])
         stackView.axis = .vertical
-        stackView.spacing = 8
+        stackView.spacing = 12
+        stackView.alignment = .center
+        stackView.isUserInteractionEnabled = false
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
     
@@ -55,6 +61,7 @@ class CardInfosButton: UIButton {
     lazy var gradientView: UIView = {
         let gradient = UIView()
         gradient.translatesAutoresizingMaskIntoConstraints = false
+        gradient.isUserInteractionEnabled = false
         return gradient
     }()
 
@@ -62,9 +69,9 @@ class CardInfosButton: UIButton {
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc func updateGradient(){
+    @objc func addGradientCardInfos(){
         DispatchQueue.main.async {
-            self.gradientView.addGradient()
+            self.gradientView.addGradientCardInfos()
         }
     }
 
@@ -95,7 +102,9 @@ extension CardInfosButton: ViewCodeProtocol {
             gradientView.trailingAnchor.constraint(equalTo: imageBackground.trailingAnchor),
             gradientView.bottomAnchor.constraint(equalTo: imageBackground.bottomAnchor),
             
-            stackTitleSubtitle.topAnchor.constraint(equalTo: imageBackground.topAnchor, constant: 100),
+            stackTitleSubtitle.bottomAnchor.constraint(equalTo: gradientView.bottomAnchor, constant: -25),
+            stackTitleSubtitle.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 65),
+            stackTitleSubtitle.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -65),
         ])
     }
 }
