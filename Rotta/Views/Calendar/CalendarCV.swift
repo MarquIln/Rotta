@@ -22,7 +22,7 @@ class CalendarCollectionView: UIView {
     
     private lazy var headerLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 28, weight: .medium)
+        label.font = .systemFont(ofSize: 20, weight: .bold)
         label.textAlignment = .right
         label.textColor = .labelPrimary
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -40,7 +40,7 @@ class CalendarCollectionView: UIView {
             let label = UILabel()
             label.text = day
             label.textAlignment = .center
-            label.font = .systemFont(ofSize: 16, weight: .medium)
+            label.font = Fonts.text
             label.textColor = (index == 0 || index == 5 || index == 6) ? .labelPrimary : .systemGray
             stack.addArrangedSubview(label)
         }
@@ -64,7 +64,7 @@ class CalendarCollectionView: UIView {
     }()
     
     private lazy var panGesture: UIPanGestureRecognizer = {
-        let gesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
+        let gesture = UIPanGestureRecognizer(target: self, action: #selector(handleGesture(_:)))
         return gesture
     }()
     
@@ -94,7 +94,8 @@ class CalendarCollectionView: UIView {
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             headerLabel.topAnchor.constraint(equalTo: topAnchor, constant: 16),
-            headerLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30),
+            headerLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -46),
+            headerLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
             
             weekdayStackView.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 16),
             weekdayStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
@@ -107,7 +108,7 @@ class CalendarCollectionView: UIView {
         ])
     }
     
-    @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
+    @objc private func handleGesture(_ gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: self)
         
         if gesture.state == .ended {
@@ -142,6 +143,7 @@ class CalendarCollectionView: UIView {
         days.removeAll()
         
         guard let monthInterval = calendar.dateInterval(of: .month, for: currentDate) else { return }
+        
         let firstOfMonth = monthInterval.start
         let firstWeekday = calendar.component(.weekday, from: firstOfMonth)
 
@@ -150,6 +152,7 @@ class CalendarCollectionView: UIView {
         }
         
         let numberOfDays = calendar.range(of: .day, in: .month, for: currentDate)?.count ?? 0
+        
         for day in 1...numberOfDays {
             if let date = calendar.date(byAdding: .day, value: day - 1, to: firstOfMonth) {
                 days.append(date)
