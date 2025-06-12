@@ -40,7 +40,7 @@ class CalendarCollectionView: UIView {
             let label = UILabel()
             label.text = day
             label.textAlignment = .center
-            label.font = Fonts.text
+            label.font = Fonts.BodyEmphasized
             label.textColor = (index == 0 || index == 5 || index == 6) ? .labelPrimary : .systemGray
             stack.addArrangedSubview(label)
         }
