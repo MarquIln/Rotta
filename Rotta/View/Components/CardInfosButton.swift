@@ -22,8 +22,8 @@ class CardInfosButton: UIButton {
     
     lazy var cardTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 40, weight: .medium)
         label.text = title
+        label.font = Fonts.Title1
         label.textColor = .label
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -31,7 +31,6 @@ class CardInfosButton: UIButton {
     
     lazy var cardSubtitleLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 17 )
         label.textColor = .label
         label.font = Fonts.BodyRegular
         label.numberOfLines = 2

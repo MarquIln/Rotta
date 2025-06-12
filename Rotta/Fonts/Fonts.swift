@@ -13,5 +13,12 @@ struct Fonts {
     static let FootnoteRegular = UIFont(name: "SFPro-Regular", size: 13)
     static let FootnoteEmphasized = UIFont(name: "SFPro-Semibold", size: 13)
     static let WeekdayCalendar = UIFont(name: "SFPro-Medium", size: 12)
-
+    
+    static let Title1 = UIFont(name: "Formula1-Display-Bold", size: 34)
+    static let Title2 = UIFont(name: "Formula1-Display-Bold", size: 22)
+    
+    static let Subtitle1 = UIFont(name: "Formula1-Display-Regular", size: 17)
+    static let Subtitle2 = UIFont(name: "Formula1-Display-Regular", size: 14)
+    
+    static let Headline = UIFont(name: "SFPro-Semibold", size: 17)
 }
