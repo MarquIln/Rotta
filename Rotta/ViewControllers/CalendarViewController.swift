@@ -1,49 +1,77 @@
+//
+//  CalendarViewController.swift
+//  Rotta
+//
+//  Created by Sofia on 10/06/25.
+//
+
 import UIKit
 
 class CalendarViewController: UIViewController {
-    
-    private let calendarView: UICalendarView = {
-        let calendar = UICalendarView()
-        calendar.calendar = .current
-        calendar.locale = Locale(identifier: "pt_BR")
-        calendar.fontDesign = .rounded
+    private lazy var customCalendarView: CalendarCollectionView = {
+        let calendar = CalendarCollectionView()
+        calendar.delegate = self
+        calendar.backgroundColor = .secondaryGray
+        calendar.layer.cornerRadius = 20
         calendar.translatesAutoresizingMaskIntoConstraints = false
-        calendar.overrideUserInterfaceStyle = .dark
-        
-        if #available(iOS 17.0, *) {
-            calendar.wantsDateDecorations = true
-        }
-        
         return calendar
     }()
     
-   
-    private let markedDays: Set<Int> = [28, 29, 30]
-    
+    private lazy var label: UILabel = {
+        let label = UILabel()
+        label.text = "F1 AMANHA"
+        label.textColor = .labelPrimary
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
-        view.addSubview(calendarView)
-
-        NSLayoutConstraint.activate([
-            calendarView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            calendarView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
-            calendarView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
-            calendarView.heightAnchor.constraint(equalToConstant: 450)
-        ])
-        
-        calendarView.delegate = self
+        setup()
     }
 }
 
-extension CalendarViewController: UICalendarViewDelegate {
-    func calendarView(_ calendarView: UICalendarView, decorationFor dateComponents: DateComponents) -> UICalendarView.Decoration? {
-      
-        guard let day = dateComponents.day, markedDays.contains(day) else {
-            return nil
-        }
-        
-        let image = UIImage(systemName: "circle.fill")?.withTintColor(.systemBlue, renderingMode: .alwaysOriginal)
-        return .image(image)
+extension CalendarViewController: CalendarCollectionViewDelegate {
+    func didSelectDate(_ date: Date) {
+        print("Data selecionada: \(date)")
+    }
+    
+    func didChangeMonth(_ date: Date) {
+        print("Mês alterado para: \(date)")
+    }
+}
+
+extension CalendarViewController: ViewCodeProtocol {
+    func addSubviews() {
+        view.addSubview(customCalendarView)
+        view.addSubview(label)
+    }
+
+    func setupConstraints() {
+        NSLayoutConstraint.activate([
+            customCalendarView.topAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.topAnchor,
+                constant: 50
+            ),
+            customCalendarView.leadingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+                constant: 16
+            ),
+            customCalendarView.trailingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+                constant: -16
+            ),
+            customCalendarView.heightAnchor.constraint(equalToConstant: 500),
+            
+            label.topAnchor.constraint(
+                equalTo: customCalendarView.bottomAnchor,
+                constant: 16
+            ),
+            label.centerXAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.centerXAnchor
+            )
+        ])
     }
 }
