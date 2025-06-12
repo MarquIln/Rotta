@@ -118,7 +118,7 @@ extension SegmentedControll: ViewCodeProtocol {
     }
 
     func addSubviews() {
-        addSubview(indicatorView) // deve vir antes do stackView
+        addSubview(indicatorView)
         addSubview(stackView)
     }
 
