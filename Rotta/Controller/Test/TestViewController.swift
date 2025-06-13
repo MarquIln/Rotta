@@ -16,6 +16,31 @@ class TestController: UIViewController {
     }()
     
     
+    lazy var scrollView: UIScrollView = {
+        let scroll = UIScrollView()
+        scroll.translatesAutoresizingMaskIntoConstraints = false
+        scroll.showsVerticalScrollIndicator = false
+        
+        return scroll
+    }()
+    
+    lazy var contentView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+
+        return view
+    }()
+    
+    lazy var imageBackground: UIImageView = {
+         let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.image = .drs2
+        imageView.clipsToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+        }()
+    
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,7 +65,7 @@ extension TestController: ViewCodeProtocol {
             imageBackground.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             imageBackground.heightAnchor.constraint(equalToConstant: 362),
             
-            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 212),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -51,7 +76,7 @@ extension TestController: ViewCodeProtocol {
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
-            component.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 212),
+            component.topAnchor.constraint(equalTo: contentView.topAnchor),
             component.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             component.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             component.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)

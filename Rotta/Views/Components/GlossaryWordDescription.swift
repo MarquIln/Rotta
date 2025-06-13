@@ -14,7 +14,7 @@ class GlossaryWordDescription: UIView {
         label.text = "DRS"
         label.textColor = .white
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 34, weight: .bold)
+        label.font = Fonts.Title1
         return label
     }()
     
@@ -25,7 +25,7 @@ class GlossaryWordDescription: UIView {
 Significa Sistema de Redução de Arrasto (Drag Reduction System em inglês) e é um sistema que reduz o arrasto aerodinâmico dos carros, permitindo-lhes alcançar velocidades máximas mais elevadas e, consequentemente, facilitando as ultrapassagens.
 """
         label.textColor = .white
-        label.font = Fonts.text
+        label.font = Fonts.BodyRegular
         label.textAlignment = .center
         
         label.numberOfLines = 0
@@ -45,7 +45,7 @@ Significa Sistema de Redução de Arrasto (Drag Reduction System em inglês) e �
         var label = UILabel()
         label.text = "Zona de DRS"
         label.textColor = .white
-        label.font = Fonts.text
+        label.font = Fonts.BodyRegular
         label.textAlignment = .center
         label.numberOfLines = 0
         return label
@@ -58,7 +58,7 @@ O DRS pode ser usado pelos pilotos em zonas designadas durante os treinos livres
 """
         label.textColor = .white
         label.textAlignment = .center
-        label.font = Fonts.text
+        label.font = Fonts.BodyRegular
         label.numberOfLines = 0
         return label
     }()
@@ -92,7 +92,7 @@ O DRS pode ser usado pelos pilotos em zonas designadas durante os treinos livres
 
 
         label.textColor = .white
-        label.font = Fonts.text
+        label.font = Fonts.BodyRegular
         label.numberOfLines = 0
         return label
     }()

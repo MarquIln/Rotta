@@ -10,7 +10,7 @@ class MainTabController: UIViewController {
 
     let viewControllers: [UIViewController] = [
         CalendarViewController(),
-        RankingViewController(),
+        TestController(),
         InfosViewController()
     ]
 
