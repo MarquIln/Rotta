@@ -55,12 +55,17 @@ extension TestController: ViewCodeProtocol {
         view.addSubview(scrollView)
         
         scrollView.addSubview(contentView)
-        scrollView.addSubview(component)
+        contentView.addSubview(component)
     }
     func setupConstraints() {
         NSLayoutConstraint.activate([
             
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            imageBackground.topAnchor.constraint(equalTo: view.topAnchor),
+            imageBackground.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            imageBackground.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            imageBackground.heightAnchor.constraint(equalToConstant: 362),
+            
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -71,15 +76,10 @@ extension TestController: ViewCodeProtocol {
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
-            imageBackground.topAnchor.constraint(equalTo: view.topAnchor),
-            imageBackground.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            imageBackground.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            imageBackground.heightAnchor.constraint(equalToConstant: 362),
-            
-            component.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 212),
-            component.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            component.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            component.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            component.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 212),
+            component.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            component.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            component.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
         ])
     }
 }

@@ -8,10 +8,6 @@
 import UIKit
 
 class GlossaryWordDescription: UIView {
-
-    
-/***************/
-    
     lazy var label: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -21,8 +17,6 @@ class GlossaryWordDescription: UIView {
         label.font = UIFont.systemFont(ofSize: 34, weight: .bold)
         return label
     }()
-    
-/***************/
     
     lazy var descripText: UILabel = {
         var label = UILabel()
@@ -47,8 +41,6 @@ Significa Sistema de Redução de Arrasto (Drag Reduction System em inglês) e �
         return view
     }()
 
-/***************/
-    
     lazy var descrip2Title: UILabel = {
         var label = UILabel()
         label.text = "Zona de DRS"
@@ -88,8 +80,6 @@ O DRS pode ser usado pelos pilotos em zonas designadas durante os treinos livres
 
         return view
     }()
-
-/***************/
     
     lazy var exploreText: UILabel = {
         var label = UILabel()
@@ -116,8 +106,6 @@ O DRS pode ser usado pelos pilotos em zonas designadas durante os treinos livres
         return view
     }()
 
-    
-/***************/
     
     lazy var mainStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [label, descripContainer, descrip2Container, exploreContainer])
