@@ -32,7 +32,7 @@ class MainTabController: UIViewController {
             segmented.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
             segmented.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             segmented.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            segmented.heightAnchor.constraint(equalToConstant: 44)
+            segmented.heightAnchor.constraint(equalToConstant: 32)
         ])
 
         segmented.didSelectSegment = { [weak self] index in
