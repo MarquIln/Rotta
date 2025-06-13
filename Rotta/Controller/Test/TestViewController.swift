@@ -16,31 +16,6 @@ class TestController: UIViewController {
     }()
     
     
-    lazy var scrollView: UIScrollView = {
-        let scroll = UIScrollView()
-        scroll.translatesAutoresizingMaskIntoConstraints = false
-        scroll.showsVerticalScrollIndicator = false
-        
-        return scroll
-    }()
-    
-    lazy var contentView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-
-        return view
-    }()
-    
-    lazy var imageBackground: UIImageView = {
-         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.image = .drs2
-        imageView.clipsToBounds = true
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-        }()
-    
-    
 
     override func viewDidLoad() {
         super.viewDidLoad()

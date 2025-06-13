@@ -5,6 +5,8 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>SF-Pro.ttf</string>
+		<string>Formula1-Bold.otf</string>
+		<string>Formula1-Regular.otf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
