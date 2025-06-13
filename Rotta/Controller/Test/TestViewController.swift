@@ -6,41 +6,80 @@
 //
 
 import UIKit
-var strings = ["Calendário", "Ranking", "Infos"]
 
 class TestController: UIViewController {
-    lazy var component: SegmentedControll = {
-        var component = SegmentedControll(items: strings)
+
+    lazy var component: GlossaryWordDescription = {
+        var component =  GlossaryWordDescription()
         component.translatesAutoresizingMaskIntoConstraints = false
         return component
     }()
+    
+    
+    lazy var scrollView: UIScrollView = {
+        let scroll = UIScrollView()
+        scroll.translatesAutoresizingMaskIntoConstraints = false
+        scroll.showsVerticalScrollIndicator = false
+        
+        return scroll
+    }()
+    
+    lazy var contentView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+
+        return view
+    }()
+    
+    lazy var imageBackground: UIImageView = {
+         let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.image = .drs2
+        imageView.clipsToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+        }()
     
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
-        view.backgroundColor = .background
+        view.backgroundColor = .systemBackground
     }
 }
 
 extension TestController: ViewCodeProtocol {
-    func setup() {
-        addSubviews()
-        setupConstraints()
+    func addSubviews() {
+        view.addSubview(imageBackground)
+        view.addSubview(scrollView)
+        
+        scrollView.addSubview(contentView)
+        scrollView.addSubview(component)
     }
     func setupConstraints() {
-        
-       NSLayoutConstraint.activate([
-            component.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            component.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
-            component.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            component.heightAnchor.constraint(equalToConstant: 44)
-
+        NSLayoutConstraint.activate([
+            
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            
+            imageBackground.topAnchor.constraint(equalTo: view.topAnchor),
+            imageBackground.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            imageBackground.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            imageBackground.heightAnchor.constraint(equalToConstant: 362),
+            
+            component.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 212),
+            component.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            component.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            component.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-    }
-    func addSubviews() {
-        view.addSubview(component)
-
     }
 }

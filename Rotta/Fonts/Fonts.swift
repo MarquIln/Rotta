@@ -9,7 +9,7 @@ import UIKit
 
 struct Fonts {
     static let largeTitle = UIFont(name: "SFPro-Bold", size: 34)
-    static let text = UIFont(name: "SFPro-Regular", size: 16)
+    static let text = UIFont(name: "SFPro-Regular", size: 17)
     static let largeTitleRegular = UIFont(name: "SFPro-Regular", size: 34)
     static let titleRegular = UIFont(name: "SFPro-Regular", size: 28)
     static let titleBold = UIFont(name: "SFPro-Bold", size: 28)

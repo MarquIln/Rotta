@@ -1,0 +1,182 @@
+//
+//  GlossaryWordDescription.swift
+//  Rotta
+//
+//  Created by sofia leitao on 12/06/25.
+//
+
+import UIKit
+
+class GlossaryWordDescription: UIView {
+
+    
+/***************/
+    
+    lazy var label: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "DRS"
+        label.textColor = .white
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 34, weight: .bold)
+        return label
+    }()
+    
+/***************/
+    
+    lazy var descripText: UILabel = {
+        var label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = """
+Significa Sistema de Redução de Arrasto (Drag Reduction System em inglês) e é um sistema que reduz o arrasto aerodinâmico dos carros, permitindo-lhes alcançar velocidades máximas mais elevadas e, consequentemente, facilitando as ultrapassagens.
+"""
+        label.textColor = .white
+        label.font = Fonts.text
+        label.textAlignment = .center
+        
+        label.numberOfLines = 0
+        return label
+    }()
+    
+    lazy var descripContainer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .gray
+        view.layer.cornerRadius = 32
+
+        return view
+    }()
+
+/***************/
+    
+    lazy var descrip2Title: UILabel = {
+        var label = UILabel()
+        label.text = "Zona de DRS"
+        label.textColor = .white
+        label.font = Fonts.text
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        return label
+    }()
+    
+    lazy var descrip2Text: UILabel = {
+        var label = UILabel()
+        label.text = """
+O DRS pode ser usado pelos pilotos em zonas designadas durante os treinos livres, classificação e corridas. A pista tem zonas específicas onde o DRS pode ser ativado, com o carro perseguidor precisando estar a menos de um segundo do carro da frente para que a aba traseira se abra. O DRS é desativado ao final das zonas designadas e quando o piloto utiliza os freios
+"""
+        label.textColor = .white
+        label.textAlignment = .center
+        label.font = Fonts.text
+        label.numberOfLines = 0
+        return label
+    }()
+    
+    lazy var stackTexts: UIStackView = {
+        var stack = UIStackView(arrangedSubviews: [descrip2Title, descrip2Text])
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .vertical
+        
+        return stack
+    }()
+    
+    
+    lazy var descrip2Container: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .gray
+        view.layer.cornerRadius = 32
+
+        return view
+    }()
+
+/***************/
+    
+    lazy var exploreText: UILabel = {
+        var label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = """
+        
+        O DRS pode ser usado pelos pilotos em zonas designadas durante os treinos livres, classificação e corridas. A pista tem zonas específicas onde o DRS pode ser ativado, com o carro perseguidor precisando estar a menos de um segundo do carro da frente para que a aba traseira se abra. O DRS é desativado ao final das zonas designadas e quando o piloto utiliza os freios
+        
+        """
+
+
+        label.textColor = .white
+        label.font = Fonts.text
+        label.numberOfLines = 0
+        return label
+    }()
+    
+    lazy var exploreContainer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .gray
+        view.layer.cornerRadius = 32
+
+        return view
+    }()
+
+    
+/***************/
+    
+    lazy var mainStack: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [label, descripContainer, descrip2Container, exploreContainer])
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .vertical
+        stack.spacing = 24
+        return stack
+    }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("not implemented")
+    }
+}
+
+extension GlossaryWordDescription: ViewCodeProtocol {
+    func addSubviews() {
+        addSubview(mainStack)
+        descripContainer.addSubview(descripText)
+        descrip2Container.addSubview(stackTexts)
+        exploreContainer.addSubview(exploreText)
+    }
+    
+    func setupConstraints() {
+        NSLayoutConstraint.activate([
+            
+            
+            mainStack.topAnchor.constraint(equalTo: self.topAnchor),
+            mainStack.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            mainStack.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            mainStack.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            
+            descripText.topAnchor.constraint(equalTo: descripContainer.topAnchor, constant: 12),
+            descripText.bottomAnchor.constraint(equalTo: descripContainer.bottomAnchor, constant: -12),
+            descripText.leadingAnchor.constraint(equalTo: descripContainer.leadingAnchor, constant: 16),
+            descripText.trailingAnchor.constraint(equalTo: descripContainer.trailingAnchor, constant: -16),
+            
+            descrip2Title.topAnchor.constraint(equalTo: descrip2Container.topAnchor, constant: 12),
+        
+        
+            descrip2Text.topAnchor.constraint(equalTo: descrip2Title.bottomAnchor, constant: 8),
+            descrip2Text.bottomAnchor.constraint(equalTo: descrip2Container.bottomAnchor, constant: -12),
+            descrip2Text.leadingAnchor.constraint(equalTo: descrip2Container.leadingAnchor, constant: 16),
+            descrip2Text.trailingAnchor.constraint(equalTo: descrip2Container.trailingAnchor, constant: -16),
+            
+            
+            exploreText.topAnchor.constraint(equalTo: exploreContainer.topAnchor, constant: 12),
+            exploreText.bottomAnchor.constraint(equalTo: exploreContainer.bottomAnchor, constant: -12),
+            exploreText.leadingAnchor.constraint(equalTo: exploreContainer.leadingAnchor, constant: 16),
+            exploreText.trailingAnchor.constraint(equalTo: exploreContainer.trailingAnchor, constant: -16)
+        ])
+    }
+}
+
+    
+    
+    
+    
