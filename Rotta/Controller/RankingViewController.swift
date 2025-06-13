@@ -1,13 +1,12 @@
 //
-//  ViewController.swift
+//  RankingViewController.swift
 //  Rotta
 //
-//  Created by Marcos on 10/06/25.
+//  Created by Isadora Ferreira Guerra on 13/06/25.
 //
 
 import UIKit
-
-class ViewController: UIViewController {
+class RankingViewController: UIViewController {
     
     
 

@@ -48,10 +48,10 @@ extension TestController: ViewCodeProtocol {
     func setupConstraints() {
         
        NSLayoutConstraint.activate([
-        segmentedControll.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-        segmentedControll.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
-        segmentedControll.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-        segmentedControll.heightAnchor.constraint(equalToConstant: 44),
+//        segmentedControll.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+//        segmentedControll.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+//        segmentedControll.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+//        segmentedControll.heightAnchor.constraint(equalToConstant: 44),
         
         cardInfo.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
         cardInfo.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
@@ -60,7 +60,7 @@ extension TestController: ViewCodeProtocol {
         ])
     }
     func addSubviews() {
-        view.addSubview(segmentedControll)
+//        view.addSubview(segmentedControll)
         view.addSubview(cardInfo)
     }
 }
