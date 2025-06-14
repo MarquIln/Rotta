@@ -39,10 +39,6 @@ class CalendarDayCell: UICollectionViewCell {
         dayLabel.text = "\(day)"
 
         let events = Database.shared.getAllEvents()
-        print("Eventos encontrados: \(events.count)")
-        for event in events {
-            print(event.date as Any)
-        }
         
         let isMarkedDay = events.contains(where: {
             guard let eventDate = $0.date else { return false }

@@ -37,7 +37,6 @@ class RankingVC: UIViewController {
         if let f2Id = Database.shared.getFormulaId(for: "Formula 2") {
             drivers = Database.shared.getDriversByFormula(idFormula: f2Id)
         } else {
-            print("nenhum driver.")
             drivers = []
         }
         drivers.sort { $0.points > $1.points }
