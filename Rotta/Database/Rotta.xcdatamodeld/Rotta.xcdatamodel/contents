@@ -2,8 +2,7 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23788" systemVersion="24F74" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
     <entity name="Car" representedClassName="Car" syncable="YES">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="idComponents" optional="YES" attributeType="Transformable" valueTransformerName="ArrayToUUIDTransformer"/>
-        <attribute name="idFormula" optional="YES" attributeType="Transformable" valueTransformerName="ArrayToUUIDTransformer"/>
+        <attribute name="idFormula" optional="YES" attributeType="UUID" valueTransformerName="ArrayToUUIDTransformer" usesScalarValueType="NO"/>
         <attribute name="image" optional="YES" attributeType="String"/>
     </entity>
     <entity name="Component" representedClassName="Component" syncable="YES">
@@ -24,16 +23,12 @@
     <entity name="Event" representedClassName="Event" syncable="YES">
         <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="idFormula" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="startTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
     </entity>
     <entity name="Formula" representedClassName="Formula" syncable="YES">
+        <attribute name="color" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="idCars" optional="YES" attributeType="Transformable" valueTransformerName="ArrayToUUIDTransformer"/>
-        <attribute name="idDrivers" optional="YES" attributeType="Transformable" valueTransformerName="ArrayToUUIDTransformer"/>
-        <attribute name="idEvent" optional="YES" attributeType="Transformable" valueTransformerName="ArrayToUUIDTransformer"/>
-        <attribute name="idRules" optional="YES" attributeType="Transformable" valueTransformerName="ArrayToUUIDTransformer"/>
-        <attribute name="idScuderias" optional="YES" attributeType="Transformable" valueTransformerName="ArrayToUUIDTransformer"/>
-        <attribute name="idTracks" optional="YES" attributeType="Transformable" valueTransformerName="ArrayToUUIDTransformer"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <fetchedProperty name="fetchedProperty" optional="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="Formula"/>
@@ -60,6 +55,7 @@
     <entity name="Track" representedClassName="Track" syncable="YES">
         <attribute name="distance" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="idFormula" optional="YES" attributeType="Transformable" valueTransformerName="ArrayToUUIDTransformer"/>
         <attribute name="location" optional="YES" attributeType="String"/>
         <attribute name="name" optional="YES" attributeType="String"/>
     </entity>
