@@ -6,9 +6,12 @@
 //
 
 import UIKit
+import CloudKit
 
 class DriverRankingCell: UITableViewCell {
     static let reuseIdentifier = "DriverRankingCell"
+    
+    let cloudKitModel = CloudKitModel.shared
     
     lazy var positionLabel: UILabel = {
         let label = UILabel()
@@ -88,19 +91,17 @@ class DriverRankingCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func config(with driver: Driver, position: Int, cellIndex: Int) {
+    func config(with driver: CKRecord, position: Int, cellIndex: Int) {
         positionLabel.text = "\(position)"
         
-        if let fullName = driver.name {
-            nameLabel.text = formatDriverName(fullName)
-        }
+        let fullName = driver.value(forKey: "fullName") as? String ?? ""
+        nameLabel.text = formatDriverName(fullName)
         
-        pointsLabel.text = "\(Int(driver.points))"
+        let points = driver.value(forKey: "points") as? Int ?? 0
+        pointsLabel.text = "\(points)"
         
-        if let scuderiaId = driver.scuderia {
-            if let scuderia = Database.shared.getScuderia(by: scuderiaId) {
-                scuderiaLabel.text = scuderia.name?.uppercased()
-            }
+        if let scuderia = driver.value(forKey: "scuderia") as? String {
+            scuderiaLabel.text = scuderia
         }
         
         driverImageView.image = UIImage(systemName: "person.circle.fill")
@@ -118,15 +119,13 @@ class DriverRankingCell: UITableViewCell {
     }
     
     private func formatDriverName(_ fullName: String) -> String {
-        let components = fullName.components(separatedBy: " ")
-        guard components.count >= 2 else { return fullName }
-        
-        let firstNameLetter = String(components[0].prefix(1))
-        if let lastName = components.last {
-            return "\(firstNameLetter). \(lastName)"
+        let components = fullName.components(separatedBy: " ").filter { !$0.isEmpty }
+        guard components.count >= 2, let firstName = components.first, let lastName = components.last else { 
+            return fullName 
         }
         
-        return fullName
+        let firstNameLetter = String(firstName.prefix(1))
+        return "\(firstNameLetter). \(lastName)"
     }
 }
 

@@ -37,22 +37,16 @@ class CalendarDayCell: UICollectionViewCell {
         let calendar = Calendar.current
         let day = calendar.component(.day, from: date)
         dayLabel.text = "\(day)"
-
-        let events = Database.shared.getAllEvents()
         
-        let isMarkedDay = events.contains(where: {
-            guard let eventDate = $0.date else { return false }
-            return Calendar.current.isDate(eventDate, inSameDayAs: date)
-        })
-
-        if isMarkedDay {
-            dayLabel.textColor = .yellowPrimary
-            decorationView.isHidden = false
-            decorationView.backgroundColor = .f2Sprint
+        if isToday {
+            dayLabel.font = .boldSystemFont(ofSize: 16)
         } else {
-            dayLabel.textColor = .labelGray
-            decorationView.isHidden = true
+            dayLabel.font = .systemFont(ofSize: 16)
         }
+
+        // TODO: Implementar lógica de eventos
+        dayLabel.textColor = .labelGray
+        decorationView.isHidden = true
     }
 
     override init(frame: CGRect) {

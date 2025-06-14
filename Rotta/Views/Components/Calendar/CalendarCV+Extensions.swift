@@ -16,7 +16,7 @@ extension CalendarCollectionView: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MonthCell", for: indexPath) as! MonthCell
         
         let month = months[indexPath.item]
-        cell.configure(with: month, selectedDate: selectedDate, delegate: self)
+        cell.config(with: month, selectedDate: selectedDate, delegate: self)
         
         return cell
     }

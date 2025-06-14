@@ -7,10 +7,11 @@
 
 
 import UIKit
+import CloudKit
 
 protocol TopThreeTableViewDelegate: AnyObject {
     func numberOfDrivers() -> Int
-    func driver(at index: Int) -> Driver
+    func driver(at index: Int) -> CKRecord
     func didScrollWithPosition(_ position: CGFloat, difference: CGFloat)
     func willBeginDragging(at position: CGFloat)
     func didEndDecelerating(at position: CGFloat)

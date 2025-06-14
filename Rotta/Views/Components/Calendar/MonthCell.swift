@@ -56,7 +56,7 @@ class MonthCell: UICollectionViewCell {
         ])
     }
     
-    func configure(with month: Date, selectedDate: Date?, delegate: MonthCellDelegate?) {
+    func config(with month: Date, selectedDate: Date?, delegate: MonthCellDelegate?) {
         self.month = month
         self.selectedDate = selectedDate
         self.delegate = delegate
