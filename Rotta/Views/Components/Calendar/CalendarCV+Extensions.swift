@@ -9,44 +9,48 @@ import UIKit
 
 extension CalendarCollectionView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return days.count
+        return months.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CalendarDayCell", for: indexPath) as! CalendarDayCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MonthCell", for: indexPath) as! MonthCell
         
-        let day = days[indexPath.item]
-        cell.configure(with: day, isSelected: day == selectedDate, isToday: day != nil && calendar.isDateInToday(day!))
+        let month = months[indexPath.item]
+        cell.configure(with: month, selectedDate: selectedDate, delegate: self)
         
         return cell
     }
 }
 
-extension CalendarCollectionView: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let date = days[indexPath.item] else { return }
-        selectedDate = date
-        collectionView.reloadData()
-        delegate?.didSelectDate(date)
+extension CalendarCollectionView: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return collectionView.frame.size
     }
 }
 
-extension CalendarCollectionView: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let availableWidth = collectionView.frame.width
-        let cellWidth = availableWidth / 7
-        return CGSize(width: cellWidth, height: 60)
+extension CalendarCollectionView: UIScrollViewDelegate {
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        let pageWidth = scrollView.frame.width
+        let currentPage = Int(scrollView.contentOffset.x / pageWidth)
+        
+        if currentPage != currentMonthIndex && currentPage < months.count {
+            currentMonthIndex = currentPage
+            currentDate = months[currentMonthIndex]
+            updateHeaderLabel()
+            delegate?.didChangeMonth(currentDate)
+        }
     }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 4
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 0, bottom: 8, right: 0)
+}
+
+extension CalendarCollectionView: MonthCellDelegate {
+    func didSelectDate(_ date: Date) {
+        selectedDate = date
+        delegate?.didSelectDate(date)
+        
+        for cell in monthsCollectionView.visibleCells {
+            if let monthCell = cell as? MonthCell {
+                monthCell.updateSelectedDate(selectedDate)
+            }
+        }
     }
 }

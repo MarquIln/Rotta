@@ -27,24 +27,34 @@ class CalendarDayCell: UICollectionViewCell {
         return dotView
     }()
 
-    func configure(with date: Date?, isSelected: Bool, isToday: Bool) {
-        if let date = date {
-            dayLabel.text = "\(Calendar.current.component(.day, from: date))"
-
-            let day = Calendar.current.component(.day, from: date)
-
-            let isMarkedDay = [7, 9, 11].contains(day)  // TODO: TEM QUE MUDAR ISSO AQUI
-
-            if isMarkedDay {
-                dayLabel.textColor = .yellowPrimary
-                decorationView.isHidden = false
-                decorationView.backgroundColor = .yellowPrimary
-            } else {
-                dayLabel.textColor = .labelGray
-                decorationView.isHidden = true
-            }
-        } else {
+    func config(with date: Date?, isSelected: Bool, isToday: Bool) {
+        guard let date = date else {
             dayLabel.text = ""
+            decorationView.isHidden = true
+            return
+        }
+
+        let calendar = Calendar.current
+        let day = calendar.component(.day, from: date)
+        dayLabel.text = "\(day)"
+
+        let events = Database.shared.getAllEvents()
+        print("Eventos encontrados: \(events.count)")
+        for event in events {
+            print(event.date as Any)
+        }
+        
+        let isMarkedDay = events.contains(where: {
+            guard let eventDate = $0.date else { return false }
+            return Calendar.current.isDate(eventDate, inSameDayAs: date)
+        })
+
+        if isMarkedDay {
+            dayLabel.textColor = .yellowPrimary
+            decorationView.isHidden = false
+            decorationView.backgroundColor = .f2Sprint
+        } else {
+            dayLabel.textColor = .labelGray
             decorationView.isHidden = true
         }
     }
