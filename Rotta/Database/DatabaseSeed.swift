@@ -12,11 +12,6 @@ import CoreData
 extension Database {
     
     func seedDatabase() {
-        if !getAllFormulas().isEmpty {
-            print("Database already seeded")
-            return
-        }
-        
         print("Starting database seed...")
         
         seedFormulas()
@@ -25,8 +20,9 @@ extension Database {
         seedTracks()
         seedGlossary()
         seedRules()
+        seedEvents()
         
-        print("Database seed completed!")
+        print("Database seed completed successfully!")
     }
     
     private func seedFormulas() {
@@ -300,5 +296,142 @@ extension Database {
         for (name, details) in f3Rules {
             addNewRule(name: name, details: details, idFormula: f3Id)
         }
+    }
+    
+    private func seedEvents() {
+        
+        guard let f2Id = getFormulaId(for: "Formula 2") else {
+            print("Formula 2 não encontrada")
+            return
+        }
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+        dateFormatter.timeZone = TimeZone.current
+        
+        func createEvent(_ dateTimeString: String) {
+            guard let dateTime = dateFormatter.date(from: dateTimeString) else {
+                print("Erro ao fazer parse da data: \(dateTimeString)")
+                return
+            }
+            addNewEvent(date: dateTime, startTime: dateTime, idFormula: f2Id)
+        }
+        
+        createEvent("2025-02-28 11:00")
+        createEvent("2025-02-28 14:30")
+        createEvent("2025-03-01 16:15")
+        createEvent("2025-03-02 12:15")
+        
+        createEvent("2025-03-07 11:30")
+        createEvent("2025-03-07 15:00")
+        createEvent("2025-03-08 16:45")
+        createEvent("2025-03-09 13:00")
+        
+        createEvent("2025-03-21 11:00")
+        createEvent("2025-03-21 14:30")
+        createEvent("2025-03-22 16:00")
+        createEvent("2025-03-23 12:30")
+        
+        createEvent("2025-04-04 10:30")
+        createEvent("2025-04-04 14:00")
+        createEvent("2025-04-05 15:30")
+        createEvent("2025-04-06 12:00")
+        
+        createEvent("2025-04-18 11:00")
+        createEvent("2025-04-18 14:30")
+        createEvent("2025-04-19 16:15")
+        createEvent("2025-04-20 12:45")
+        
+        createEvent("2025-05-02 11:30")
+        createEvent("2025-05-02 15:00")
+        createEvent("2025-05-03 16:30")
+        createEvent("2025-05-04 13:00")
+        
+        createEvent("2025-05-16 10:00")
+        createEvent("2025-05-16 13:30")
+        createEvent("2025-05-17 15:00")
+        createEvent("2025-05-18 11:30")
+        
+        createEvent("2025-05-23 09:30")
+        createEvent("2025-05-23 13:00")
+        createEvent("2025-05-24 14:30")
+        createEvent("2025-05-25 10:00")
+        
+        createEvent("2025-06-13 11:00")
+        createEvent("2025-06-13 14:30")
+        createEvent("2025-06-14 16:00")
+        createEvent("2025-06-15 12:30")
+        
+        createEvent("2025-06-27 10:30")
+        createEvent("2025-06-27 14:00")
+        createEvent("2025-06-28 15:30")
+        createEvent("2025-06-29 11:45")
+        
+        createEvent("2025-07-04 11:00")
+        createEvent("2025-07-04 14:30")
+        createEvent("2025-07-05 16:15")
+        createEvent("2025-07-06 12:00")
+        
+        createEvent("2025-07-25 10:30")
+        createEvent("2025-07-25 14:00")
+        createEvent("2025-07-26 15:45")
+        createEvent("2025-07-27 12:15")
+        
+        createEvent("2025-08-01 11:00")
+        createEvent("2025-08-01 14:30")
+        createEvent("2025-08-02 16:00")
+        createEvent("2025-08-03 12:30")
+        
+        createEvent("2025-08-29 10:30")
+        createEvent("2025-08-29 14:00")
+        createEvent("2025-08-30 15:30")
+        createEvent("2025-08-31 11:45")
+        
+        createEvent("2025-09-05 11:00")
+        createEvent("2025-09-05 14:30")
+        createEvent("2025-09-06 16:15")
+        createEvent("2025-09-07 12:00")
+        
+        createEvent("2025-09-19 10:30")
+        createEvent("2025-09-19 14:00")
+        createEvent("2025-09-20 15:45")
+        createEvent("2025-09-21 12:15")
+        
+        createEvent("2025-10-03 19:00")
+        createEvent("2025-10-03 22:30")
+        createEvent("2025-10-04 20:15")
+        createEvent("2025-10-05 19:30")
+        
+        createEvent("2025-10-17 11:30")
+        createEvent("2025-10-17 15:00")
+        createEvent("2025-10-18 16:30")
+        createEvent("2025-10-19 13:00")
+        
+        createEvent("2025-10-24 12:00")
+        createEvent("2025-10-24 15:30")
+        createEvent("2025-10-25 17:00")
+        createEvent("2025-10-26 13:30")
+        
+        createEvent("2025-11-07 11:00")
+        createEvent("2025-11-07 14:30")
+        createEvent("2025-11-08 16:00")
+        createEvent("2025-11-09 12:30")
+        
+        createEvent("2025-11-20 22:00")
+        createEvent("2025-11-21 01:30")
+        createEvent("2025-11-21 23:15")
+        createEvent("2025-11-22 22:00")
+        
+        createEvent("2025-11-28 14:00")
+        createEvent("2025-11-28 17:30")
+        createEvent("2025-11-29 19:00")
+        createEvent("2025-11-30 15:00")
+        
+        createEvent("2025-12-05 13:00")
+        createEvent("2025-12-05 16:30")
+        createEvent("2025-12-06 18:15")
+        createEvent("2025-12-07 14:00")
+        
+        print("Formula 2 events seeded successfully!")
     }
 }

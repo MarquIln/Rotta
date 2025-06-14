@@ -10,17 +10,13 @@ import CoreData
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
-
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-        
-        // Configurar o contexto do Core Data no Database
         Database.shared.context = persistentContainer.viewContext
         
-        // Inicializar o banco com seed
-        Database.shared.initializeDatabase()
+        if Database.shared.getCurrentStoredDatabaseVersion() != Database.shared.getExpectedDatabaseVersion() {
+            Database.shared.initializeDatabase()
+            print("database does not match version")
+        }
         
         return true
     }
