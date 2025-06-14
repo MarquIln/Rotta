@@ -20,7 +20,7 @@ class CalendarViewController: UIViewController {
     private lazy var label: UILabel = {
         let label = UILabel()
         label.text = "F1 AMANHA"
-        label.textColor = .labelPrimary
+        label.textColor = .yellowPrimary
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
