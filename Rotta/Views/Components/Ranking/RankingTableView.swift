@@ -18,6 +18,60 @@ protocol RankingTableViewDelegate: AnyObject {
 class RankingTableView: UIView {
     weak var delegate: RankingTableViewDelegate?
     
+    var showOnlyTopThree: Bool = true {
+      didSet { tableView.reloadData() }
+    }
+    
+    lazy var driverLabel: UILabel = {
+        let label = UILabel()
+        label.font = Fonts.Subtitle2
+        label.text = "Driver"
+        label.textAlignment = .center
+        label.textColor = .white
+        label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        
+        return label
+    }()
+    
+    lazy var pointsLabel: UILabel = {
+        let label = UILabel()
+        label.font = Fonts.Subtitle2
+        label.textAlignment = .center
+        label.text = "Points"
+        label.textColor = .white
+        
+        
+        return label
+    }()
+    
+    lazy var scuderiaLabel: UILabel = {
+        let label = UILabel()
+        label.font = Fonts.Subtitle2
+        label.textAlignment = .center
+        label.text = "Scuderia"
+        label.textColor = .white
+        
+        return label
+    }()
+    
+    lazy var headerStack: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [driverLabel, pointsLabel, scuderiaLabel])
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .horizontal
+        stack.distribution = .fillEqually
+        stack.backgroundColor = .end
+        stack.alignment = .fill
+        stack.layer.cornerRadius = 12
+        
+        stack.layer.maskedCorners = [
+             .layerMinXMinYCorner,
+             .layerMaxXMinYCorner
+         ]
+         stack.layer.masksToBounds = true
+        
+        return stack
+    }()
+    
     lazy var tableView: UITableView = {
         let table = UITableView()
         table.translatesAutoresizingMaskIntoConstraints = false
@@ -25,29 +79,20 @@ class RankingTableView: UIView {
         table.dataSource = self
         table.backgroundColor = .clear
         table.separatorStyle = .none
-        table.register(DriverRankingCell.self, forCellReuseIdentifier: "DriverRankingCell")
+        table.showsVerticalScrollIndicator = false
+        table.register(DriverRankingCell.self, forCellReuseIdentifier: DriverRankingCell.reuseIdentifier)
+        
         return table
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupView()
+        setup()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        setupView()
-    }
-    
-    private func setupView() {
-        addSubview(tableView)
-        
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: bottomAnchor)
-        ])
+        setup()
     }
     
     func reloadData() {
@@ -55,40 +100,3 @@ class RankingTableView: UIView {
     }
 }
 
-// MARK: - UITableViewDataSource
-extension RankingTableView: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return delegate?.numberOfDrivers() ?? 0
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "DriverRankingCell", for: indexPath) as? DriverRankingCell,
-              let driver = delegate?.driver(at: indexPath.row) else {
-            return UITableViewCell()
-        }
-        
-        let position = indexPath.row + 1
-        cell.configure(with: driver, position: position)
-        return cell
-    }
-}
-
-// MARK: - UITableViewDelegate
-extension RankingTableView: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80
-    }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let currentPosition = scrollView.contentOffset.y
-        delegate?.didScrollWithPosition(currentPosition, difference: 0)
-    }
-    
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        delegate?.willBeginDragging(at: scrollView.contentOffset.y)
-    }
-    
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        delegate?.didEndDecelerating(at: scrollView.contentOffset.y)
-    }
-}
