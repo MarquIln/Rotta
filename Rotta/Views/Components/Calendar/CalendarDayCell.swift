@@ -36,9 +36,9 @@ class CalendarDayCell: UICollectionViewCell {
             let isMarkedDay = [7, 9, 11].contains(day)  // TODO: TEM QUE MUDAR ISSO AQUI
 
             if isMarkedDay {
-                dayLabel.textColor = .labelPrimary
+                dayLabel.textColor = .yellowPrimary
                 decorationView.isHidden = false
-                decorationView.backgroundColor = .labelPrimary
+                decorationView.backgroundColor = .yellowPrimary
             } else {
                 dayLabel.textColor = .labelGray
                 decorationView.isHidden = true
