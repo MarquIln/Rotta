@@ -46,6 +46,20 @@ extension Database {
         return nil
     }
     
+    func getScuderiasByFormula(idFormula: UUID) -> [Scuderia] {
+        guard let context else { return [] }
+        
+        var result: [Scuderia] = []
+        
+        do {
+            let fetchRequest: NSFetchRequest<Scuderia> = Scuderia.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "idFormula == %@", idFormula as CVarArg)
+            result = try context.fetch(fetchRequest)
+        } catch { print(error) }
+        
+        return result
+    }
+
     func deleteScuderia(by id: UUID) {
         guard let context, let scuderiaToDelete = getScuderia(by: id) else { return }
         

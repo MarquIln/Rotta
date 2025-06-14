@@ -1,5 +1,5 @@
 //
-//  Car.swift
+//  Rule.swift
 //  Rotta
 //
 //  Created by Marcos on 13/06/25.
@@ -9,35 +9,35 @@ import Foundation
 import CoreData
 
 extension Database {
-    func addNewCar(idComponents: [UUID], idFormula: UUID, image: String? = nil) {
+    func addNewRule(name: String? = nil, details: String? = nil, idFormula: UUID? = nil) {
         guard let context else { return }
         
-        let newCar = Car(context: context)
-        newCar.id = UUID()
-        newCar.idComponents = idComponents
-        newCar.idFormula = idFormula
-        newCar.image = image
+        let newRule = Rule(context: context)
+        newRule.id = UUID()
+        newRule.name = name
+        newRule.details = details
+        newRule.idFormula = idFormula
         
         save()
     }
     
-    func getAllCars() -> [Car] {
+    func getAllRules() -> [Rule] {
         guard let context else { return [] }
         
-        var result: [Car] = []
+        var result: [Rule] = []
         
         do {
-            result = try context.fetch(Car.fetchRequest())
+            result = try context.fetch(Rule.fetchRequest())
         } catch { print(error) }
         
         return result
     }
     
-    func getCar(by id: UUID) -> Car? {
+    func getRule(by id: UUID) -> Rule? {
         guard let context else { return nil }
         
         do {
-            let fetchRequest: NSFetchRequest<Car> = Car.fetchRequest()
+            let fetchRequest: NSFetchRequest<Rule> = Rule.fetchRequest()
             fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
             return try context.fetch(fetchRequest).first
         } catch { print(error) }
@@ -45,25 +45,24 @@ extension Database {
         return nil
     }
     
-    func getCarsByFormula(idFormula: UUID) -> [Car]? {
+    func getRulesByFormula(idFormula: UUID) -> [Rule] {
         guard let context else { return [] }
         
-        var result: [Car] = []
+        var result: [Rule] = []
         
         do {
-            let fetchRequest: NSFetchRequest<Car> = Car.fetchRequest()
+            let fetchRequest: NSFetchRequest<Rule> = Rule.fetchRequest()
             fetchRequest.predicate = NSPredicate(format: "idFormula == %@", idFormula as CVarArg)
             result = try context.fetch(fetchRequest)
-            return result
         } catch { print(error) }
         
-        return []
+        return result
     }
 
-    func deleteCar(by id: UUID) {
-        guard let context, let carToDelete = getCar(by: id) else { return }
+    func deleteRule(by id: UUID) {
+        guard let context, let ruleToDelete = getRule(by: id) else { return }
         
-        context.delete(carToDelete)
+        context.delete(ruleToDelete)
         save()
     }
 }

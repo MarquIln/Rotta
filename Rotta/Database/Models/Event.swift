@@ -9,13 +9,14 @@ import Foundation
 import CoreData
 
 extension Database {
-    func addNewEvent(date: Date? = nil, startTime: Date? = nil) {
+    func addNewEvent(date: Date? = nil, startTime: Date? = nil, idFormula: UUID? = nil) {
         guard let context else { return }
         
         let newEvent = Event(context: context)
         newEvent.id = UUID()
         newEvent.date = date
         newEvent.startTime = startTime
+        newEvent.idFormula = idFormula
         
         save()
     }
@@ -62,6 +63,20 @@ extension Database {
         return result
     }
     
+    func getEventsByFormula(idFormula: UUID) -> [Event] {
+        guard let context else { return [] }
+        
+        var result: [Event] = []
+        
+        do {
+            let fetchRequest: NSFetchRequest<Event> = Event.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "idFormula == %@", idFormula as CVarArg)
+            result = try context.fetch(fetchRequest)
+        } catch { print(error) }
+        
+        return result
+    }
+
     func deleteEvent(by id: UUID) {
         guard let context, let eventToDelete = getEvent(by: id) else { return }
         

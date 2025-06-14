@@ -14,6 +14,10 @@ class Database {
     var context: NSManagedObjectContext?
     
     private init() {}
+    
+    func initializeDatabase() {
+        seedDatabase()
+    }
 
     func save() {
         if let context, context.hasChanges {
@@ -23,5 +27,10 @@ class Database {
                 print(error)
             }
         }
+    }
+    
+    func getFormulaId(for formulaName: String) -> UUID? {
+        let formulas = getAllFormulas()
+        return formulas.first { $0.name == formulaName }?.id
     }
 }

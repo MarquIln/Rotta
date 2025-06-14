@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 
 extension Database {
-    func addNewTrack(name: String? = nil, location: String? = nil, distance: Double = 0.0) {
+    func addNewTrack(name: String? = nil, location: String? = nil, distance: Double = 0.0, idFormula: [UUID]? = nil) {
         guard let context else { return }
         
         let newTrack = Track(context: context)
@@ -17,6 +17,7 @@ extension Database {
         newTrack.name = name
         newTrack.location = location
         newTrack.distance = distance
+        newTrack.idFormula = idFormula
         
         save()
     }
@@ -43,6 +44,20 @@ extension Database {
         } catch { print(error) }
         
         return nil
+    }
+    
+    func getTracksByFormula(idFormula: UUID) -> [Track] {
+        guard let context else { return [] }
+        
+        var result: [Track] = []
+        
+        do {
+            let fetchRequest: NSFetchRequest<Track> = Track.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "idFormula == %@", idFormula as CVarArg)
+            result = try context.fetch(fetchRequest)
+        } catch { print(error) }
+        
+        return result
     }
     
     func deleteTrack(by id: UUID) {

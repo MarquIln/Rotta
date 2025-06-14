@@ -62,6 +62,20 @@ extension Database {
         return result
     }
     
+    func getDriversByFormula(idFormula: UUID) -> [Driver] {
+        guard let context else { return [] }
+        
+        var result: [Driver] = []
+        
+        do {
+            let fetchRequest: NSFetchRequest<Driver> = Driver.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "idFormula == %@", idFormula as CVarArg)
+            result = try context.fetch(fetchRequest)
+        } catch { print(error) }
+        
+        return result
+    }
+
     func deleteDriver(by id: UUID) {
         guard let context, let driverToDelete = getDriver(by: id) else { return }
         

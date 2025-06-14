@@ -9,19 +9,13 @@ import Foundation
 import CoreData
 
 extension Database {
-    func addNewFormula(name: String? = nil, color: String? = nil, idCars: [UUID] = [], idDrivers: [UUID] = [], idEvent: [UUID] = [], idRules: [UUID] = [], idScuderias: [UUID] = [], idTracks: [UUID] = []) {
+    func addNewFormula(name: String? = nil, color: String? = nil) {
         guard let context else { return }
         
         let newFormula = Formula(context: context)
         newFormula.id = UUID()
         newFormula.name = name
         newFormula.color = color
-        newFormula.idCars = idCars
-        newFormula.idDrivers = idDrivers
-        newFormula.idEvent = idEvent
-        newFormula.idRules = idRules
-        newFormula.idScuderias = idScuderias
-        newFormula.idTracks = idTracks
         
         save()
     }

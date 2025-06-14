@@ -45,6 +45,20 @@ extension Database {
         return nil
     }
     
+    func getComponentsByCar(idCar: UUID) -> [Component] {
+        var result: [Component] = []
+        
+        if let car = getCar(by: idCar), let componentIds = car.idComponents {
+            for componentId in componentIds {
+                if let component = getComponent(by: componentId) {
+                    result.append(component)
+                }
+            }
+        }
+        
+        return result
+    }
+
     func deleteComponent(by id: UUID) {
         guard let context, let componentToDelete = getComponent(by: id) else { return }
         
