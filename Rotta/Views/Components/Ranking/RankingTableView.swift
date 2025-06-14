@@ -17,11 +17,7 @@ protocol RankingTableViewDelegate: AnyObject {
 
 class RankingTableView: UIView {
     weak var delegate: RankingTableViewDelegate?
-    
-    var showOnlyTopThree: Bool = true {
-      didSet { tableView.reloadData() }
-    }
-    
+
     lazy var driverLabel: UILabel = {
         let label = UILabel()
         label.font = Fonts.Subtitle2
@@ -93,10 +89,6 @@ class RankingTableView: UIView {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setup()
-    }
-    
-    func reloadData() {
-        tableView.reloadData()
     }
 }
 

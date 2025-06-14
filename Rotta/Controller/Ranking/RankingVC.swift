@@ -9,35 +9,17 @@ import UIKit
 
 class RankingVC: UIViewController {
     var drivers: [Driver] = []
-    let impactFeedback = UIImpactFeedbackGenerator(style: .light)
+    let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
     var lastScrollPosition: CGFloat = 0
-    let scrollThreshold: CGFloat = 30.0
+    let scrollDistance: CGFloat = 30.0
 
-    lazy var rankingTableView: RankingTableView = {
-        let tableView = RankingTableView()
+    lazy var rankingTableView: TopThreeTableView = {
+        let tableView = TopThreeTableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
 
         return tableView
     }()
-
-    lazy var viewAllDriversButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = .yellowPrimary
-        button.setTitle("View all Standings", for: .normal)
-        button.addTarget(
-            self,
-            action: #selector(viewAllDrivers),
-            for: .touchUpInside
-        )
-
-        return button
-    }()
-
-    @objc private func viewAllDrivers() {
-        print("vai ver todos os drivers sim.")
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,7 +41,7 @@ class RankingVC: UIViewController {
             drivers = []
         }
         drivers.sort { $0.points > $1.points }
-        rankingTableView.reloadData()
+        rankingTableView.tableView.reloadData()
     }
 }
 

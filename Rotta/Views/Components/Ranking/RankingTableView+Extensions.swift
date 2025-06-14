@@ -9,10 +9,7 @@ import UIKit
 
 extension RankingTableView: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let total = delegate?.numberOfDrivers() ?? 0
-        return showOnlyTopThree
-          ? min(3, total)
-          : total
+        return delegate?.numberOfDrivers() ?? 0
       }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -70,7 +67,7 @@ extension RankingTableView: ViewCodeProtocol {
             tableView.topAnchor.constraint(equalTo: headerStack.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
         ])
     }
 }
