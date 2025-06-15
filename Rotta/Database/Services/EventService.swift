@@ -1,10 +1,17 @@
+//
+//  CarService.swift
+//  Rotta
+//
+//  Created by Marcos on 13/06/25.
+//
+
 import Foundation
 import CloudKit
 
 class EventService {
     private let privateDatabase: CKDatabase
 
-    init(container: CKContainer = .default()) {
+    init(container: CKContainer = .init(identifier: "iCloud.Rotta.CloudRotta")) {
         privateDatabase = container.privateCloudDatabase
     }
 
@@ -13,12 +20,12 @@ class EventService {
         let predicate = NSPredicate(value: true)
         let query = CKQuery(recordType: "Event", predicate: predicate)
         do {
-            let resultados = try await privateDatabase.records(matching: query)
-            for resultado in resultados.matchResults {
+            let results = try await privateDatabase.records(matching: query)
+            for result in results.matchResults {
                 do {
-                    let record = try resultado.1.get()
+                    let record = try result.1.get()
                     let event = EventModel(
-                        id: UUID(uuidString: record.recordID.recordName) ?? UUID(),
+                        id: UUID(uuidString: record["id"] as? String ?? "") ?? UUID(),
                         date: record["date"] as? Date,
                         startTime: record["startTime"] as? Date,
                         idFormula: UUID(uuidString: record["idFormula"] as? String ?? "")
@@ -39,7 +46,7 @@ class EventService {
         do {
             let record = try await privateDatabase.record(for: recordID)
             return EventModel(
-                id: UUID(uuidString: record.recordID.recordName) ?? UUID(),
+                id: UUID(uuidString: record["id"] as? String ?? "") ?? UUID(),
                 date: record["date"] as? Date,
                 startTime: record["startTime"] as? Date,
                 idFormula: UUID(uuidString: record["idFormula"] as? String ?? "")
@@ -55,12 +62,12 @@ class EventService {
         let predicate = NSPredicate(format: "idFormula == %@", idFormula.uuidString)
         let query = CKQuery(recordType: "Event", predicate: predicate)
         do {
-            let resultados = try await privateDatabase.records(matching: query)
-            for resultado in resultados.matchResults {
+            let results = try await privateDatabase.records(matching: query)
+            for result in results.matchResults {
                 do {
-                    let record = try resultado.1.get()
+                    let record = try result.1.get()
                     let event = EventModel(
-                        id: UUID(uuidString: record.recordID.recordName) ?? UUID(),
+                        id: UUID(uuidString: record["id"] as? String ?? "") ?? UUID(),
                         date: record["date"] as? Date,
                         startTime: record["startTime"] as? Date,
                         idFormula: UUID(uuidString: record["idFormula"] as? String ?? "")
@@ -84,12 +91,12 @@ class EventService {
         let predicate = NSPredicate(format: "date >= %@ AND date < %@", startOfDay as NSDate, endOfDay as NSDate)
         let query = CKQuery(recordType: "Event", predicate: predicate)
         do {
-            let resultados = try await privateDatabase.records(matching: query)
-            for resultado in resultados.matchResults {
+            let results = try await privateDatabase.records(matching: query)
+            for result in results.matchResults {
                 do {
-                    let record = try resultado.1.get()
+                    let record = try result.1.get()
                     let event = EventModel(
-                        id: UUID(uuidString: record.recordID.recordName) ?? UUID(), 
+                        id: UUID(uuidString: record["id"] as? String ?? "") ?? UUID(), 
                         date: record["date"] as? Date,
                         startTime: record["startTime"] as? Date,
                         idFormula: UUID(uuidString: record["idFormula"] as? String ?? "")
@@ -106,7 +113,9 @@ class EventService {
     }
 
     func add(name: String, date: Date? = nil, startTime: Date? = nil, idFormula: UUID? = nil) async {
+        let uuid = UUID().uuidString
         let record = CKRecord(recordType: "Event")
+        record["id"] = uuid
         record["name"] = name
         if let date = date { record["date"] = date }
         if let startTime = startTime { record["startTime"] = startTime }

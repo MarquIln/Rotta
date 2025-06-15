@@ -13,7 +13,7 @@ class Database {
     
     private let container = CKContainer(identifier: "iCloud.Rotta.CloudRotta")
     private var privateDatabase: CKDatabase {
-        return container.privateCloudDatabase
+        return container.publicCloudDatabase
     }
     
     private let formulaService = FormulaService()
@@ -24,6 +24,7 @@ class Database {
     private let componentService = ComponentService()
     private let ruleService = RuleService()
     private let glossaryService = GlossaryService()
+    private let trackService = TrackService()
     
     private init() {}
     
@@ -122,20 +123,19 @@ class Database {
     
     // MARK: - Track Functions
     func getAllTracks() async -> [TrackModel] {
-        // Talvez criar TrackService similar caso necessário
-        return []
+        return await trackService.getAll()
     }
     
     func getTrack(by id: UUID) async -> TrackModel? {
-        return nil
+        return await trackService.get(by: id)
     }
     
     func getAllTracksByFormula(by idFormula: UUID) async -> [TrackModel] {
-        return []
+        return await trackService.getByFormula(idFormula: idFormula)
     }
     
-    func addTrack(name: String? = nil, location: String? = nil, distance: Double = 0.0, idFormula: [UUID]? = nil) async {
-        // Implementação futura em TrackService
+    func addTrack(name: String, location: String, distance: Double = 0.0, idFormula: [UUID]) async {
+        return await trackService.add(name: name, location: location, distance: distance, idFormula: idFormula)
     }
     
     // MARK: - Component Functions
@@ -179,5 +179,27 @@ class Database {
     
     func addGlossaryTerm(name: String? = nil, details: String? = nil) async {
         await glossaryService.add(name: name, details: details)
+    }
+    
+    func deleteAllRecords(of recordTypes: [String]) async {
+        for type in recordTypes {
+            let predicate = NSPredicate(value: true)
+            let query = CKQuery(recordType: type, predicate: predicate)
+            do {
+                let resultados = try await privateDatabase.records(matching: query)
+                let recordIDs = resultados.matchResults.compactMap { try? $0.1.get().recordID }
+                if !recordIDs.isEmpty {
+                    _ = try await privateDatabase.modifyRecords(saving: [], deleting: recordIDs)
+                    print("Deleted \(recordIDs.count) records of type \(type)")
+                }
+            } catch {
+                print("Error deleting records for type \(type): \(error.localizedDescription)")
+            }
+        }
+    }
+
+    func resetCloudKit() async {
+        let types = ["Formula", "Driver", "Scuderia", "Event", "Car", "Component", "Rule", "Glossary", "Track"]
+        await deleteAllRecords(of: types)
     }
 }

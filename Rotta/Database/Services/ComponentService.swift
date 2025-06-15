@@ -1,10 +1,17 @@
+//
+//  CarService.swift
+//  Rotta
+//
+//  Created by Marcos on 13/06/25.
+//
+
 import Foundation
 import CloudKit
 
 class ComponentService {
     private let privateDatabase: CKDatabase
 
-    init(container: CKContainer = .default()) {
+    init(container: CKContainer = .init(identifier: "iCloud.Rotta.CloudRotta")) {
         privateDatabase = container.privateCloudDatabase
     }
 
@@ -13,12 +20,12 @@ class ComponentService {
         let predicate = NSPredicate(value: true)
         let query = CKQuery(recordType: "Component", predicate: predicate)
         do {
-            let resultados = try await privateDatabase.records(matching: query)
-            for resultado in resultados.matchResults {
+            let results = try await privateDatabase.records(matching: query)
+            for result in results.matchResults {
                 do {
-                    let record = try resultado.1.get()
+                    let record = try result.1.get()
                     let component = ComponentModel(
-                        id: UUID(uuidString: record.recordID.recordName) ?? UUID(),
+                        id: UUID(uuidString: record["id"] as? String ?? "") ?? UUID(),
                         name: record["name"] as? String,
                         details: record["details"] as? String,
                         image: record["image"] as? String
@@ -39,7 +46,7 @@ class ComponentService {
         do {
             let record = try await privateDatabase.record(for: recordID)
             return ComponentModel(
-                id: UUID(uuidString: record.recordID.recordName) ?? UUID(),
+                id: UUID(uuidString: record["id"] as? String ?? "") ?? UUID(),
                 name: record["name"] as? String,
                 details: record["details"] as? String,
                 image: record["image"] as? String
@@ -51,7 +58,9 @@ class ComponentService {
     }
 
     func add(name: String? = nil, details: String? = nil, image: String? = nil) async {
+        let uuid = UUID().uuidString
         let record = CKRecord(recordType: "Component")
+        record["id"] = uuid
         if let name = name { record["name"] = name }
         if let details = details { record["details"] = details }
         if let image = image { record["image"] = image }
