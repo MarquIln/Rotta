@@ -71,6 +71,11 @@ class TwoEventDayComponent: UIView {
         stack.spacing = 0
         stack.alignment = .firstBaseline
         stack.distribution = .fillProportionally
+//        stack.axis = .horizontal
+//        stack.spacing = 12
+//        stack.alignment = .top
+//        stack.distribution = .fill
+
         stack.layoutMargins = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
         stack.isLayoutMarginsRelativeArrangement = true
         stack.translatesAutoresizingMaskIntoConstraints = false
@@ -149,6 +154,8 @@ extension TwoEventDayComponent: ViewCodeProtocol {
             contentStack.bottomAnchor.constraint(equalTo: backgroundContainer.bottomAnchor, constant: -12),
 
             separator.heightAnchor.constraint(equalToConstant: 0.50),
+            
+            dayNumberStack.topAnchor.constraint(equalTo: firstEvent.topAnchor)
         ])
     }
 }

@@ -57,11 +57,12 @@ class EventDayComponent: UIView {
         stack.layoutMargins = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
         stack.isLayoutMarginsRelativeArrangement = true
         stack.layer.cornerRadius = 12
-        stack.alignment = .top
+        stack.axis = .horizontal
+        stack.alignment = .center
+        stack.spacing = 12
         
         return stack
     }()
-    
     
     //MARK: Properties
     var dayName: String? {
