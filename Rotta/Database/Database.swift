@@ -13,7 +13,7 @@ class Database {
     
     private let container = CKContainer(identifier: "iCloud.Rotta.CloudRotta")
     private var privateDatabase: CKDatabase {
-        return container.publicCloudDatabase
+        return container.privateCloudDatabase
     }
     
     private let formulaService = FormulaService()
