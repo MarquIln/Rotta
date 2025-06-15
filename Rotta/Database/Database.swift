@@ -5,124 +5,179 @@
 //  Created by Marcos on 12/06/25.
 //
 
-import CoreData
 import Foundation
+import CloudKit
 
 class Database {
     static var shared = Database()
-
-    var context: NSManagedObjectContext?
-
-    private let currentDatabaseVersion = "1.0.0"
-    private let databaseVersionKey = "DatabaseVersion"
-    private let firstLaunchKey = "HasLaunchedBefore"
+    
+    private let container = CKContainer(identifier: "iCloud.Rotta.CloudRotta")
+    private var privateDatabase: CKDatabase {
+        return container.privateCloudDatabase
+    }
+    
+    private let formulaService = FormulaService()
+    private let driverService = DriverService()
+    private let scuderiaService = ScuderiaService()
+    private let eventService = EventService()
+    private let carService = CarService()
+    private let componentService = ComponentService()
+    private let ruleService = RuleService()
+    private let glossaryService = GlossaryService()
     
     private init() {}
-
-    func initializeDatabase() {
-        checkAndSeedIfNeeded()
+    
+    // MARK: - Formula Functions
+    func getAllFormulas() async -> [FormulaModel] {
+        return await formulaService.getAll()
     }
-
-    func checkAndSeedIfNeeded() {
-        let userDefaults = UserDefaults.standard
-        let hasLaunchedBefore = userDefaults.bool(forKey: firstLaunchKey)
-        let storedVersion = userDefaults.string(forKey: databaseVersionKey)
-
-        let shouldSeed =
-            !hasLaunchedBefore || storedVersion != currentDatabaseVersion
-
-        if shouldSeed {
-            print(
-                "Database seed needed - First launch: \(!hasLaunchedBefore), Version changed: \(storedVersion != currentDatabaseVersion)"
-            )
-
-            if hasLaunchedBefore && storedVersion != currentDatabaseVersion {
-                clearExistingData()
-            }
-
-            seedDatabase()
-
-            userDefaults.set(true, forKey: firstLaunchKey)
-            userDefaults.set(currentDatabaseVersion, forKey: databaseVersionKey)
-            userDefaults.synchronize()
-            print("Database version updated to: \(currentDatabaseVersion)")
-
-        } else {
-            print(
-                "Database already seeded and up to date (version: \(currentDatabaseVersion))"
-            )
-        }
-
+    
+    func getFormula(by id: UUID) async -> FormulaModel? {
+        return await formulaService.get(by: id)
     }
-
-    private func clearExistingData() {
-        print("Clearing existing data due to database version change...")
-
-        guard let context = context else { return }
-
-        let entityNames = [
-            "Formula", "Scuderia", "Driver", "Track", "Glossary", "Rule", "Car",
-            "Component", "Event",
-        ]
-
-        for entityName in entityNames {
-            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(
-                entityName: entityName
-            )
-            let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-
-            do {
-                try context.execute(deleteRequest)
-                print("Cleared \(entityName) entities")
-            } catch {
-                print("Error clearing \(entityName): \(error)")
-            }
-        }
-
-        save()
+    
+    func addFormula(name: String, color: String) async {
+        await formulaService.add(name: name, color: color)
     }
-
-    func save() {
-        if let context, context.hasChanges {
-            do {
-                try context.save()
-            } catch {
-                print(error)
-            }
-        }
+    
+    // MARK: - Driver Functions
+    func getAllDrivers() async -> [DriverModel] {
+        return await driverService.getAll()
     }
-
-    func getFormulaId(for formulaName: String) -> UUID? {
-        let formulas = getAllFormulas()
-        return formulas.first { $0.name == formulaName }?.id
+    
+    func getDriver(by id: UUID) async -> DriverModel? {
+        return await driverService.get(by: id)
     }
-}
-
-extension Database {
-    func forceDatabaseReset() {
-        print("Forcing database reset...")
-        clearExistingData()
-        seedDatabase()
-
-        let userDefaults = UserDefaults.standard
-        userDefaults.set(currentDatabaseVersion, forKey: databaseVersionKey)
-        userDefaults.synchronize()
-
-        print("Database reset completed!")
+    
+    func getDriversByFormula(idFormula: UUID) async -> [DriverModel] {
+        return await driverService.getByFormula(idFormula: idFormula)
     }
-
-    func getCurrentStoredDatabaseVersion() -> String? {
-        return UserDefaults.standard.string(forKey: databaseVersionKey)
+    
+    func getDriversByScuderia(scuderiaId: UUID) async -> [DriverModel] {
+        return await driverService.getByScuderia(scuderiaId: scuderiaId)
     }
-
-    func getExpectedDatabaseVersion() -> String {
-        return currentDatabaseVersion
+    
+    func addDriver(name: String, country: String, number: Int16, points: Double, scuderia: UUID, idFormula: UUID) async {
+        await driverService.add(name: name, country: country, number: number, points: points, scuderia: scuderia, idFormula: idFormula)
     }
-
-    func isDatabaseUpToDate() -> Bool {
-        let storedVersion = UserDefaults.standard.string(
-            forKey: databaseVersionKey
-        )
-        return storedVersion == currentDatabaseVersion
+    
+    // MARK: - Scuderia Functions
+    func getAllScuderias() async -> [ScuderiaModel] {
+        return await scuderiaService.getAll()
+    }
+    
+    func getScuderia(by id: UUID) async -> ScuderiaModel? {
+        return await scuderiaService.get(by: id)
+    }
+    
+    func getScuderiasByFormula(idFormula: UUID) async -> [ScuderiaModel] {
+        return await scuderiaService.getByFormula(idFormula: idFormula)
+    }
+    
+    func addScuderia(name: String, logo: String, points: Double, idFormula: UUID) async {
+        await scuderiaService.add(name: name, logo: logo, points: points, idFormula: idFormula)
+    }
+    
+    // MARK: - Event Functions
+    func getAllEvents() async -> [EventModel] {
+        return await eventService.getAll()
+    }
+    
+    func getEvent(by id: UUID) async -> EventModel? {
+        return await eventService.get(by: id)
+    }
+    
+    func getAllEventsByFormula(by idFormula: UUID) async -> [EventModel] {
+        return await eventService.getByFormula(idFormula: idFormula)
+    }
+    
+    func getEventsOnDate(_ date: Date) async -> [EventModel] {
+        return await eventService.getOnDate(date)
+    }
+    
+    func addEvent(name: String, date: Date? = nil, startTime: Date? = nil, idFormula: UUID? = nil) async {
+        await eventService.add(name: name, date: date, startTime: startTime, idFormula: idFormula)
+    }
+    
+    // MARK: - Car Functions
+    func getAllCars() async -> [CarModel] {
+        return await carService.getAll()
+    }
+    
+    func getCar(by id: UUID) async -> CarModel? {
+        return await carService.get(by: id)
+    }
+    
+    func getAllCarsByFormula(by idFormula: UUID) async -> [CarModel] {
+        return await carService.getByFormula(idFormula: idFormula)
+    }
+    
+    func getCarsByComponent(componentId: UUID) async -> [CarModel] {
+        return await carService.getByComponent(componentId: componentId)
+    }
+    
+    func addCar(idComponents: [UUID], idFormula: UUID, image: String? = nil) async {
+        await carService.add(idComponents: idComponents, idFormula: idFormula, image: image)
+    }
+    
+    // MARK: - Track Functions
+    func getAllTracks() async -> [TrackModel] {
+        // Talvez criar TrackService similar caso necessário
+        return []
+    }
+    
+    func getTrack(by id: UUID) async -> TrackModel? {
+        return nil
+    }
+    
+    func getAllTracksByFormula(by idFormula: UUID) async -> [TrackModel] {
+        return []
+    }
+    
+    func addTrack(name: String? = nil, location: String? = nil, distance: Double = 0.0, idFormula: [UUID]? = nil) async {
+        // Implementação futura em TrackService
+    }
+    
+    // MARK: - Component Functions
+    func getAllComponents() async -> [ComponentModel] {
+        return await componentService.getAll()
+    }
+    
+    func getComponent(by id: UUID) async -> ComponentModel? {
+        return await componentService.get(by: id)
+    }
+    
+    func addComponent(name: String? = nil, details: String? = nil, image: String? = nil) async {
+        await componentService.add(name: name, details: details, image: image)
+    }
+    
+    // MARK: - Rule Functions
+    func getAllRules() async -> [RuleModel] {
+        return await ruleService.getAll()
+    }
+    
+    func getRule(by id: UUID) async -> RuleModel? {
+        return await ruleService.get(by: id)
+    }
+    
+    func getAllRulesByFormula(by idFormula: UUID) async -> [RuleModel] {
+        return await ruleService.getByFormula(idFormula: idFormula)
+    }
+    
+    func addRule(name: String? = nil, details: String? = nil, idFormula: UUID? = nil) async {
+        await ruleService.add(name: name, details: details, idFormula: idFormula)
+    }
+    
+    // MARK: - Glossary Functions
+    func getAllGlossaryTerms() async -> [GlossaryModel] {
+        return await glossaryService.getAll()
+    }
+    
+    func getGlossaryTerm(by id: UUID) async -> GlossaryModel? {
+        return await glossaryService.get(by: id)
+    }
+    
+    func addGlossaryTerm(name: String? = nil, details: String? = nil) async {
+        await glossaryService.add(name: name, details: details)
     }
 }

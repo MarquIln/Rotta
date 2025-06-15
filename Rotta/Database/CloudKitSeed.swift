@@ -1,0 +1,484 @@
+//
+//  CloudKitSeed.swift
+//  Rotta
+//
+//  Created by Marcos on 14/06/25.
+//
+
+import Foundation
+import CloudKit
+
+class CloudKitSeed {
+    var database: Database
+    
+    init(database: Database) {
+        self.database = database
+    }
+    
+    func seedDatabase() async {
+        let existingFormulas = await database.getAllFormulas()
+        if !existingFormulas.isEmpty {
+            print("Data already exists in CloudKit. Skipping seed.")
+            return
+        }
+         
+        print("Starting CloudKit database seed...")
+        
+        await seedFormulas()
+        try? await Task.sleep(nanoseconds: 1_000_000_000)
+        
+        await seedAllScuderias()
+        try? await Task.sleep(nanoseconds: 1_000_000_000)
+        
+        await seedAllDrivers()
+        try? await Task.sleep(nanoseconds: 1_000_000_000)
+        
+        await seedTracks()
+        try? await Task.sleep(nanoseconds: 1_000_000_000)
+        
+        await seedGlossaryTerms()
+        try? await Task.sleep(nanoseconds: 1_000_000_000)
+                
+        await seedAllRules()
+         
+        try? await Task.sleep(nanoseconds: 1_000_000_000)
+        
+        await seedEvents()
+         
+        // faltando components e cars
+         
+        print("CloudKit database seed completed!")
+    }
+    
+    private func seedFormulas() async {
+        print("Seeding formulas...")
+         
+        let formulas = [
+            ("Formula 1", "#FF0000"),
+            ("Formula 2", "#0000FF"),
+            ("Formula 3", "#00FF00"),
+            ("F1 Academy", "#FF00FF")
+        ]
+        
+        for formula in formulas {
+            await database.addFormula(name: formula.0, color: formula.1)
+        }
+    }
+    
+    private func seedAllScuderias() async {
+        print("Seeding scuderias...")
+         
+        let formulas = await database.getAllFormulas()
+        guard let f1AcademyId = formulas.first(where: { $0.name == "F1 Academy" })?.id,
+              let f2Id = formulas.first(where: { $0.name == "Formula 2" })?.id,
+              let f3Id = formulas.first(where: { $0.name == "Formula 3" })?.id else {
+            print("Formulas not found")
+            return
+        }
+        
+        let f1AcademyTeams = [
+            ("Campos Racing", "campos_logo", 108.0),
+            ("MP Motorsport", "mp_logo", 94.0),
+            ("PREMA Racing", "prema_logo", 88.0),
+            ("Rodin Motorsport", "rodin_logo", 34.0),
+            ("ART Grand Prix", "art_logo", 5.0),
+            ("Hitech TGR", "hitech_logo", 1.0)
+        ]
+        
+        for team in f1AcademyTeams {
+            await database.addScuderia(name: team.0, logo: team.1, points: team.2, idFormula: f1AcademyId)
+        }
+        
+        let f2Teams = [
+            ("Campos Racing", "campos_logo", 128.0),
+            ("Hitech TGR", "hitech_logo", 102.0),
+            ("MP Motorsport", "mp_logo", 96.0),
+            ("DAMS Lucas Oil", "dams_logo", 94.0),
+            ("Rodin Motorsport", "rodin_logo", 89.0),
+            ("Invicta Racing", "invicta_logo", 78.0),
+            ("PREMA Racing", "prema_logo", 57.0),
+            ("ART Grand Prix", "art_logo", 46.0),
+            ("AIX Racing", "aix_logo", 11.0),
+            ("Van Amersfoort Racing", "var_logo", 10.0),
+            ("TRIDENT", "trident_logo", 1.0)
+        ]
+        
+        for team in f2Teams {
+            await database.addScuderia(name: team.0, logo: team.1, points: team.2, idFormula: f2Id)
+        }
+        
+        let f3Teams = [
+            ("TRIDENT", "trident_logo", 176.0),
+            ("Campos Racing", "campos_logo", 130.0),
+            ("MP Motorsport", "mp_logo", 126.0),
+            ("Van Amersfoort Racing", "var_logo", 106.0),
+            ("Rodin Motorsport", "rodin_logo", 90.0),
+            ("ART Grand Prix", "art_logo", 90.0),
+            ("Hitech TGR", "hitech_logo", 37.0),
+            ("AIX Racing", "aix_logo", 27.0),
+            ("DAMS Lucas Oil", "dams_logo", 10.0),
+            ("PREMA Racing", "prema_logo", 8.0)
+        ]
+        
+        for team in f3Teams {
+            await database.addScuderia(name: team.0, logo: team.1, points: team.2, idFormula: f3Id)
+        }
+    }
+    
+    private func seedAllDrivers() async {
+        print("Seeding drivers...")
+         
+        let formulas = await database.getAllFormulas()
+        guard let f1AcademyId = formulas.first(where: { $0.name == "F1 Academy" })?.id,
+              let f2Id = formulas.first(where: { $0.name == "Formula 2" })?.id,
+              let f3Id = formulas.first(where: { $0.name == "Formula 3" })?.id else {
+            print("Formulas not found")
+            return
+        }
+        
+        let allScuderias = await database.getAllScuderias()
+        
+        let f1AcademyDrivers = [
+            ("Maya Weug", "Spain", 47, "Campos Racing", 64.0),
+            ("Lia Pin", "France", 1, "MP Motorsport", 63.0),
+            ("Sophia Flörsch", "Germany", 2, "PREMA Racing", 55.0),
+            ("Palou Toni", "Spain", 3, "Rodin Motorsport", 44.0),
+            ("Larson Kyle", "United States", 4, "MP Motorsport", 28.0),
+            ("Llorca Marc", "Spain", 5, "Campos Racing", 23.0),
+            ("Hauger Dennis", "Norway", 6, "Hitech TGR", 13.0),
+            ("Gada Reema", "United Arab Emirates", 7, "PREMA Racing", 12.0),
+            ("Felipe Drugovich", "Brazil", 8, "ART Grand Prix", 10.0),
+            ("Ferris Jack", "United Kingdom", 9, "Rodin Motorsport", 9.0),
+            ("Aurelia Nobels", "Belgium", 10, "ART Grand Prix", 3.0),
+            ("Lia Block", "United States", 11, "Rodin Motorsport", 2.0),
+            ("Caterina Ciacci", "Italy", 12, "Hitech TGR", 2.0),
+            ("Ana Segura", "Mexico", 13, "Campos Racing", 1.0),
+            ("Chloe Chong", "United States", 14, "Hitech TGR", 1.0)
+        ]
+        
+        for driver in f1AcademyDrivers {
+            if let scuderia = allScuderias.first(where: { $0.name == driver.3 && $0.idFormula == f1AcademyId }) {
+                await database.addDriver(
+                    name: driver.0,
+                    country: driver.1,
+                    number: Int16(driver.2),
+                    points: driver.4,
+                    scuderia: scuderia.id,
+                    idFormula: f1AcademyId
+                )
+            }
+        }
+        
+        let f2Drivers = [
+            ("Alex Dunne", "Ireland", 1, "MP Motorsport", 87.0),
+            ("Richard Verschoor", "Netherlands", 2, "MP Motorsport", 84.0),
+            ("Arvid Lindblad", "United Kingdom", 3, "DAMS Lucas Oil", 79.0),
+            ("Jak Crawford", "United States", 4, "DAMS Lucas Oil", 73.0),
+            ("Luke Browning", "United Kingdom", 5, "Hitech TGR", 73.0),
+            ("Leonardo Fornaroli", "Argentina", 6, "Invicta Racing", 66.0),
+            ("Josep Maria Marti", "Spain", 7, "Campos Racing", 49.0),
+            ("Victor Martins", "France", 8, "ART Grand Prix", 41.0),
+            ("Sebastian Montoya", "Colombia", 9, "Campos Racing", 36.0),
+            ("Dino Beganovic", "Sweden", 10, "Rodin Motorsport", 29.0),
+            ("Kush Maini", "India", 11, "Invicta Racing", 21.0),
+            ("Gabriele Mini", "Italy", 12, "PREMA Racing", 21.0),
+            ("Enzo Gomes", "Brazil", 13, "Hitech TGR", 12.0),
+            ("Roman Stanek", "Czech Republic", 14, "Invicta Racing", 12.0),
+            ("Joshua Durksen", "Paraguay", 15, "AIX Racing", 11.0),
+            ("Rafael Villagomez", "Mexico", 16, "Van Amersfoort Racing", 10.0),
+            ("Miyata Shingo", "Japan", 17, "ART Grand Prix", 5.0),
+            ("Amaury Cordeel", "Belgium", 18, "TRIDENT", 2.0),
+            ("Sami Meguetounif", "France", 19, "TRIDENT", 1.0),
+            ("Taylor Barnard", "United Kingdom", 20, "Rodin Motorsport", 0.0),
+            ("Paul Aron", "Estonia", 21, "PREMA Racing", 0.0),
+            ("Isack Hadjar", "France", 22, "Van Amersfoort Racing", 0.0)
+        ]
+        
+        for driver in f2Drivers {
+            if let scuderia = allScuderias.first(where: { $0.name == driver.3 && $0.idFormula == f2Id }) {
+                await database.addDriver(
+                    name: driver.0,
+                    country: driver.1,
+                    number: Int16(driver.2),
+                    points: driver.4,
+                    scuderia: scuderia.id,
+                    idFormula: f2Id
+                )
+            }
+        }
+        
+        let f3Drivers = [
+            ("Rafael Camara", "Brazil", 1, "Campos Racing", 105.0),
+            ("Nikola Tsolov", "Bulgaria", 2, "ART Grand Prix", 79.0),
+            ("Tim Tramnitz", "Germany", 3, "TRIDENT", 70.0),
+            ("Charlie Wurz", "Austria", 4, "Hitech TGR", 56.0),
+            ("Tuukka Taponen", "Finland", 5, "MP Motorsport", 51.0),
+            ("Kacper Sztuka", "Poland", 6, "MP Motorsport", 45.0),
+            ("Noel Ramzi", "Singapore", 7, "Rodin Motorsport", 45.0),
+            ("Martinius Stenshorne", "Norway", 8, "Hitech TGR", 43.0),
+            ("Callum Voisin", "United Kingdom", 9, "Rodin Motorsport", 41.0),
+            ("Gabriel Biller", "Denmark", 10, "Campos Racing", 38.0),
+            ("Laurens van Hoepen", "Netherlands", 11, "ART Grand Prix", 37.0),
+            ("Mari Boya", "Spain", 12, "TRIDENT", 36.0),
+            ("Sami Meguetounif", "France", 13, "Van Amersfoort Racing", 36.0),
+            ("Domenico Lovera", "Italy", 14, "DAMS Lucas Oil", 18.0),
+            ("Nikita Bedrin", "Italy", 15, "AIX Racing", 17.0),
+            ("James Wharton", "Australia", 16, "PREMA Racing", 15.0),
+            ("Tasanapol Inthraphuvasak", "Thailand", 17, "Rodin Motorsport", 15.0),
+            ("Alex Dunne", "Ireland", 18, "MP Motorsport", 11.0),
+            ("Max Esterson", "United States", 19, "Hitech TGR", 11.0),
+            ("Ugo Ugochukwu", "United States", 20, "PREMA Racing", 10.0),
+            ("Matías Zagazeta", "Peru", 21, "DAMS Lucas Oil", 6.0),
+            ("Arvid Lindblad", "United Kingdom", 22, "PREMA Racing", 4.0),
+            ("Leonardo Fornaroli", "Argentina", 23, "TRIDENT", 4.0),
+            ("Luke Browning", "United Kingdom", 24, "Campos Racing", 3.0),
+            ("James Wharton", "Australia", 25, "PREMA Racing", 0.0),
+            ("William Alatalo", "Finland", 26, "Van Amersfoort Racing", 0.0),
+            ("Brando Badoer", "Italy", 27, "PREMA Racing", 0.0)
+        ]
+        
+        for driver in f3Drivers {
+            if let scuderia = allScuderias.first(where: { $0.name == driver.3 && $0.idFormula == f3Id }) {
+                await database.addDriver(
+                    name: driver.0,
+                    country: driver.1,
+                    number: Int16(driver.2),
+                    points: driver.4,
+                    scuderia: scuderia.id,
+                    idFormula: f3Id
+                )
+            }
+        }
+    }
+    
+    private func seedTracks() async {
+        print("Seeding tracks...")
+         
+        let tracks = [
+            ("Bahrain International Circuit", "Bahrain", 5.412, 2004),
+            ("Circuit de Monaco", "Monaco", 3.337, 1950),
+            ("Circuit de Barcelona-Catalunya", "Spain", 4.675, 1991),
+            ("Hungaroring", "Hungary", 4.381, 1986),
+            ("Circuit de Spa-Francorchamps", "Belgium", 7.004, 1925),
+            ("Autodromo Nazionale Monza", "Italy", 5.793, 1922),
+            ("Baku City Circuit", "Azerbaijan", 6.003, 2016),
+            ("Silverstone Circuit", "United Kingdom", 5.891, 1948),
+            ("Red Bull Ring", "Austria", 4.318, 1969),
+            ("Yas Marina Circuit", "United Arab Emirates", 5.281, 2009),
+            ("Circuit Zandvoort", "Netherlands", 4.259, 1948),
+            
+            ("Circuit Paul Ricard", "France", 5.842, 1970),
+            ("Imola Circuit", "Italy", 4.909, 1953),
+            ("Valencia Circuit", "Spain", 4.005, 2008),
+            ("Jerez Circuit", "Spain", 4.428, 1986),
+            ("Mugello Circuit", "Italy", 5.245, 1974)
+        ]
+        
+        for track in tracks {
+            await database.addTrack(
+                 name: track.0,
+                 location: track.1,
+                 distance: track.2,
+                 idFormula: nil
+             )
+        }
+     }
+    
+    private func seedGlossaryTerms() async {
+        print("Seeding glossary terms...")
+        
+        let glossaryTerms = [
+            ("DRS", "Drag Reduction System", "A movable flap on the rear wing that reduces drag and increases straight-line speed."),
+            ("ERS", "Energy Recovery System", "A system that recovers energy from braking and exhaust heat to provide additional power."),
+            ("Pole Position", "Starting Position", "The first position on the starting grid, awarded to the fastest qualifier."),
+            ("Fastest Lap", "Race Record", "The quickest lap time recorded during a race, often rewarded with an extra championship point."),
+            ("DNF", "Did Not Finish", "When a driver fails to complete the race due to mechanical failure, accident, or other issues."),
+            ("DNS", "Did Not Start", "When a driver is unable to start the race."),
+            ("DSQ", "Disqualified", "When a driver is excluded from race results due to rule violations."),
+            ("Safety Car", "Pace Car", "A car deployed to slow down the field during dangerous conditions on track."),
+            ("Virtual Safety Car", "VSC", "An electronic system that limits drivers' speeds during caution periods."),
+            ("Pit Stop", "Service Stop", "A planned stop in the pit lane for tire changes, fuel, or repairs."),
+            ("Undercut", "Strategy Move", "Gaining track position by pitting earlier than a rival and using fresh tires."),
+            ("Overcut", "Strategy Move", "Staying out longer than rivals to gain track position through tire strategy."),
+            ("Slipstream", "Drafting", "Following closely behind another car to reduce air resistance and increase speed."),
+            ("Dirty Air", "Turbulence", "Disturbed airflow behind a car that reduces downforce for following vehicles."),
+            ("Apex", "Racing Line", "The innermost point of a corner where drivers aim to position their car."),
+            ("Chicane", "Track Feature", "A sequence of tight turns designed to slow cars down."),
+            ("Kerb", "Track Boundary", "Raised or painted strips marking the edge of the racing surface."),
+            ("Marshals", "Track Officials", "Volunteers who ensure safety and enforce rules during racing events."),
+            ("Parc Fermé", "Restricted Area", "Rules that limit car modifications between qualifying and race."),
+            ("Formation Lap", "Warm-up Lap", "A lap completed before the race start to warm up tires and check conditions.")
+        ]
+        
+        for term in glossaryTerms {
+            await database.addGlossaryTerm(
+                 name: term.0,
+                 details: term.2
+             )
+         }
+     }
+    
+    private func seedAllRules() async {
+        print("Seeding rules...")
+        
+        let formulas = await database.getAllFormulas()
+        guard let f1AcademyId = formulas.first(where: { $0.name == "F1 Academy" })?.id,
+              let f2Id = formulas.first(where: { $0.name == "Formula 2" })?.id,
+              let f3Id = formulas.first(where: { $0.name == "Formula 3" })?.id else {
+            print("Formulas not found")
+            return
+        }
+        
+        let f1AcademyRules = [
+            ("Race Weekend Format", "Practice, Qualifying, and two Races per weekend", "Each weekend consists of one practice session, one qualifying session, and two races."),
+            ("Points System", "25-18-15-12-10-8-6-4-2-1", "Points awarded to the top 10 finishers in each race, with 25 points for the winner."),
+            ("Car Specifications", "Tatuus T-318", "All drivers use identical Tatuus T-318 Formula 4 cars with Autotecnica engines."),
+            ("Driver Eligibility", "Female drivers only", "Championship exclusively for female drivers aged 16 and above."),
+            ("Tire Regulations", "Single tire compound", "All drivers must use the same tire compound provided by Pirelli."),
+            ("Fuel Regulations", "Standard fuel load", "All cars carry standardized fuel loads with no refueling during races."),
+            ("Safety Equipment", "Mandatory safety gear", "Drivers must wear approved helmets, HANS devices, and fire-resistant suits."),
+            ("Race Duration", "30 minutes + 1 lap", "Races run for 30 minutes plus one additional lap after time expires.")
+        ]
+        
+        for rule in f1AcademyRules {
+            await database.addRule(
+                 name: rule.0,
+                 details: rule.2,
+                 idFormula: f1AcademyId
+             )
+        }
+        
+        let f2Rules = [
+            ("Race Weekend Format", "Practice, Qualifying, Sprint, and Feature Race", "Each weekend includes practice, qualifying, one sprint race, and one feature race."),
+            ("Points System", "Feature: 25-18-15-12-10-8-6-4-2-1, Sprint: 15-12-10-8-6-4-2-1", "Different points systems for feature races (25 for winner) and sprint races (15 for winner)."),
+            ("Car Specifications", "Dallara F2 2018", "All teams use identical Dallara F2 2018 chassis with Mecachrome V6 engines."),
+            ("DRS Usage", "Two DRS zones per track", "Drivers can use DRS in designated zones when within 1 second of the car ahead."),
+            ("Tire Regulations", "Three tire compounds", "Pirelli provides soft, medium, and hard compounds. Drivers must use two different compounds in feature races."),
+            ("Fuel Regulations", "Refueling prohibited", "No refueling allowed during races. Cars start with enough fuel for the entire race."),
+            ("Reverse Grid", "Sprint race starting order", "Sprint race grid is determined by reverse order of top 8 from qualifying."),
+            ("Feature Race Duration", "45 minutes + 1 lap", "Feature races run for approximately 45 minutes plus one additional lap."),
+            ("Sprint Race Duration", "25 minutes + 1 lap", "Sprint races run for approximately 25 minutes plus one additional lap."),
+            ("Mandatory Pit Stop", "Feature race only", "Drivers must make at least one pit stop during feature races.")
+        ]
+        
+        for rule in f2Rules {
+            await database.addRule(
+                 name: rule.0,
+                 details: rule.2,
+                 idFormula: f2Id
+             )
+        }
+        
+        let f3Rules = [
+            ("Race Weekend Format", "Practice, Qualifying, and two Races", "Each weekend consists of one practice session, one qualifying session, and two races."),
+            ("Points System", "25-18-15-12-10-8-6-4-2-1", "Points awarded to the top 10 finishers in each race, with 25 points for the winner."),
+            ("Car Specifications", "Dallara F3 2019", "All teams use identical Dallara F3 2019 chassis with Mecachrome 3.4L V6 engines."),
+            ("DRS Usage", "One DRS zone per track", "Drivers can use DRS in designated zones when within 1 second of the car ahead."),
+            ("Tire Regulations", "Single tire compound", "Pirelli provides one tire compound per weekend. All drivers must use the same compound."),
+            ("Fuel Regulations", "Refueling prohibited", "No refueling allowed during races. Cars start with enough fuel for the entire race."),
+            ("Reverse Grid", "Race 2 starting order", "Race 2 grid is determined by reverse order of top 8 from Race 1 results."),
+            ("Race Duration", "40 minutes + 1 lap", "Both races run for approximately 40 minutes plus one additional lap."),
+            ("Age Restrictions", "Minimum age 16", "Drivers must be at least 16 years old to compete in the championship."),
+            ("Engine Allocation", "Limited engine usage", "Teams are allocated a specific number of engines per season to control costs.")
+        ]
+        
+        for rule in f3Rules {
+            await database.addRule(
+                 name: rule.0,
+                 details: rule.2,
+                 idFormula: f3Id
+             )
+        }
+    }
+    
+    private func seedEvents() async {
+        print("Seeding events...")
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        let formulas = await database.getAllFormulas()
+         
+         guard let f1AcademyId = formulas.first(where: { $0.name == "F1 Academy" })?.id,
+               let f2Id = formulas.first(where: { $0.name == "Formula 2" })?.id,
+               let f3Id = formulas.first(where: { $0.name == "Formula 3" })?.id else {
+             print("Formulas not found")
+             return
+         }
+         
+         let f1AcademyEvents = [
+             ("Bahrain Grand Prix", "Bahrain International Circuit", "2024-03-02", "2024-03-03"),
+             ("Saudi Arabian Grand Prix", "Jeddah Corniche Circuit", "2024-03-09", "2024-03-10"),
+             ("Miami Grand Prix", "Miami International Autodrome", "2024-05-04", "2024-05-05"),
+             ("Monaco Grand Prix", "Circuit de Monaco", "2024-05-25", "2024-05-26"),
+             ("Spanish Grand Prix", "Circuit de Barcelona-Catalunya", "2024-06-22", "2024-06-23"),
+             ("Hungarian Grand Prix", "Hungaroring", "2024-07-20", "2024-07-21"),
+             ("Belgian Grand Prix", "Circuit de Spa-Francorchamps", "2024-07-27", "2024-07-28"),
+             ("Netherlands Grand Prix", "Circuit Zandvoort", "2024-08-24", "2024-08-25"),
+             ("Qatar Grand Prix", "Lusail International Circuit", "2024-11-30", "2024-12-01")
+         ]
+         
+         let f2Events = [
+             ("Bahrain Grand Prix", "Bahrain International Circuit", "2024-03-01", "2024-03-03"),
+             ("Saudi Arabian Grand Prix", "Jeddah Corniche Circuit", "2024-03-08", "2024-03-10"),
+             ("Australian Grand Prix", "Albert Park Circuit", "2024-03-22", "2024-03-24"),
+             ("Imola Grand Prix", "Imola Circuit", "2024-05-17", "2024-05-19"),
+             ("Monaco Grand Prix", "Circuit de Monaco", "2024-05-24", "2024-05-26"),
+             ("Spanish Grand Prix", "Circuit de Barcelona-Catalunya", "2024-06-21", "2024-06-23"),
+             ("Austrian Grand Prix", "Red Bull Ring", "2024-06-28", "2024-06-30"),
+             ("British Grand Prix", "Silverstone Circuit", "2024-07-05", "2024-07-07"),
+             ("Hungarian Grand Prix", "Hungaroring", "2024-07-19", "2024-07-21"),
+             ("Belgian Grand Prix", "Circuit de Spa-Francorchamps", "2024-07-26", "2024-07-28"),
+             ("Netherlands Grand Prix", "Circuit Zandvoort", "2024-08-23", "2024-08-25"),
+             ("Italian Grand Prix", "Autodromo Nazionale Monza", "2024-08-30", "2024-09-01"),
+             ("Azerbaijan Grand Prix", "Baku City Circuit", "2024-09-13", "2024-09-15"),
+             ("Abu Dhabi Grand Prix", "Yas Marina Circuit", "2024-12-06", "2024-12-08")
+         ]
+         
+         let f3Events = [
+             ("Bahrain Grand Prix", "Bahrain International Circuit", "2024-03-01", "2024-03-03"),
+             ("Australian Grand Prix", "Albert Park Circuit", "2024-03-22", "2024-03-24"),
+             ("Imola Grand Prix", "Imola Circuit", "2024-05-17", "2024-05-19"),
+             ("Monaco Grand Prix", "Circuit de Monaco", "2024-05-24", "2024-05-26"),
+             ("Spanish Grand Prix", "Circuit de Barcelona-Catalunya", "2024-06-21", "2024-06-23"),
+             ("Austrian Grand Prix", "Red Bull Ring", "2024-06-28", "2024-06-30"),
+             ("British Grand Prix", "Silverstone Circuit", "2024-07-05", "2024-07-07"),
+             ("Hungarian Grand Prix", "Hungaroring", "2024-07-19", "2024-07-21"),
+             ("Belgian Grand Prix", "Circuit de Spa-Francorchamps", "2024-07-26", "2024-07-28"),
+             ("Netherlands Grand Prix", "Circuit Zandvoort", "2024-08-23", "2024-08-25")
+         ]
+         
+         for event in f1AcademyEvents {
+             let start = dateFormatter.date(from: event.2)
+             let end = dateFormatter.date(from: event.3)
+             await database.addEvent(
+                 name: event.0,
+                 date: start,
+                 startTime: end,
+                 idFormula: f1AcademyId
+             )
+         }
+         
+         for event in f2Events {
+             let start = dateFormatter.date(from: event.2)
+             let end = dateFormatter.date(from: event.3)
+             await database.addEvent(
+                 name: event.0,
+                 date: start,
+                 startTime: end,
+                 idFormula: f2Id
+             )
+         }
+          
+          for event in f3Events {
+             let start = dateFormatter.date(from: event.2)
+             let end = dateFormatter.date(from: event.3)
+             await database.addEvent(
+                 name: event.0,
+                 date: start,
+                 startTime: end,
+                 idFormula: f3Id
+             )
+         }
+     }
+}

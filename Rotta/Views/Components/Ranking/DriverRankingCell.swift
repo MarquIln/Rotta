@@ -11,7 +11,7 @@ import CloudKit
 class DriverRankingCell: UITableViewCell {
     static let reuseIdentifier = "DriverRankingCell"
     
-    let cloudKitModel = CloudKitModel.shared
+    let cloudKitModel = Database.shared
     
     lazy var positionLabel: UILabel = {
         let label = UILabel()
@@ -94,14 +94,16 @@ class DriverRankingCell: UITableViewCell {
     func config(with driver: CKRecord, position: Int, cellIndex: Int) {
         positionLabel.text = "\(position)"
         
-        let fullName = driver.value(forKey: "fullName") as? String ?? ""
-        nameLabel.text = formatDriverName(fullName)
+        if let driverName = driver["name"] as? String {
+            nameLabel.text = formatDriverName(driverName)
+        }
         
-        let points = driver.value(forKey: "points") as? Int ?? 0
-        pointsLabel.text = "\(points)"
+        if let points = driver["points"] as? Int {
+            pointsLabel.text = "\(points)"
+        }
         
-        if let scuderia = driver.value(forKey: "scuderia") as? String {
-            scuderiaLabel.text = scuderia
+        if let scuderiaName = driver["scuderia"] as? String {
+            scuderiaLabel.text = scuderiaName
         }
         
         driverImageView.image = UIImage(systemName: "person.circle.fill")

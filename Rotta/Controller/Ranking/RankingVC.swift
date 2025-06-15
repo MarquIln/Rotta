@@ -8,7 +8,8 @@
 import UIKit
 
 class RankingVC: UIViewController {
-    var drivers: [Driver] = []
+    var drivers: [DriverModel] = []
+    let cloudKitModel = Database.shared
     let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
     var lastScrollPosition: CGFloat = 0
     let scrollDistance: CGFloat = 30.0
@@ -33,14 +34,19 @@ class RankingVC: UIViewController {
         loadDrivers()
     }
 
+    
     private func loadDrivers() {
-        if let f2Id = Database.shared.getFormulaId(for: "Formula 2") {
-            drivers = Database.shared.getDriversByFormula(idFormula: f2Id)
-        } else {
-            drivers = []
+        Task {
+            _ = await cloudKitModel.getAllDrivers()
+            if let f2Id = (await cloudKitModel.getAllFormulas()).first?.id {
+                drivers = await cloudKitModel.getDriversByFormula(idFormula: f2Id)
+            }
+
+            drivers.sort { $0.points > $1.points }
+            await MainActor.run {
+                self.rankingTableView.tableView.reloadData()
+            }
         }
-        drivers.sort { $0.points > $1.points }
-        rankingTableView.tableView.reloadData()
     }
 }
 

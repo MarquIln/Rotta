@@ -6,14 +6,15 @@
 //
 
 import UIKit
+import CloudKit
 
 extension RankingVC: TopThreeTableViewDelegate {
     func numberOfDrivers() -> Int {
         return drivers.count
     }
 
-    func driver(at index: Int) -> Driver {
-        return drivers[index]
+    func driver(at index: Int) -> CKRecord {
+        return CKRecord(recordType: "Driver")
     }
 
     func didScrollWithPosition(_ position: CGFloat, difference: CGFloat) {
