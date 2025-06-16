@@ -18,6 +18,7 @@ extension Track {
 
     @NSManaged public var distance: Double
     @NSManaged public var id: UUID?
+    @NSManaged public var idFormula: [UUID]?
     @NSManaged public var location: String?
     @NSManaged public var name: String?
 

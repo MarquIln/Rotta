@@ -31,7 +31,6 @@ class CalendarViewController: UIViewController {
         return calendar
     }()
     
-    
     private lazy var event: OpenCalendarComponent = {
         var event = OpenCalendarComponent()
         event.translatesAutoresizingMaskIntoConstraints = false

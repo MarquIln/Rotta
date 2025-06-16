@@ -20,11 +20,12 @@ DerivedData/
 *.xcworkspace
 *.xcuserstate
 *.xcscmblueprint
-
 # Configurações específicas de usuário
 xcuserdata/
 *.xcodeproj/*.xcuserdatad
-*.xcodeproj/project.xcworkspace/
+*.xcodeproj/*.xcuserdata/
+*.xcodeproj/*.xcworkspace/
+*.xcodeproj/*.xcworkspace/xcuserdata/
 
 # Arquivos temporários do Xcode
 *.moved-aside

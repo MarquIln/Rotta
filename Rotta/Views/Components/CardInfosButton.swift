@@ -9,17 +9,6 @@ class CardInfosButton: UIButton {
     var title: String
     var subtitle: String
     
-    init(title: String, subtitle: String) {
-        self.title = title
-        self.subtitle = subtitle
-        super.init(frame: .zero)
-        self.backgroundColor = .cardInfosBackground
-        cardTitleLabel.text = title
-        cardSubtitleLabel.text = subtitle
-        setup()
-        addGradientCardInfos()
-    }
-    
     lazy var cardTitleLabel: UILabel = {
         let label = UILabel()
         label.text = title
@@ -52,7 +41,7 @@ class CardInfosButton: UIButton {
     lazy var imageBackground: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
-        imageView.image = .categoryInfos
+//        imageView.image = .categoryInfos
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -63,6 +52,18 @@ class CardInfosButton: UIButton {
         gradient.isUserInteractionEnabled = false
         return gradient
     }()
+    
+    init(title: String, subtitle: String, image: UIImage) {
+        self.title = title
+        self.subtitle = subtitle
+        super.init(frame: .zero)
+        self.backgroundColor = .cardInfosBackground
+        imageBackground.image = image
+        cardTitleLabel.text = title
+        cardSubtitleLabel.text = subtitle
+        setup()
+        addGradientCardInfos()
+    }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

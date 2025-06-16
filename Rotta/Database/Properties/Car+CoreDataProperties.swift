@@ -18,7 +18,7 @@ extension Car {
 
     @NSManaged public var id: UUID?
     @NSManaged public var idComponents: [UUID]?
-    @NSManaged public var idFormula: [UUID]?
+    @NSManaged public var idFormula: UUID?
     @NSManaged public var image: String?
 
 }
