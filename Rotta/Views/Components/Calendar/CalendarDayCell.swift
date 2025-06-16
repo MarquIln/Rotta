@@ -12,7 +12,7 @@ class CalendarDayCell: UICollectionViewCell {
         let dayLabel = UILabel()
         dayLabel.textAlignment = .center
         dayLabel.font = .systemFont(ofSize: 16)
-        dayLabel.textColor = .labelGray
+        dayLabel.textColor = .rottaGray
         dayLabel.translatesAutoresizingMaskIntoConstraints = false
 
         return dayLabel
@@ -27,8 +27,23 @@ class CalendarDayCell: UICollectionViewCell {
         return dotView
     }()
 
-    func config(with date: Date?, isSelected: Bool, isToday: Bool) {
-        guard let date = date else {
+    func configure(with date: Date?, isSelected: Bool, isToday: Bool) {
+        if let date = date {
+            dayLabel.text = "\(Calendar.current.component(.day, from: date))"
+
+            let day = Calendar.current.component(.day, from: date)
+
+            let isMarkedDay = [7, 9, 11].contains(day)  // TODO: TEM QUE MUDAR ISSO AQUI
+
+            if isMarkedDay {
+                dayLabel.textColor = .rottaYellow
+                decorationView.isHidden = false
+                decorationView.backgroundColor = .rottaYellow
+            } else {
+                dayLabel.textColor = .rottaGray
+                decorationView.isHidden = true
+            }
+        } else {
             dayLabel.text = ""
             decorationView.isHidden = true
             return

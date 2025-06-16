@@ -18,7 +18,7 @@ class MainTabController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.backgroundColor = .backgroundPrimary
 
         setupSegmented()
         displayViewController(at: 0)
