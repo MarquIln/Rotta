@@ -11,7 +11,9 @@ class MainTabController: UIViewController {
     let viewControllers: [UIViewController] = [
         CalendarViewController(),
         RankingViewController(),
-        InfosViewController()
+     //  InfosViewController(),
+        GlossaryTableViewController()
+       //TestController()
     ]
 
     var currentVC: UIViewController?

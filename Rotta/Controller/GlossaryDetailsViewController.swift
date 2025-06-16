@@ -7,7 +7,7 @@
 
 import UIKit
 
-class GlossaryViewController: UIViewController {
+class GlossaryDetailsViewController: UIViewController {
 
     lazy var component: GlossaryWordDescription = {
         var component =  GlossaryWordDescription()
@@ -60,7 +60,7 @@ class GlossaryViewController: UIViewController {
     }
 }
 
-extension GlossaryViewController: ViewCodeProtocol {
+extension GlossaryDetailsViewController: ViewCodeProtocol {
     func addSubviews() {
         view.addSubview(imageBackground)
         view.addSubview(gradientView)
