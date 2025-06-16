@@ -25,7 +25,7 @@ class CalendarViewController: UIViewController {
     private lazy var customCalendarView: CalendarCollectionView = {
         let calendar = CalendarCollectionView()
         calendar.delegate = self
-        calendar.backgroundColor = .secondaryGray
+        calendar.backgroundColor = .fillsUnselected
         calendar.layer.cornerRadius = 20
         calendar.translatesAutoresizingMaskIntoConstraints = false
         return calendar

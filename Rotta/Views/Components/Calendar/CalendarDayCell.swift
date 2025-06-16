@@ -12,7 +12,7 @@ class CalendarDayCell: UICollectionViewCell {
         let dayLabel = UILabel()
         dayLabel.textAlignment = .center
         dayLabel.font = .systemFont(ofSize: 16)
-        dayLabel.textColor = .labelGray
+        dayLabel.textColor = .rottaGray
         dayLabel.translatesAutoresizingMaskIntoConstraints = false
 
         return dayLabel
@@ -36,11 +36,11 @@ class CalendarDayCell: UICollectionViewCell {
             let isMarkedDay = [7, 9, 11].contains(day)  // TODO: TEM QUE MUDAR ISSO AQUI
 
             if isMarkedDay {
-                dayLabel.textColor = .yellowPrimary
+                dayLabel.textColor = .rottaYellow
                 decorationView.isHidden = false
-                decorationView.backgroundColor = .yellowPrimary
+                decorationView.backgroundColor = .rottaYellow
             } else {
-                dayLabel.textColor = .labelGray
+                dayLabel.textColor = .rottaGray
                 decorationView.isHidden = true
             }
         } else {
