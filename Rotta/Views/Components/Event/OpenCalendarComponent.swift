@@ -66,7 +66,7 @@ class OpenCalendarComponent: UIView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.image = UIImage(named: "testeImagem")
+        imageView.image = UIImage(named: "lusail-international-circuit")
         return imageView
     }()
     
@@ -74,7 +74,7 @@ class OpenCalendarComponent: UIView {
        var stack = UIStackView(arrangedSubviews: [eventTitle, firstDay, thirdEventInfo, fourthEventInfo])
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .vertical
-        stack.spacing = 8
+        stack.spacing = 16
         return stack
     }()
     

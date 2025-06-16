@@ -88,13 +88,10 @@ extension CalendarViewController: ViewCodeProtocol {
                    customCalendarView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
                    customCalendarView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
                    customCalendarView.heightAnchor.constraint(equalToConstant: 500),
-
-                   // contentView precisa de um bottom fixo: último elemento + padding
-//                   label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20),
                    
                    event.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
                    event.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-                   event.topAnchor.constraint(equalTo: customCalendarView.bottomAnchor, constant: 19),
+                   event.topAnchor.constraint(equalTo: customCalendarView.bottomAnchor, constant: 20),
                    event.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0)
 
                ])

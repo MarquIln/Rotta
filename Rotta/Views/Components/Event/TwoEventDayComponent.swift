@@ -143,14 +143,15 @@ extension TwoEventDayComponent: ViewCodeProtocol {
             backgroundContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
             backgroundContainer.bottomAnchor.constraint(equalTo: bottomAnchor),
 
-            contentStack.topAnchor.constraint(equalTo: backgroundContainer.topAnchor, constant: 12),
+            contentStack.topAnchor.constraint(equalTo: backgroundContainer.topAnchor),
             contentStack.leadingAnchor.constraint(equalTo: backgroundContainer.leadingAnchor, constant: 12),
             contentStack.trailingAnchor.constraint(equalTo: backgroundContainer.trailingAnchor, constant: -12),
             contentStack.bottomAnchor.constraint(equalTo: backgroundContainer.bottomAnchor, constant: -12),
 
-            separator.heightAnchor.constraint(equalToConstant: 0.50),
+            separator.heightAnchor.constraint(equalToConstant: 0.5),
             
             dayNumberStack.topAnchor.constraint(equalTo: firstEvent.topAnchor)
+
         ])
     }
 }

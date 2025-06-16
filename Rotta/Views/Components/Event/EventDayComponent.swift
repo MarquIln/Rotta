@@ -54,7 +54,7 @@ class EventDayComponent: UIView {
         stack.backgroundColor = .backgroundSecondary
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.distribution = .fillProportionally
-        stack.layoutMargins = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+        stack.layoutMargins = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
         stack.isLayoutMarginsRelativeArrangement = true
         stack.layer.cornerRadius = 12
         stack.axis = .horizontal
@@ -114,9 +114,6 @@ extension EventDayComponent: ViewCodeProtocol {
             eventStack.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             eventStack.topAnchor.constraint(equalTo: self.topAnchor),
             eventStack.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-
-//            eventStack.heightAnchor.constraint(equalToConstant: 66),
-
         ])
     }
 }
