@@ -46,7 +46,22 @@ class CalendarDayCell: UICollectionViewCell {
         } else {
             dayLabel.text = ""
             decorationView.isHidden = true
+            return
         }
+
+        let calendar = Calendar.current
+        let day = calendar.component(.day, from: date)
+        dayLabel.text = "\(day)"
+        
+        if isToday {
+            dayLabel.font = .boldSystemFont(ofSize: 16)
+        } else {
+            dayLabel.font = .systemFont(ofSize: 16)
+        }
+
+        // TODO: Implementar lógica de eventos
+        dayLabel.textColor = .labelGray
+        decorationView.isHidden = true
     }
 
     override init(frame: CGRect) {

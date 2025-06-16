@@ -6,12 +6,17 @@
 //
 
 import UIKit
+import CloudKit
 
 class DriverRankingCell: UITableViewCell {
+    static let reuseIdentifier = "DriverRankingCell"
+    
+    let cloudKitModel = Database.shared
+    
     lazy var positionLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        label.font = Fonts.Title2
         label.textColor = .white
         label.textAlignment = .center
         return label
@@ -20,112 +25,130 @@ class DriverRankingCell: UITableViewCell {
     lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        label.font = Fonts.Subtitle2
         label.textColor = .white
-        return label
-    }()
-    
-    lazy var countryLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-        label.textColor = .lightGray
         return label
     }()
     
     lazy var pointsLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+        label.font = Fonts.Subtitle2
         label.textColor = .white
         label.textAlignment = .right
         return label
     }()
     
-    lazy var numberLabel: UILabel = {
+    lazy var scuderiaLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        label.textColor = .gray
+        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        label.textColor = .lightGray
         label.textAlignment = .center
         return label
     }()
     
-    lazy var containerView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .systemGray6.withAlphaComponent(0.3)
-        view.layer.cornerRadius = 12
-        return view
+    lazy var driverImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        return imageView
+    }()
+    
+    private lazy var nameStackView: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [positionLabel, driverImageView, nameLabel])
+        stack.axis = .horizontal
+        stack.spacing = 8
+        stack.alignment = .center
+        return stack
+    }()
+    
+    private lazy var performanceStackView: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [pointsLabel, scuderiaLabel])
+        stack.axis = .horizontal
+        stack.spacing = 16
+        stack.alignment = .center
+        return stack
+    }()
+    
+    private lazy var mainStackView: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [nameStackView, performanceStackView])
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .horizontal
+        stack.spacing = 16
+        stack.alignment = .center
+        stack.distribution = .fill
+        return stack
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupCell()
+        setup()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setupCell() {
-        backgroundColor = .clear
-        selectionStyle = .none
+    func config(with driver: CKRecord, position: Int, cellIndex: Int) {
+        positionLabel.text = "\(position)"
         
-        contentView.addSubview(containerView)
-        containerView.addSubview(positionLabel)
-        containerView.addSubview(numberLabel)
-        containerView.addSubview(nameLabel)
-        containerView.addSubview(countryLabel)
-        containerView.addSubview(pointsLabel)
+        if let driverName = driver["name"] as? String {
+            nameLabel.text = formatDriverName(driverName)
+        }
         
-        NSLayoutConstraint.activate([
-            containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4),
-            containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -4),
-            
-            positionLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-            positionLabel.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            positionLabel.widthAnchor.constraint(equalToConstant: 40),
-            
-            numberLabel.leadingAnchor.constraint(equalTo: positionLabel.trailingAnchor, constant: 8),
-            numberLabel.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            numberLabel.widthAnchor.constraint(equalToConstant: 30),
-            
-            nameLabel.leadingAnchor.constraint(equalTo: numberLabel.trailingAnchor, constant: 12),
-            nameLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 12),
-            
-            countryLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
-            countryLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 4),
-            countryLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -12),
-            
-            pointsLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-            pointsLabel.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            pointsLabel.leadingAnchor.constraint(greaterThanOrEqualTo: nameLabel.trailingAnchor, constant: 8)
-        ])
+        if let points = driver["points"] as? Int {
+            pointsLabel.text = "\(points)"
+        }
+        
+        if let scuderiaName = driver["scuderia"] as? String {
+            scuderiaLabel.text = scuderiaName
+        }
+        
+        driverImageView.image = UIImage(systemName: "person.circle.fill")
+        driverImageView.tintColor = .systemGray3
+        
+        setupBackgroundColor(for: cellIndex)
     }
     
-    func configure(with driver: Driver, position: Int) {
-        positionLabel.text = "\(position)"
-        nameLabel.text = driver.name ?? "Piloto Desconhecido"
-        countryLabel.text = driver.country ?? "País não informado"
-        pointsLabel.text = "\(Int(driver.points)) pts"
-        numberLabel.text = "#\(driver.number)"
-        
-        switch position {
-        case 1:
-            containerView.backgroundColor = UIColor.systemYellow.withAlphaComponent(0.3)
-            positionLabel.textColor = .systemYellow
-        case 2:
-            containerView.backgroundColor = UIColor.systemGray.withAlphaComponent(0.3)
-            positionLabel.textColor = .systemGray
-        case 3:
-            containerView.backgroundColor = UIColor.systemOrange.withAlphaComponent(0.3)
-            positionLabel.textColor = .systemOrange
-        default:
-            containerView.backgroundColor = .systemGray6.withAlphaComponent(0.3)
-            positionLabel.textColor = .white
+    private func setupBackgroundColor(for cellIndex: Int) {
+        if cellIndex % 2 == 0 {
+            backgroundColor = UIColor(named: "white4")
+        } else {
+            backgroundColor = UIColor(named: "white5")
         }
+    }
+    
+    private func formatDriverName(_ fullName: String) -> String {
+        let components = fullName.components(separatedBy: " ").filter { !$0.isEmpty }
+        guard components.count >= 2, let firstName = components.first, let lastName = components.last else { 
+            return fullName 
+        }
+        
+        let firstNameLetter = String(firstName.prefix(1))
+        return "\(firstNameLetter). \(lastName)"
+    }
+}
+
+// MARK: - ViewCodeProtocol
+extension DriverRankingCell: ViewCodeProtocol {
+    func addSubviews() {
+        contentView.addSubview(mainStackView)
+    }
+    
+    func setupConstraints() {
+        NSLayoutConstraint.activate([
+            mainStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            mainStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
+            mainStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+            mainStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+            
+            positionLabel.widthAnchor.constraint(equalToConstant: 34),
+            driverImageView.widthAnchor.constraint(equalToConstant: 28),
+            driverImageView.heightAnchor.constraint(equalToConstant: 28),
+            pointsLabel.widthAnchor.constraint(equalToConstant: 40),
+            scuderiaLabel.widthAnchor.constraint(equalToConstant: 120)
+        ])
     }
 }
