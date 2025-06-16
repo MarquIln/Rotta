@@ -4,16 +4,20 @@
 //
 //  Created by Isadora Ferreira Guerra on 13/06/25.
 //
-import UIKit
+
 import UIKit
 
 class InfosViewController: UIViewController {
-
     private let cardsData: [(title: String, subtitle: String, image: UIImage)] = [
         (
             title: "Glossário",
             subtitle: "Entenda os principais termos utilizados na Fórmula 2",
             image: .glossaryCategoryInfos
+        ),
+        (
+            title: "Peças",
+            subtitle: "Conheça as principais peças dos carros da Fórmula 2",
+            image: .componentsCategoryInfos
         ),
         (
             title: "Peças",
@@ -44,9 +48,16 @@ class InfosViewController: UIViewController {
         setup()
     }
 
-    @objc private func cardInfoTapped(_ sender: CardInfosButton) {
-        print("CardInfosButton foi tocado!")
+//    @objc private func cardInfoTapped(_ sender: CardInfosButton) {
+//        print("CardInfosButton foi tocado!")
+//    }
+    
+    @objc private func cardInfoTapped(_ sender: UIButton) {
+        let index = sender.tag
+        let item = cardsData[index]
+        print("Toquei no card: \(item.title)")
     }
+
 }
 
 // MARK: - ViewCodeProtocol
@@ -81,12 +92,21 @@ extension InfosViewController: UICollectionViewDelegate, UICollectionViewDataSou
         }
 
         let item = cardsData[indexPath.item]
-        cell.configure(with: item.title, subtitle: item.subtitle, image: item.image)
+        cell.configure(
+            with: item.title,
+            subtitle: item.subtitle,
+            image: item.image,
+            target: self,
+            action: #selector(cardInfoTapped(_:)),
+        )
         return cell
     }
 
+
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("Selecionado:", cardsData[indexPath.item].title)
+        guard let cell = collectionView.cellForItem(at: indexPath) as? CardInfosCell else { return }
+        let button = cell.cardButtonPublic
+        cardInfoTapped(button)
     }
 }
 
@@ -97,7 +117,7 @@ extension InfosViewController: UICollectionViewDelegateFlowLayout {
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         let height = collectionView.bounds.height
-        let width = collectionView.bounds.width * 0.9
+        let width = collectionView.bounds.width * 0.93
         return CGSize(width: width, height: height)
     }
 }
