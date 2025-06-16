@@ -54,7 +54,7 @@ class OpenCalendarComponent: UIView {
     private lazy var backgroundContainer: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .clear // vamos usar a imagem como background
+        view.backgroundColor = .clear
         view.layer.cornerRadius = 16
         view.clipsToBounds = true
         return view
@@ -78,10 +78,27 @@ class OpenCalendarComponent: UIView {
         return stack
     }()
     
+    lazy var gradientView: UIView = {
+        let gradient = UIView()
+        gradient.translatesAutoresizingMaskIntoConstraints = false
+        gradient.isUserInteractionEnabled = false
+        gradient.layer.cornerRadius = 16
+        gradient.clipsToBounds = true
+        return gradient
+    }()
+    
     // MARK: Initializers
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
         setup()
+        addGradient()
+    }
+    
+    @objc func addGradient() {
+        DispatchQueue.main.async {
+            self.gradientView.addGradientCalendar()
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -92,8 +109,9 @@ class OpenCalendarComponent: UIView {
 extension OpenCalendarComponent: ViewCodeProtocol {
     func addSubviews() {
         addSubview(backgroundContainer)
-        backgroundContainer.addSubview(backgroundImageView)  // imagem atrás
-        backgroundContainer.addSubview(eventCalendarStack)  // conteúdo na frente
+        backgroundImageView.addSubview(gradientView)
+        backgroundContainer.addSubview(backgroundImageView)
+        backgroundContainer.addSubview(eventCalendarStack)
     }
 
     func setupConstraints() {
@@ -102,16 +120,21 @@ extension OpenCalendarComponent: ViewCodeProtocol {
             backgroundContainer.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             backgroundContainer.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             backgroundContainer.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            
+            gradientView.topAnchor.constraint(equalTo: self.topAnchor),
+            gradientView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            gradientView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            gradientView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
 
-            backgroundImageView.topAnchor.constraint(equalTo: backgroundContainer.topAnchor),
-            backgroundImageView.leadingAnchor.constraint(equalTo: backgroundContainer.leadingAnchor),
-            backgroundImageView.trailingAnchor.constraint(equalTo: backgroundContainer.trailingAnchor),
-            backgroundImageView.bottomAnchor.constraint(equalTo: backgroundContainer.bottomAnchor),
+            backgroundImageView.topAnchor.constraint(equalTo: gradientView.topAnchor),
+            backgroundImageView.leadingAnchor.constraint(equalTo: gradientView.leadingAnchor),
+            backgroundImageView.trailingAnchor.constraint(equalTo: gradientView.trailingAnchor),
+            backgroundImageView.bottomAnchor.constraint(equalTo: gradientView.bottomAnchor),
 
-            eventCalendarStack.topAnchor.constraint(equalTo: backgroundContainer.topAnchor, constant: 16),
-            eventCalendarStack.leadingAnchor.constraint(equalTo: backgroundContainer.leadingAnchor, constant: 16),
-            eventCalendarStack.trailingAnchor.constraint(equalTo: backgroundContainer.trailingAnchor, constant: -16),
-            eventCalendarStack.bottomAnchor.constraint(equalTo: backgroundContainer.bottomAnchor, constant: -16)
+            eventCalendarStack.topAnchor.constraint(equalTo: gradientView.topAnchor, constant: 16),
+            eventCalendarStack.leadingAnchor.constraint(equalTo: gradientView.leadingAnchor, constant: 16),
+            eventCalendarStack.trailingAnchor.constraint(equalTo: gradientView.trailingAnchor, constant: -16),
+            eventCalendarStack.bottomAnchor.constraint(equalTo: gradientView.bottomAnchor, constant: -16),
         ])
     }
 }
