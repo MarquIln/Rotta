@@ -24,7 +24,7 @@ class CalendarCollectionView: UIView {
         let label = UILabel()
         label.font = .systemFont(ofSize: 20, weight: .bold)
         label.textAlignment = .right
-        label.textColor = .yellowPrimary
+        label.textColor = .rottaYellow
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

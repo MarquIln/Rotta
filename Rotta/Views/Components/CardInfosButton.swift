@@ -59,7 +59,7 @@ class CardInfosButton: UIButton {
         self.title = title
         self.subtitle = subtitle
         super.init(frame: .zero)
-        self.backgroundColor = .cardInfosBackground
+        self.backgroundColor = .backgroundPrimary
 
         imageBackground.image = image
         cardTitleLabel.text = title
