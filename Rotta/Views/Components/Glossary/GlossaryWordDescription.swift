@@ -35,7 +35,7 @@ Significa Sistema de Redução de Arrasto (Drag Reduction System em inglês) e �
     lazy var descripContainer: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .gray
+        view.backgroundColor = .fillsTextBox
         view.layer.cornerRadius = 32
 
         return view
@@ -45,7 +45,7 @@ Significa Sistema de Redução de Arrasto (Drag Reduction System em inglês) e �
         var label = UILabel()
         label.text = "Zona de DRS"
         label.textColor = .white
-        label.font = Fonts.BodyRegular
+        label.font = Fonts.Subtitle1
         label.textAlignment = .center
         label.numberOfLines = 0
         return label
@@ -75,7 +75,7 @@ O DRS pode ser usado pelos pilotos em zonas designadas durante os treinos livres
     lazy var descrip2Container: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .gray
+        view.backgroundColor = .fillsTextBox
         view.layer.cornerRadius = 32
 
         return view
@@ -100,7 +100,7 @@ O DRS pode ser usado pelos pilotos em zonas designadas durante os treinos livres
     lazy var exploreContainer: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .gray
+        view.backgroundColor = .fillsTextBox
         view.layer.cornerRadius = 32
 
         return view
@@ -148,7 +148,6 @@ extension GlossaryWordDescription: ViewCodeProtocol {
             descripText.trailingAnchor.constraint(equalTo: descripContainer.trailingAnchor, constant: -16),
             
             descrip2Title.topAnchor.constraint(equalTo: descrip2Container.topAnchor, constant: 12),
-        
         
             descrip2Text.topAnchor.constraint(equalTo: descrip2Title.bottomAnchor, constant: 8),
             descrip2Text.bottomAnchor.constraint(equalTo: descrip2Container.bottomAnchor, constant: -12),

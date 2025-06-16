@@ -55,7 +55,9 @@ class InfosViewController: UIViewController {
     @objc private func cardInfoTapped(_ sender: UIButton) {
         let index = sender.tag
         let item = cardsData[index]
-        print("Toquei no card: \(item.title)")
+        let modal = GlossaryViewController()
+        modal.modalPresentationStyle = UIModalPresentationStyle.fullScreen
+        present(modal, animated: true , completion: nil)
     }
 
 }
