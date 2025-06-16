@@ -31,7 +31,7 @@ class TestController: UIViewController {
 //            action: #selector(cardInfoTapped(_:)),
 //            for: .touchUpInside
 //        )
-        view.backgroundColor = .background
+        view.backgroundColor = .backgroundPrimary
         
     }
     

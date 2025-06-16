@@ -37,7 +37,7 @@ class SegmentedControll: UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = 16
-        view.backgroundColor = .yellowPrimary
+        view.backgroundColor = .rottaYellow
         return view
     }()
 
