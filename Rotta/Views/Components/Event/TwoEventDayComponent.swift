@@ -150,8 +150,8 @@ extension TwoEventDayComponent: ViewCodeProtocol {
 
             separator.heightAnchor.constraint(equalToConstant: 0.5),
             
-            dayNumberStack.topAnchor.constraint(equalTo: firstEvent.topAnchor)
-
+            dayNumberStack.topAnchor.constraint(equalTo: contentStack.topAnchor, constant: 16)
+            
         ])
     }
 }
