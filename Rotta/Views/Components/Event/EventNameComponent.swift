@@ -12,7 +12,7 @@ class EventNameComponent: UIView {
     //MARK: Race Number
     private lazy var raceNumberLabel: UILabel = {
         var label = UILabel()
-        label.font = .systemFont(ofSize: 22)
+        label.font = Fonts.Subtitle1
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         
@@ -44,7 +44,7 @@ class EventNameComponent: UIView {
     //MARK: Country Name
     private lazy var countryNameLabel: UILabel = {
         var label = UILabel()
-        label.font = .systemFont(ofSize: 22)
+        label.font = Fonts.Title2
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         
@@ -64,7 +64,7 @@ class EventNameComponent: UIView {
     lazy var separator: UIView = {
         var separator = UIView()
         separator.translatesAutoresizingMaskIntoConstraints = false
-        separator.backgroundColor = .separator
+        separator.backgroundColor = .dividerPrimary
         return separator
     }()
     
@@ -125,7 +125,7 @@ extension EventNameComponent: ViewCodeProtocol {
             raceEventStack.topAnchor.constraint(equalTo: self.topAnchor),
             raceEventStack.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             
-            separator.topAnchor.constraint(equalTo: countryStack.bottomAnchor, constant: 1),
+            separator.topAnchor.constraint(equalTo: countryStack.bottomAnchor, constant: 8),
             separator.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             separator.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             separator.trailingAnchor.constraint(equalTo: self.trailingAnchor),

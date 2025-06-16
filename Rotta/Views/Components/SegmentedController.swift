@@ -90,6 +90,8 @@ class SegmentedControll: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        indicatorView.layer.cornerRadius = indicatorView.frame.height / 2
+        self.layer.cornerRadius = self.frame.height / 2
         updateIndicator(animated: false)
     }
 
@@ -111,7 +113,7 @@ class SegmentedControll: UIView {
 extension SegmentedControll: ViewCodeProtocol {
     func setup() {
         self.backgroundColor = .fillsUnselected
-        self.layer.cornerRadius = 20
+//        self.layer.cornerRadius = 20
         addSubviews()
         setupConstraints()
     }
@@ -130,9 +132,9 @@ extension SegmentedControll: ViewCodeProtocol {
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
 
-            indicatorView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: segmentWidthMultiplier, constant: -12),
-            indicatorView.topAnchor.constraint(equalTo: topAnchor, constant: 4),
-            indicatorView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4)
+            indicatorView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: segmentWidthMultiplier, constant: 0),
+            indicatorView.topAnchor.constraint(equalTo: topAnchor, constant: 2),
+            indicatorView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -2)
         ])
 
         indicatorCenterX = indicatorView.centerXAnchor.constraint(equalTo: leadingAnchor)

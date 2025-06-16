@@ -17,13 +17,8 @@ extension Formula {
     }
 
     @NSManaged public var id: UUID?
-    @NSManaged public var idCars: [UUID]?
-    @NSManaged public var idDrivers: [UUID]?
-    @NSManaged public var idEvent: [UUID]?
-    @NSManaged public var idRules: [UUID]?
-    @NSManaged public var idScuderias: [UUID]?
-    @NSManaged public var idTracks: [UUID]?
     @NSManaged public var name: String?
+    @NSManaged public var color: String?
 
 }
 

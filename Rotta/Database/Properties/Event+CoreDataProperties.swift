@@ -18,6 +18,7 @@ extension Event {
 
     @NSManaged public var date: Date?
     @NSManaged public var id: UUID?
+    @NSManaged public var idFormula: UUID?
     @NSManaged public var startTime: Date?
 
 }
