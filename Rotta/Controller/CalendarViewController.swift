@@ -66,29 +66,6 @@ extension CalendarViewController: ViewCodeProtocol {
     }
 
     func setupConstraints() {
-//        NSLayoutConstraint.activate([
-//            customCalendarView.topAnchor.constraint(
-//                equalTo: view.safeAreaLayoutGuide.topAnchor,
-//                constant: 50
-//            ),
-//            customCalendarView.leadingAnchor.constraint(
-//                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
-//                constant: 16
-//            ),
-//            customCalendarView.trailingAnchor.constraint(
-//                equalTo: view.safeAreaLayoutGuide.trailingAnchor,
-//                constant: -16
-//            ),
-//            customCalendarView.heightAnchor.constraint(equalToConstant: 500),
-//            
-//            label.topAnchor.constraint(
-//                equalTo: customCalendarView.bottomAnchor,
-//                constant: 16
-//            ),
-//            label.centerXAnchor.constraint(
-//                equalTo: view.safeAreaLayoutGuide.centerXAnchor
-//            )
-//        ])
         
         NSLayoutConstraint.activate([
                    // ScrollView ocupa toda a tela
