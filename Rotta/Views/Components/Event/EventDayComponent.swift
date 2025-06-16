@@ -12,7 +12,7 @@ class EventDayComponent: UIView {
     //MARK: WeekDay
     private lazy var weekDayLabel: UILabel = {
         var label = UILabel()
-        label.font = .systemFont(ofSize: 22)
+        label.font = Fonts.Subtitle2
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         
@@ -22,7 +22,7 @@ class EventDayComponent: UIView {
     //MARK: Number Day
     private lazy var numberDayLabel: UILabel = {
         var label = UILabel()
-        label.font = .systemFont(ofSize: 28)
+        label.font = Fonts.Title2
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         
@@ -51,18 +51,18 @@ class EventDayComponent: UIView {
     //MARK: Event Stack
     private lazy var eventStack: UIStackView = {
         var stack = UIStackView(arrangedSubviews: [dayNumberStack, eventName])
-        stack.backgroundColor = .blue
+        stack.backgroundColor = .backgroundSecondary
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.distribution = .fillProportionally
         stack.layoutMargins = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
         stack.isLayoutMarginsRelativeArrangement = true
         stack.layer.cornerRadius = 12
-        stack.alignment = .top
-
+        stack.axis = .horizontal
+        stack.alignment = .center
+        stack.spacing = 12
         
         return stack
     }()
-    
     
     //MARK: Properties
     var dayName: String? {

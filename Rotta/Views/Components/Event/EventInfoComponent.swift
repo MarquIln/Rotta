@@ -25,7 +25,7 @@ class EventInfoComponent: UIView {
     //MARK: Event Title
     private lazy var eventTitle: UILabel = {
         var label = UILabel()
-        label.font = .systemFont(ofSize: 17)
+        label.font = Fonts.Headline
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -42,7 +42,7 @@ class EventInfoComponent: UIView {
 
     private lazy var eventTime: UILabel = {
         var label = UILabel()
-        label.font = .systemFont(ofSize: 17)
+        label.font = Fonts.BodyRegular
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         
@@ -106,6 +106,8 @@ extension EventInfoComponent: ViewCodeProtocol {
             eventInfoStack.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             eventInfoStack.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             eventInfoStack.topAnchor.constraint(equalTo: self.topAnchor),
+            eventInfoStack.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+
 
             eventIcon.widthAnchor.constraint(equalToConstant: 8),
             eventIcon.heightAnchor.constraint(equalToConstant: 8),
