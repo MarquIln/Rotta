@@ -66,8 +66,32 @@ class MonthCell: UICollectionViewCell {
     }
     
     func updateSelectedDate(_ selectedDate: Date?) {
+        let previousSelectedDate = self.selectedDate
         self.selectedDate = selectedDate
-        daysCollectionView.reloadData()
+        
+        var indexPathsToUpdate: [IndexPath] = []
+        
+        if let previousDate = previousSelectedDate {
+            for (index, day) in days.enumerated() {
+                if let day = day, calendar.isDate(day, inSameDayAs: previousDate) {
+                    indexPathsToUpdate.append(IndexPath(item: index, section: 0))
+                    break
+                }
+            }
+        }
+        
+        if let currentDate = selectedDate {
+            for (index, day) in days.enumerated() {
+                if let day = day, calendar.isDate(day, inSameDayAs: currentDate) {
+                    indexPathsToUpdate.append(IndexPath(item: index, section: 0))
+                    break
+                }
+            }
+        }
+        
+        if !indexPathsToUpdate.isEmpty {
+            daysCollectionView.reloadItems(at: indexPathsToUpdate)
+        }
     }
     
     private func generateDaysInMonth() {

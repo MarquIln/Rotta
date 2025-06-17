@@ -27,30 +27,15 @@ class CalendarDayCell: UICollectionViewCell {
         return dotView
     }()
 
-    func configure(with date: Date?, isSelected: Bool, isToday: Bool) {
-        if let date = date {
-            dayLabel.text = "\(Calendar.current.component(.day, from: date))"
-
-            let day = Calendar.current.component(.day, from: date)
-
-            let isMarkedDay = [7, 9, 11].contains(day)  // TODO: TEM QUE MUDAR ISSO AQUI
-
-            if isMarkedDay {
-                dayLabel.textColor = .rottaYellow
-                decorationView.isHidden = false
-                decorationView.backgroundColor = .rottaYellow
-            } else {
-                dayLabel.textColor = .rottaGray
-                decorationView.isHidden = true
-            }
-        } else {
+    func configure(with date: Date?, isSelected: Bool, isToday: Bool, hasEvent: Bool = false) {
+        guard let date = date else {
             dayLabel.text = ""
             decorationView.isHidden = true
             return
         }
 
         let calendar = Calendar.current
-        let day = calendar.component(.day, from: date ?? Date())
+        let day = calendar.component(.day, from: date)
         dayLabel.text = "\(day)"
         
         if isToday {
@@ -59,9 +44,14 @@ class CalendarDayCell: UICollectionViewCell {
             dayLabel.font = .systemFont(ofSize: 16)
         }
 
-        // TODO: Implementar lógica de eventos
-        dayLabel.textColor = .rottaGray
-        decorationView.isHidden = true
+        if hasEvent {
+            dayLabel.textColor = .rottaYellow
+            decorationView.isHidden = false
+            decorationView.backgroundColor = .rottaYellow
+        } else {
+            dayLabel.textColor = .rottaGray
+            decorationView.isHidden = true
+        }
     }
 
     override init(frame: CGRect) {
