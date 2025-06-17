@@ -52,7 +52,6 @@ class CloudKitSeed {
         
         await seedCars()
          
-        // Marcar que o seed foi completado
         Self.markSeedAsCompleted()
         
         print("CloudKit database seed completed!")
@@ -63,17 +62,14 @@ class CloudKitSeed {
     private func isDatabaseAlreadySeeded() async -> Bool {
         print("Checking if database is already seeded...")
         
-        // Verificar se UserDefaults já indica que foi feito seed
         if Self.isSeedCompleted() {
             print("UserDefaults indicates database is seeded")
             return true
         }
         
-        // Verificar se existem fórmulas no banco (indicativo de que já foi feito seed)
         let formulas = await database.getAllFormulas()
         if !formulas.isEmpty {
             print("Found \(formulas.count) formulas in database - already seeded")
-            // Atualizar UserDefaults para futuras verificações
             Self.markSeedAsCompleted()
             return true
         }
@@ -82,19 +78,14 @@ class CloudKitSeed {
         return false
     }
     
-    // Método para forçar um novo seed (útil para desenvolvimento)
     func forceSeedDatabase() async {
         print("Force seeding database...")
         Self.markSeedAsNotCompleted()
         await seedDatabase()
     }
     
-    // Método para limpar o banco e refazer o seed
     func resetAndSeedDatabase() async {
         print("Resetting and seeding database...")
-        
-        // Aqui você pode adicionar lógica para limpar o banco se necessário
-        // Por exemplo: await database.clearAllData()
         
         Self.markSeedAsNotCompleted()
         await seedDatabase()
@@ -103,7 +94,6 @@ class CloudKitSeed {
     private func seedFormulas() async {
         print("Seeding formulas...")
         
-        // Verificar se já existem fórmulas
         let existingFormulas = await database.getAllFormulas()
         if !existingFormulas.isEmpty {
             print("Formulas already exist, skipping...")
@@ -321,7 +311,6 @@ class CloudKitSeed {
     private func seedTracks() async {
         print("Seeding tracks...")
         
-        // Verificar se já existem tracks
         let existingTracks = await database.getAllTracks()
         if !existingTracks.isEmpty {
             print("Tracks already exist, skipping...")
@@ -360,7 +349,6 @@ class CloudKitSeed {
     private func seedGlossaryTerms() async {
         print("Seeding glossary terms...")
         
-        // Verificar se já existem termos do glossário
         let existingTerms = await database.getAllGlossaryTerms()
         if !existingTerms.isEmpty {
             print("Glossary terms already exist, skipping...")
@@ -401,7 +389,6 @@ class CloudKitSeed {
     private func seedAllRules() async {
         print("Seeding rules...")
         
-        // Verificar se já existem regras
         let existingRules = await database.getAllRules()
         if !existingRules.isEmpty {
             print("Rules already exist, skipping...")
@@ -479,7 +466,6 @@ class CloudKitSeed {
     private func seedEvents() async {
         print("Seeding events...")
         
-        // Verificar se já existem eventos
         let existingEvents = await database.getAllEvents()
         if !existingEvents.isEmpty {
             print("Events already exist, skipping...")
@@ -575,7 +561,6 @@ class CloudKitSeed {
     private func seedComponents() async {
         print("Seeding components...")
         
-        // Verificar se já existem componentes
         let existingComponents = await database.getAllComponents()
         if !existingComponents.isEmpty {
             print("Components already exist, skipping...")
@@ -599,7 +584,6 @@ class CloudKitSeed {
     private func seedCars() async {
         print("Seeding cars...")
         
-        // Verificar se já existem carros
         let existingCars = await database.getAllCars()
         if !existingCars.isEmpty {
             print("Cars already exist, skipping...")

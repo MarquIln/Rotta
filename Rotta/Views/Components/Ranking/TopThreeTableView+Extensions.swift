@@ -9,7 +9,6 @@ import UIKit
 
 extension TopThreeTableView: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // exibe no máximo 3 drivers, garantindo que não exceda a quantidade disponível
         guard let count = delegate?.numberOfDrivers() else { return 0 }
         return min(3, count)
       }

@@ -118,7 +118,7 @@ class CarService {
         let record = CKRecord(recordType: "Car")
         record["id"] = uuid
         record["idFormula"] = idFormula.uuidString
-        record["idComponents"] = ArrayToUUIDTransformer().reverseTransformedValue(idComponents) as? [CKRecord.Reference]
+        record["idComponents"] = idComponents.map{ $0.uuidString }
         if let image = image { record["image"] = image }
         do {
             let saved = try await privateDatabase.save(record)

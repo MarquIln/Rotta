@@ -38,12 +38,8 @@ class OnBoardingVC: UIViewController {
         
         let nextVC = MainTabController()
         
-        // Usar navegação normal do NavigationController configurado no SceneDelegate
         if let navController = navigationController {
-            print("✅ NavigationController encontrado - fazendo push")
             navController.pushViewController(nextVC, animated: true)
-        } else {
-            print("❌ NavigationController não encontrado")
         }
     }
 }

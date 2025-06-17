@@ -34,7 +34,6 @@ class RankingVC: UIViewController {
         loadDrivers()
     }
 
-    
     private func loadDrivers() {
         Task {
             drivers = await database.getAllDrivers()

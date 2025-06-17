@@ -14,11 +14,9 @@ extension RankingVC: TopThreeTableViewDelegate {
     }
 
     func driver(at index: Int) -> DriverModel? {
-        // evita crash caso índice esteja fora do array
         if drivers.indices.contains(index) {
             return drivers[index]
         } else {
-            // retorna último driver como fallback, ou nil se array estiver vazio
             return drivers.last
         }
     }

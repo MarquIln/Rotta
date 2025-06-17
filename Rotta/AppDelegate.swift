@@ -15,11 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print("🚀 Verificando/Iniciando seed do CloudKit...")
             let cloudKitSeed = CloudKitSeed(database: Database.shared)
             
-            // O seedDatabase() agora verifica automaticamente se já foi feito seed
             await cloudKitSeed.seedDatabase()
-            
-            // Para debugging, você pode usar:
-            // await cloudKitSeed.printDatabaseStatus()
         }
 
         return true
