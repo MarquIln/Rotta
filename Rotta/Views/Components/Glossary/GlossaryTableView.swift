@@ -10,6 +10,7 @@ import UIKit
 protocol GlossaryTableViewDelegate: AnyObject {
     func numberOfItems() -> Int
     func item(at index: Int) -> (title: String, imageName: String)
+    func didSelectItem(at index: Int)
 }
 
 class GlossaryTableView: UIView {
@@ -66,6 +67,7 @@ extension GlossaryTableView: UITableViewDataSource {
         
         let image = UIImage(named: item.imageName)
         cell.configure(with: item.title, image: image)
+        cell.delegate = delegate as? GlossaryCellDelegate
         return cell
     }
 }
@@ -74,5 +76,10 @@ extension GlossaryTableView: UITableViewDataSource {
 extension GlossaryTableView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        delegate?.didSelectItem(at: indexPath.row)
     }
 }

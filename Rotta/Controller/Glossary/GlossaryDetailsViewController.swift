@@ -53,10 +53,73 @@ class GlossaryDetailsViewController: UIViewController {
         }
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .systemBackground
+        setupNavigationBar()
+        setupGestures()
         setup()
         addGradientGlossary()
+    }
+    
+    private func setupGestures() {
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        navigationController?.interactivePopGestureRecognizer?.delegate = self
+        
+        let swipeRightGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture(_:)))
+        swipeRightGesture.direction = .right
+        view.addGestureRecognizer(swipeRightGesture)
+    }
+    
+    @objc private func handleSwipeGesture(_ gesture: UISwipeGestureRecognizer) {
+        if gesture.direction == .right {
+            navigationController?.popViewController(animated: true)
+        }
+    }
+    
+    @objc private func handleEdgePanGesture(_ gesture: UIScreenEdgePanGestureRecognizer) {
+        let translation = gesture.translation(in: view)
+        let velocity = gesture.velocity(in: view)
+        
+        switch gesture.state {
+        case .ended:
+            if translation.x > 100 || velocity.x > 500 {
+                navigationController?.popViewController(animated: true)
+            }
+        default:
+            break
+        }
+    }
+    
+    @objc private func customBackTapped() {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    private func setupCustomBackButton() {
+        navigationItem.hidesBackButton = true
+    
+        let backButton = UIButton(type: .system)
+        backButton.setImage(UIImage(systemName: "chevron.left.circle.fill"), for: .normal)
+        backButton.tintColor = .rottaYellow
+        backButton.backgroundColor = .clear
+        backButton.layer.cornerRadius = 16
+        backButton.clipsToBounds = true
+        backButton.addTarget(self, action: #selector(customBackTapped), for: .touchUpInside)
+        
+        backButton.frame = CGRect(x: 0, y: 0, width: 32, height: 32)
+        
+        let barButton = UIBarButtonItem(customView: backButton)
+        navigationItem.leftBarButtonItem = barButton
+    }
+    
+    private func setupNavigationBar() {
+        title = "Detalhes"
+        setupCustomBackButton()
     }
 }
 
@@ -101,6 +164,13 @@ extension GlossaryDetailsViewController: ViewCodeProtocol {
             component.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
         ])
 
+    }
+}
+
+// MARK: - UIGestureRecognizerDelegate
+extension GlossaryDetailsViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }
 
