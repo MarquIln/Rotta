@@ -9,10 +9,12 @@ import UIKit
 
 class GlossaryCell: UITableViewCell {
     
+    weak var delegate: GlossaryCellDelegate?
+    
     lazy var containerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .red
+        view.backgroundColor = .fillsRows
         view.layer.cornerRadius = 12
         return view
     }()
@@ -38,9 +40,21 @@ class GlossaryCell: UITableViewCell {
     lazy var chevronImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(systemName: "chevron.right"))
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.tintColor = .gray
+        imageView.tintColor = .fillsSelector
+        imageView.isUserInteractionEnabled = true
         return imageView
     }()
+    
+    @objc private func chevronTapped() {
+        print("chevron tapped")
+        delegate?.didTapChevron(in: self)
+    }
+
+//    @objc private func chevronTapped() {
+//        print("chevron tapped")
+//        let vc = GlossaryTableViewController()
+//            navigationController?.pushViewController(vc, animated: true)
+//    }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -59,6 +73,9 @@ class GlossaryCell: UITableViewCell {
         containerView.addSubview(iconImageView)
         containerView.addSubview(titleLabel)
         containerView.addSubview(chevronImageView)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(chevronTapped))
+        chevronImageView.addGestureRecognizer(tapGesture)
         
         NSLayoutConstraint.activate([
             containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
@@ -86,3 +103,8 @@ class GlossaryCell: UITableViewCell {
         iconImageView.image = image
     }
 }
+
+protocol GlossaryCellDelegate: AnyObject {
+    func didTapChevron(in cell: GlossaryCell)
+}
+

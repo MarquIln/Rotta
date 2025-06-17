@@ -11,7 +11,7 @@ class GlossaryHeaderView: UIView {
     private let containerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.systemPurple.withAlphaComponent(0.9)
+        view.backgroundColor = .clear
         view.layer.cornerRadius = 16
         return view
     }()

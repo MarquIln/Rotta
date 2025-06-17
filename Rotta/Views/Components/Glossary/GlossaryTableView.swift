@@ -14,7 +14,6 @@ protocol GlossaryTableViewDelegate: AnyObject {
 
 class GlossaryTableView: UIView {
     weak var delegate: GlossaryTableViewDelegate?
-
     
     lazy var tableView: UITableView = {
         let table = UITableView()

@@ -9,8 +9,8 @@ import UIKit
 
 class GlossaryDetailsViewController: UIViewController {
 
-    lazy var component: GlossaryWordDescription = {
-        var component =  GlossaryWordDescription()
+    lazy var component: GlossaryDetails = {
+        var component =  GlossaryDetails()
         component.translatesAutoresizingMaskIntoConstraints = false
         return component
     }()

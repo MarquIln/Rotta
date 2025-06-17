@@ -54,7 +54,11 @@ class InfosViewController: UIViewController {
     
     @objc private func cardInfoTapped(_ sender: UIButton) {
         let index = sender.tag
-        let item = cardsData[index]
+        _ = cardsData[index]
+        print("clicou")
+        let vc = GlossaryTableViewController()
+        navigationController?.pushViewController(vc, animated: true)
+        
 //        let modal = GlossaryTableViewController()
 //        modal.modalPresentationStyle = UIModalPresentationStyle.fullScreen
 //        present(modal, animated: true , completion: nil)

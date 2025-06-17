@@ -7,7 +7,8 @@
 
 import UIKit
 
-class GlossaryWordDescription: UIView {
+class GlossaryDetails: UIView {// UICollectionViewDataSource 
+    
     lazy var label: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -81,24 +82,37 @@ O DRS pode ser usado pelos pilotos em zonas designadas durante os treinos livres
         return view
     }()
     
-    lazy var exploreText: UILabel = {
-        var label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = """
-        
-        O DRS pode ser usado pelos pilotos em zonas designadas durante os treinos livres, classificação e corridas. A pista tem zonas específicas onde o DRS pode ser ativado, com o carro perseguidor precisando estar a menos de um segundo do carro da frente para que a aba traseira se abra. O DRS é desativado ao final das zonas designadas e quando o piloto utiliza os freios
-        
-        """
+//    lazy var exploreLabel: UILabel = {
+//        let label = UILabel()
+//        label.translatesAutoresizingMaskIntoConstraints = false
+//        label.text = "Explore nosso glossário"
+//        label.textColor = .white
+//        label.font = UIFont.systemFont(ofSize: 20, weight: .medium)
+//        label.textAlignment = .center
+//        return label
+//    }()
+//
+//    lazy var collectionViewLayout: UICollectionViewFlowLayout = {
+//        let layout = UICollectionViewFlowLayout()
+//        layout.scrollDirection = .horizontal
+//        layout.itemSize = CGSize(width: 100, height: 120)
+//        layout.minimumLineSpacing = 16
+//        return layout
+//    }()
+//
+//    lazy var exploreCarousel: UICollectionView = {
+//        let collection = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
+//        collection.translatesAutoresizingMaskIntoConstraints = false
+//        collection.backgroundColor = .clear
+//        collection.showsHorizontalScrollIndicator = false
+//        collection.register(GlossaryItemViewCell.self, forCellWithReuseIdentifier: GlossaryItemViewCell.identifier)
+//        collection.dataSource = self
+//        return collection
+//    }()
+//    
 
-
-        label.textColor = .white
-        label.font = Fonts.BodyRegular
-        label.numberOfLines = 0
-        return label
-    }()
-    
-    lazy var exploreContainer: UIView = {
-        let view = UIView()
+    lazy var exploreContainer: UIScrollView = {
+        let view = UIScrollView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .fillsTextBox
         view.layer.cornerRadius = 32
@@ -123,14 +137,30 @@ O DRS pode ser usado pelos pilotos em zonas designadas durante os treinos livres
     required init?(coder: NSCoder) {
         fatalError("not implemented")
     }
+    
+//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//           return 10
+//       }
+//
+//       func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//           guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: GlossaryItemViewCell.identifier, for: indexPath) as? GlossaryItemViewCell else {
+//               return UICollectionViewCell()
+//           }
+//
+//           cell.imageView.tintColor = .blue
+//           cell.label.text = "Palavra"
+//           return cell
+//       }
 }
 
-extension GlossaryWordDescription: ViewCodeProtocol {
+extension GlossaryDetails: ViewCodeProtocol {
     func addSubviews() {
         addSubview(mainStack)
         descripContainer.addSubview(descripText)
         descrip2Container.addSubview(stackTexts)
-        exploreContainer.addSubview(exploreText)
+//        addSubview(exploreLabel)
+//        addSubview(exploreCarousel)
+
     }
     
     func setupConstraints() {
@@ -154,16 +184,15 @@ extension GlossaryWordDescription: ViewCodeProtocol {
             descrip2Text.leadingAnchor.constraint(equalTo: descrip2Container.leadingAnchor, constant: 16),
             descrip2Text.trailingAnchor.constraint(equalTo: descrip2Container.trailingAnchor, constant: -16),
             
-            
-            exploreText.topAnchor.constraint(equalTo: exploreContainer.topAnchor, constant: 12),
-            exploreText.bottomAnchor.constraint(equalTo: exploreContainer.bottomAnchor, constant: -12),
-            exploreText.leadingAnchor.constraint(equalTo: exploreContainer.leadingAnchor, constant: 16),
-            exploreText.trailingAnchor.constraint(equalTo: exploreContainer.trailingAnchor, constant: -16)
+//           exploreLabel.topAnchor.constraint(equalTo: exploreContainer.bottomAnchor, constant: 32),
+//            exploreLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+//
+//               exploreCarousel.topAnchor.constraint(equalTo: exploreLabel.bottomAnchor, constant: 16),
+//            exploreCarousel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+//            exploreCarousel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+//            exploreCarousel.heightAnchor.constraint(equalToConstant: 120),
+    
         ])
     }
 }
-
-    
-    
-    
     
