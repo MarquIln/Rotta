@@ -46,10 +46,6 @@ class Database {
         return await driverService.getAll()
     }
     
-    func getDriver(by id: UUID) async -> DriverModel? {
-        return await driverService.get(by: id)
-    }
-    
     func getDriversByFormula(idFormula: UUID) async -> [DriverModel] {
         return await driverService.getByFormula(idFormula: idFormula)
     }

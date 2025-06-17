@@ -29,7 +29,7 @@ class DriverService {
                         name: record["name"] as? String ?? "",
                         country: record["country"] as? String ?? "",
                         number: record["number"] as? Int16 ?? 0,
-                        points: record["points"] as? Double ?? 0.0,
+                        points: record["points"] as? Int16 ?? 0,
                         scuderia: record["scuderia"] as? String ?? "",
                         idFormula: UUID(uuidString: record["idFormula"] as? String ?? "") ?? UUID()
                     )
@@ -43,81 +43,26 @@ class DriverService {
         }
         return drivers
     }
-
-    func get(by id: UUID) async -> DriverModel? {
-        let recordID = CKRecord.ID(recordName: id.uuidString)
-        do {
-            let record = try await privateDatabase.record(for: recordID)
-            return DriverModel(
-                id: UUID(uuidString: record["id"] as? String ?? "") ?? UUID(),
-                name: record["name"] as? String ?? "",
-                country: record["country"] as? String ?? "",
-                number: record["number"] as? Int16 ?? 0,
-                points: record["points"] as? Double ?? 0.0,
-                scuderia: record["scuderia"] as? String ?? "",
-                idFormula: UUID(uuidString: record["idFormula"] as? String ?? "") ?? UUID()
-            )
-        } catch {
-            print("Erro ao buscar Driver por ID: \(error.localizedDescription)")
-            return nil
-        }
-    }
-
+    
     func getByFormula(idFormula: UUID) async -> [DriverModel] {
-        var drivers: [DriverModel] = []
-        let predicate = NSPredicate(format: "idFormula == %@", idFormula.uuidString)
-        let query = CKQuery(recordType: "Driver", predicate: predicate)
-        do {
-            let results = try await privateDatabase.records(matching: query)
-            for result in results.matchResults {
-                do {
-                    let record = try result.1.get()
-                    let driver = DriverModel(
-                        id: UUID(uuidString: record["id"] as? String ?? "") ?? UUID(),
-                        name: record["name"] as? String ?? "",
-                        country: record["country"] as? String ?? "",
-                        number: record["number"] as? Int16 ?? 0,
-                        points: record["points"] as? Double ?? 0.0,
-                        scuderia: record["scuderia"] as? String ?? "",
-                        idFormula: UUID(uuidString: record["idFormula"] as? String ?? "") ?? UUID()
-                    )
-                    drivers.append(driver)
-                } catch {
-                    print("Erro ao processar record Driver: \(error.localizedDescription)")
-                }
+        var drivers = await getAll()
+        for driver in drivers {
+            if driver.idFormula != idFormula {
+                drivers.removeAll { $0.id == driver.id }
             }
-        } catch {
-            print("Erro ao buscar Drivers por Fórmula: \(error.localizedDescription)")
         }
+        
         return drivers
     }
 
     func getByScuderia(scuderiaId: UUID) async -> [DriverModel] {
-        var drivers: [DriverModel] = []
-        let predicate = NSPredicate(format: "scuderiaId == %@", scuderiaId.uuidString)
-        let query = CKQuery(recordType: "Driver", predicate: predicate)
-        do {
-            let results = try await privateDatabase.records(matching: query)
-            for result in results.matchResults {
-                do {
-                    let record = try result.1.get()
-                    let driver = DriverModel(
-                        id: UUID(uuidString: record["id"] as? String ?? "") ?? UUID(),
-                        name: record["name"] as? String ?? "",
-                        country: record["country"] as? String ?? "",
-                        number: record["number"] as? Int16 ?? 0,
-                        points: record["points"] as? Double ?? 0.0,
-                        scuderia: record["scuderia"] as? String ?? "",
-                        idFormula: UUID(uuidString: record["idFormula"] as? String ?? "") ?? UUID()
-                    )
-                    drivers.append(driver)
-                } catch {
-                    print("Erro ao processar record Driver: \(error.localizedDescription)")
-                }
+        var drivers = await getAll()
+        for driver in drivers {
+            if driver.scuderia != scuderiaId.uuidString {
+                drivers.removeAll { $0.id == driver.id }
             }
-        } catch {
-            print("Erro ao buscar Drivers por Scuderia: \(error.localizedDescription)")
         }
+        
         return drivers
     }
 
