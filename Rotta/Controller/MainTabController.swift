@@ -51,20 +51,19 @@ class MainTabController: UIViewController {
             var buttonConfig = UIButton.Configuration.plain()
             buttonConfig.title = option
             buttonConfig.baseForegroundColor = .labelsPrimary
+            buttonConfig.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 31, bottom: 0, trailing: 0)
             buttonConfig.titleAlignment = .leading
             
             
             let button = UIButton(configuration: buttonConfig)
             button.contentHorizontalAlignment = .leading
+            button.semanticContentAttribute = .forceLeftToRight
             button.addTarget(self, action: #selector(didSelectDropdownOption(_:)), for: .touchUpInside)
             
-            
-//            //check mark
+            //check mark
             if option == selected {
                 button.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
                 button.semanticContentAttribute = .forceLeftToRight
-            } else {
-                buttonConfig.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 31, bottom: 0, trailing: 0)
             }
             
             stack.isUserInteractionEnabled = true
@@ -132,7 +131,6 @@ class MainTabController: UIViewController {
         isArrowRotated.toggle()
         dropdownView.isHidden.toggle()
         view.bringSubviewToFront(dropdownView)
-        print("Botão selecionado")
     }
 
 
