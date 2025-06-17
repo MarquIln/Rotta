@@ -7,44 +7,83 @@
 import UIKit
 
 class MainTabController: UIViewController {
+    var selected: String = "Fórmula 2"
+    
     let segmented = SegmentedControll(items: ["Calendário", "Ranking", "Infos"])
     
     lazy var titleSelectorButton: UIButton = {
         var button = UIButton(type: .system)
-        button.setTitle("Fórmula 2 ", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
-        button.setImage(UIImage(systemName: "chevron.right"), for: .normal)
-        button.tintColor = .label
+        button.setTitle(selected, for: .normal)
+        button.titleLabel?.font = Fonts.Title1
+        button.setImage(UIImage(systemName: "chevron.down"), for: .normal)
+        button.tintColor = .labelsPrimary
         button.semanticContentAttribute = .forceRightToLeft
         button.addTarget(self, action: #selector(didTapTitleSelector), for: .touchUpInside)
         
         return button
     }()
     
-    lazy var dropdownView: UIStackView = {
-        let options = ["Fórmula 2", "Fórmula 3", "F1 Academy"]
+    lazy var dropdownView: UIVisualEffectView = {
+        let blurView = createBlurContainer()
+        let stackView = createDropdownStack()
+
+        blurView.contentView.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: blurView.contentView.topAnchor, constant: 12),
+            stackView.bottomAnchor.constraint(equalTo: blurView.contentView.bottomAnchor, constant: -12),
+            stackView.leadingAnchor.constraint(equalTo: blurView.contentView.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: blurView.contentView.trailingAnchor, constant: -16)
+        ])
+
+        return blurView
+    }()
+    
+    private func createDropdownStack() -> UIStackView {
         let stack = UIStackView()
         stack.axis = .vertical
         stack.alignment = .fill
-        stack.spacing = 8
-        stack.backgroundColor = UIColor.systemGray6
-        stack.layer.cornerRadius = 8
-        stack.layer.borderWidth = 1
-        stack.layer.borderColor = UIColor.systemGray4.cgColor
+        stack.spacing = 11
         stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.isHidden = true
 
-        for option in options {
-            let button = UIButton(type: .system)
-            button.setTitle("GP de \(option)", for: .normal)
-            button.setTitleColor(.label, for: .normal)
-            button.contentHorizontalAlignment = .center
+        let formulas = ["Fórmula 2", "Fórmula 3", "F1 Academy"]
+        for (index, option) in formulas.enumerated() { //.enumerated() transforma o array em tupla com indice :)
+            var buttonConfig = UIButton.Configuration.plain()
+            buttonConfig.title = option
+            buttonConfig.baseForegroundColor = .labelsPrimary
+            buttonConfig.titleAlignment = .leading
+            
+            
+            let button = UIButton(configuration: buttonConfig)
+            button.contentHorizontalAlignment = .leading
             button.addTarget(self, action: #selector(didSelectDropdownOption(_:)), for: .touchUpInside)
+            
+            
+//            //check mark
+            if option == selected {
+                button.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
+                button.semanticContentAttribute = .forceLeftToRight
+            } else {
+                buttonConfig.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 31, bottom: 0, trailing: 0)
+            }
+            
+            stack.isUserInteractionEnabled = true
+
             stack.addArrangedSubview(button)
+            
+            //separador
+            if index < formulas.count - 1 {
+                let separator = UIView()
+                separator.backgroundColor = .separator
+                separator.translatesAutoresizingMaskIntoConstraints = false
+                separator.heightAnchor.constraint(equalToConstant: 1).isActive = true
+                stack.addArrangedSubview(separator)
+            }
+            
         }
 
         return stack
-    }()
+    }
     
     var isArrowRotated = false
 
@@ -61,6 +100,7 @@ class MainTabController: UIViewController {
         view.backgroundColor = .backgroundPrimary
         setup()
         displayViewController(at: 0)
+
     }
 
     private func displayViewController(at index: Int) {
@@ -81,28 +121,20 @@ class MainTabController: UIViewController {
 
         selectedVC.didMove(toParent: self)
         currentVC = selectedVC
+
+        view.bringSubviewToFront(titleSelectorButton)
+        view.bringSubviewToFront(segmented)
+        view.bringSubviewToFront(dropdownView)
     }
+
 
     @objc private func didTapTitleSelector() {
-        UIView.animate(withDuration: 0.3) {
-            self.titleSelectorButton.imageView?.transform = self.isArrowRotated ? .identity : CGAffineTransform(rotationAngle: .pi / 2)
-        }
         isArrowRotated.toggle()
-
-        let alert = UIAlertController(title: "Selecionar GP", message: nil, preferredStyle: .actionSheet)
-        let options = ["Silverstone", "Monza", "Interlagos"]
-        options.forEach { gp in
-            alert.addAction(UIAlertAction(title: "GP de \(gp)", style: .default) { _ in
-                self.titleSelectorButton.setTitle("GP de \(gp) ", for: .normal)
-                self.resetArrow()
-            })
-        }
-        alert.addAction(UIAlertAction(title: "Cancelar", style: .cancel) { _ in
-            self.resetArrow()
-        })
-
-        present(alert, animated: true)
+        dropdownView.isHidden.toggle()
+        view.bringSubviewToFront(dropdownView)
+        print("Botão selecionado")
     }
+
 
     private func resetArrow() {
         UIView.animate(withDuration: 0.3) {
@@ -111,11 +143,46 @@ class MainTabController: UIViewController {
         isArrowRotated = false
     }
     
+    private func createBlurContainer() -> UIVisualEffectView {
+        let blur = UIBlurEffect(style: .systemThinMaterialDark)
+        let blurView = UIVisualEffectView(effect: blur)
+        blurView.layer.cornerRadius = 12
+        blurView.clipsToBounds = true
+        blurView.translatesAutoresizingMaskIntoConstraints = false
+        blurView.isHidden = true
+        return blurView
+    }
+    
+    private func checkMark() -> UIButton {
+        var config = UIButton.Configuration.plain()
+        config.image = UIImage(systemName: "checkmark.circle.fill")
+        config.baseForegroundColor = .labelsPrimary
+        config.contentInsets = .zero
+        config.imagePlacement = .leading
+
+        let button = UIButton(configuration: config)
+        button.isUserInteractionEnabled = false
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }
+    
     @objc private func didSelectDropdownOption(_ sender: UIButton) {
-        guard let title = sender.currentTitle else { return }
-        titleSelectorButton.setTitle(title + " ", for: .normal)
+        guard let title = sender.titleLabel?.text else { return }
+        titleSelectorButton.setTitle("\(title) ", for: .normal)
         dropdownView.isHidden = true
+        selected = title
         resetArrow()
+        
+        dropdownView.contentView.subviews.forEach { $0.removeFromSuperview() }
+        let newStack = createDropdownStack()
+        dropdownView.contentView.addSubview(newStack)
+
+        NSLayoutConstraint.activate([
+            newStack.topAnchor.constraint(equalTo: dropdownView.contentView.topAnchor, constant: 12),
+            newStack.bottomAnchor.constraint(equalTo: dropdownView.contentView.bottomAnchor, constant: -12),
+            newStack.leadingAnchor.constraint(equalTo: dropdownView.contentView.leadingAnchor, constant: 16),
+            newStack.trailingAnchor.constraint(equalTo: dropdownView.contentView.trailingAnchor, constant: -16)
+        ])
     }
 }
 
@@ -129,8 +196,8 @@ extension MainTabController: ViewCodeProtocol {
 
     func addSubviews() {
         view.addSubview(titleSelectorButton)
-        view.addSubview(dropdownView)
         view.addSubview(segmented)
+        view.addSubview(dropdownView)
     }
 
     func setupConstraints() {
@@ -138,14 +205,14 @@ extension MainTabController: ViewCodeProtocol {
         segmented.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            titleSelectorButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
+            titleSelectorButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 3),
             titleSelectorButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             
             dropdownView.topAnchor.constraint(equalTo: titleSelectorButton.bottomAnchor, constant: 4),
             dropdownView.centerXAnchor.constraint(equalTo: titleSelectorButton.centerXAnchor),
-            dropdownView.widthAnchor.constraint(equalToConstant: 160),
+            dropdownView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
 
-            segmented.topAnchor.constraint(equalTo: titleSelectorButton.bottomAnchor, constant: 8),
+            segmented.topAnchor.constraint(equalTo: titleSelectorButton.bottomAnchor, constant: 20),
             segmented.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             segmented.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             segmented.heightAnchor.constraint(equalToConstant: 32)
@@ -156,3 +223,7 @@ extension MainTabController: ViewCodeProtocol {
         }
     }
 }
+
+//#Preview {
+//    MainTabController()
+//}
