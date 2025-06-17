@@ -11,7 +11,6 @@ import CloudKit
 class DriverRankingCell: UITableViewCell {
     static let reuseIdentifier = "DriverRankingCell"
     
-    let database = Database.shared
     
     lazy var positionLabel: UILabel = {
         let label = UILabel()
