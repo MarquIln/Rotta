@@ -13,8 +13,14 @@ extension RankingVC: TopThreeTableViewDelegate {
         return drivers.count
     }
 
-    func driver(at index: Int) -> CKRecord {
-        return CKRecord(recordType: "Driver")
+    func driver(at index: Int) -> DriverModel {
+        // evita crash caso índice esteja fora do array
+        if drivers.indices.contains(index) {
+            return drivers[index]
+        } else {
+            // retorna último driver como fallback
+            return drivers.last!
+        }
     }
 
     func didScrollWithPosition(_ position: CGFloat, difference: CGFloat) {

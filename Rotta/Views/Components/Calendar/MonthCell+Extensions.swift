@@ -16,7 +16,7 @@ extension MonthCell: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CalendarDayCell", for: indexPath) as! CalendarDayCell
         
         let day = days[indexPath.item]
-        cell.config(with: day, isSelected: day == selectedDate, isToday: day != nil && calendar.isDateInToday(day!))
+        cell.configure(with: day, isSelected: day == selectedDate, isToday: day != nil && calendar.isDateInToday(day!))
         
         return cell
     }

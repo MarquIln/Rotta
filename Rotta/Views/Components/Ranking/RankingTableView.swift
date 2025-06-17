@@ -10,7 +10,7 @@ import CloudKit
 
 protocol RankingTableViewDelegate: AnyObject {
     func numberOfDrivers() -> Int
-    func driver(at index: Int) -> CKRecord
+    func driver(at index: Int) -> DriverModel
     func didScrollWithPosition(_ position: CGFloat, difference: CGFloat)
     func willBeginDragging(at position: CGFloat)
     func didEndDecelerating(at position: CGFloat)
@@ -56,7 +56,7 @@ class RankingTableView: UIView {
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .horizontal
         stack.distribution = .fillEqually
-        stack.backgroundColor = .end
+        stack.backgroundColor = .f2Corrida
         stack.alignment = .fill
         stack.layer.cornerRadius = 12
         

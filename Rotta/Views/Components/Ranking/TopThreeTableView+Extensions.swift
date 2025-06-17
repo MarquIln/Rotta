@@ -9,7 +9,9 @@ import UIKit
 
 extension TopThreeTableView: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        // exibe no máximo 3 drivers, garantindo que não exceda a quantidade disponível
+        guard let count = delegate?.numberOfDrivers() else { return 0 }
+        return min(3, count)
       }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -18,6 +20,7 @@ extension TopThreeTableView: UITableViewDataSource {
             return UITableViewCell()
         }
         let position = indexPath.row + 1
+        
         cell.config(with: driver, position: position, cellIndex: indexPath.row)
         cell.selectionStyle = .none
         return cell

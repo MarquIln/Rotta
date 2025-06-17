@@ -50,7 +50,7 @@ class CalendarDayCell: UICollectionViewCell {
         }
 
         let calendar = Calendar.current
-        let day = calendar.component(.day, from: date)
+        let day = calendar.component(.day, from: date ?? Date())
         dayLabel.text = "\(day)"
         
         if isToday {
@@ -60,7 +60,7 @@ class CalendarDayCell: UICollectionViewCell {
         }
 
         // TODO: Implementar lógica de eventos
-        dayLabel.textColor = .labelGray
+        dayLabel.textColor = .rottaGray
         decorationView.isHidden = true
     }
 

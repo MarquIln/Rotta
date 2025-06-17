@@ -11,7 +11,7 @@ import CloudKit
 
 protocol TopThreeTableViewDelegate: AnyObject {
     func numberOfDrivers() -> Int
-    func driver(at index: Int) -> CKRecord
+    func driver(at index: Int) -> DriverModel
     func didScrollWithPosition(_ position: CGFloat, difference: CGFloat)
     func willBeginDragging(at position: CGFloat)
     func didEndDecelerating(at position: CGFloat)
@@ -86,7 +86,7 @@ class TopThreeTableView: UIView {
     lazy var standingsButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = .yellowPrimary
+        button.backgroundColor = .rottaYellow
         button.setTitle("View all Standings", for: .normal)
         button.addTarget(
             self,
