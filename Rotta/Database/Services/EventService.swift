@@ -83,33 +83,39 @@ class EventService {
         return events
     }
 
+    func getEventsInRange(startDate: Date, endDate: Date) async -> [EventModel] {
+        let allEvents = await getAll()
+        
+        var calendar = Calendar.current
+        calendar.timeZone = TimeZone(secondsFromGMT: 0)!
+        
+        let startOfPeriod = calendar.startOfDay(for: startDate)
+        let endOfPeriod = calendar.startOfDay(for: endDate)
+        
+        let filtered = allEvents.filter { event in
+            guard let eventDate = event.date else { return false }
+            let eventDayStart = calendar.startOfDay(for: eventDate)
+            return eventDayStart >= startOfPeriod && eventDayStart < endOfPeriod
+        }
+        
+        return filtered
+    }
+
     func getOnDate(_ date: Date) async -> [EventModel] {
-        var events: [EventModel] = []
-        let calendar = Calendar.current
+        let allEvents = await getAll()
+        
+        var calendar = Calendar.current
+        calendar.timeZone = TimeZone(secondsFromGMT: 0)!
+
         let startOfDay = calendar.startOfDay(for: date)
         let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
-        let predicate = NSPredicate(format: "date >= %@ AND date < %@", startOfDay as NSDate, endOfDay as NSDate)
-        let query = CKQuery(recordType: "Event", predicate: predicate)
-        do {
-            let results = try await privateDatabase.records(matching: query)
-            for result in results.matchResults {
-                do {
-                    let record = try result.1.get()
-                    let event = EventModel(
-                        id: UUID(uuidString: record["id"] as? String ?? "") ?? UUID(), 
-                        date: record["date"] as? Date,
-                        startTime: record["startTime"] as? Date,
-                        idFormula: UUID(uuidString: record["idFormula"] as? String ?? "")
-                    )
-                    events.append(event)
-                } catch {
-                    print("Erro ao processar record Event: \(error.localizedDescription)")
-                }
-            }
-        } catch {
-            print("Erro ao buscar Events por data: \(error.localizedDescription)")
+
+        let filtered = allEvents.filter {
+            guard let eventDate = $0.date else { return false }
+            return eventDate >= startOfDay && eventDate < endOfDay
         }
-        return events
+
+        return filtered
     }
 
     func add(name: String, date: Date? = nil, startTime: Date? = nil, idFormula: UUID? = nil) async {

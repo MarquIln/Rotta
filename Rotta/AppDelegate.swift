@@ -11,13 +11,15 @@ import UIKit
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        let defaults = UserDefaults.standard
-        if !defaults.bool(forKey: "hasSeededCloudKit") {
-            Task {
-                print("🚀 Iniciando seed do CloudKit...")
-                await CloudKitSeed(database: Database.shared).seedDatabase()
-                defaults.set(true, forKey: "hasSeededCloudKit")
-            }
+        Task {
+            print("🚀 Verificando/Iniciando seed do CloudKit...")
+            let cloudKitSeed = CloudKitSeed(database: Database.shared)
+            
+            // O seedDatabase() agora verifica automaticamente se já foi feito seed
+            await cloudKitSeed.seedDatabase()
+            
+            // Para debugging, você pode usar:
+            // await cloudKitSeed.printDatabaseStatus()
         }
 
         return true
