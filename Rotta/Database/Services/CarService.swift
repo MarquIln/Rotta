@@ -24,9 +24,7 @@ class CarService {
             for result in results.matchResults {
                 do {
                     let record = try result.1.get()
-                    let transformer = ArrayToUUIDTransformer()
-                    let componentsData = record["idComponents"] as? Data
-                    let idsComponents = transformer.reverseTransformedValue(componentsData) as? [UUID] ?? []
+                    let idsComponents = record["idComponents"] as? [UUID] ?? []
                     let car = CarModel(
                         id: UUID(uuidString: record["id"] as? String ?? "") ?? UUID(),
                         idComponents: idsComponents,
@@ -48,12 +46,10 @@ class CarService {
         let recordID = CKRecord.ID(recordName: id.uuidString)
         do {
             let record = try await privateDatabase.record(for: recordID)
-            let transformer = ArrayToUUIDTransformer()
-            let componentsData = record["idComponents"] as? Data
-            let ids = transformer.reverseTransformedValue(componentsData) as? [UUID] ?? []
+            let idsComponents = record["idComponents"] as? [UUID] ?? []
             return CarModel(
                 id: UUID(uuidString: record["id"] as? String ?? "") ?? UUID(),
-                idComponents: ids,
+                idComponents: idsComponents,
                 idFormula: UUID(uuidString: record["idFormula"] as? String ?? "") ?? UUID(),
                 image: record["image"] as? String
             )
@@ -72,12 +68,10 @@ class CarService {
             for result in results.matchResults {
                 do {
                     let record = try result.1.get()
-                    let transformer = ArrayToUUIDTransformer()
-                    let componentsData = record["idComponents"] as? Data
-                    let ids = transformer.reverseTransformedValue(componentsData) as? [UUID] ?? []
+                    let idsComponents = record["idComponents"] as? [UUID] ?? []
                     let car = CarModel(
                         id: UUID(uuidString: record["id"] as? String ?? "") ?? UUID(),
-                        idComponents: ids,
+                        idComponents: idsComponents,
                         idFormula: UUID(uuidString: record["idFormula"] as? String ?? "") ?? UUID(),
                         image: record["image"] as? String
                     )
@@ -101,12 +95,10 @@ class CarService {
             for result in results.matchResults {
                 do {
                     let record = try result.1.get()
-                    let transformer = ArrayToUUIDTransformer()
-                    let componentsData = record["idComponents"] as? Data
-                    let ids = transformer.reverseTransformedValue(componentsData) as? [UUID] ?? []
+                    
                     let car = CarModel(
                         id: UUID(uuidString: record["id"] as? String ?? "") ?? UUID(),
-                        idComponents: ids,
+                        idComponents: record["idComponents"] as? [UUID] ?? [],
                         idFormula: UUID(uuidString: record["idFormula"] as? String ?? "") ?? UUID(),
                         image: record["image"] as? String
                     )
@@ -125,8 +117,8 @@ class CarService {
         let uuid = UUID().uuidString
         let record = CKRecord(recordType: "Car")
         record["id"] = uuid
-        record["idComponents"] = ArrayToUUIDTransformer().transformedValue(idComponents) as? Data
         record["idFormula"] = idFormula.uuidString
+        record["idComponents"] = idComponents.map{ $0.uuidString }
         if let image = image { record["image"] = image }
         do {
             let saved = try await privateDatabase.save(record)

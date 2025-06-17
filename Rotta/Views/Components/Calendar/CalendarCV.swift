@@ -22,6 +22,10 @@ class CalendarCollectionView: UIView {
     var months: [Date] = []
     var currentMonthIndex = 0
     
+    private let eventService = EventService()
+    private var eventsCache: [Date: [EventModel]] = [:]
+    private var loadedMonths: Set<String> = []
+    
     private lazy var headerLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 20, weight: .bold)
@@ -146,6 +150,105 @@ class CalendarCollectionView: UIView {
         }
     }
     
+    func preloadAllEvents() {
+        Task {
+            await loadAllEventsAtOnce()
+        }
+    }
+    
+    @MainActor
+    private func loadAllEventsAtOnce() async {
+        let allEvents = await eventService.getAll()
+        
+        var calendar = Calendar.current
+        calendar.timeZone = TimeZone(secondsFromGMT: 0)!
+        
+        eventsCache.removeAll()
+        
+        for event in allEvents {
+            guard let eventDate = event.date else { continue }
+            let dayKey = calendar.startOfDay(for: eventDate)
+            
+            if eventsCache[dayKey] == nil {
+                eventsCache[dayKey] = []
+            }
+            eventsCache[dayKey]?.append(event)
+        }
+        
+        let startYear = 2024
+        let endYear = 2026
+        for year in startYear...endYear {
+            for month in 1...12 {
+                let monthKey = String(format: "%04d-%02d", year, month)
+                loadedMonths.insert(monthKey)
+            }
+        }
+        
+        monthsCollectionView.reloadData()
+    }
+    
+    func loadEventsForVisibleDates() {
+        guard !isUserInteracting else { return }
+        
+        Task {
+            await loadEventsForCurrentMonth()
+        }
+    }
+    
+    var isUserInteracting: Bool = false
+    
+    @MainActor
+    private func loadEventsForCurrentMonth() async {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM"
+        let monthKey = formatter.string(from: currentDate)
+        
+        guard !loadedMonths.contains(monthKey) else {
+            monthsCollectionView.reloadData()
+            return
+        }
+        
+        var calendar = Calendar.current
+        calendar.timeZone = TimeZone(secondsFromGMT: 0)!
+
+        let startOfMonth = calendar.dateInterval(of: .month, for: currentDate)?.start ?? currentDate
+        let endOfMonth = calendar.dateInterval(of: .month, for: currentDate)?.end ?? currentDate
+        
+        let allEvents = await eventService.getEventsInRange(startDate: startOfMonth, endDate: endOfMonth)
+        
+        let daysInMonth = calendar.range(of: .day, in: .month, for: currentDate)?.count ?? 30
+        for day in 1...daysInMonth {
+            if let date = calendar.date(byAdding: .day, value: day - 1, to: startOfMonth) {
+                let dayKey = calendar.startOfDay(for: date)
+                eventsCache[dayKey] = []
+            }
+        }
+        
+        for event in allEvents {
+            guard let eventDate = event.date else { continue }
+            let dayKey = calendar.startOfDay(for: eventDate)
+            
+            if eventsCache[dayKey] == nil {
+                eventsCache[dayKey] = []
+            }
+            eventsCache[dayKey]?.append(event)
+        }
+        
+        // Marcar este mês como carregado
+        loadedMonths.insert(monthKey)
+        
+        monthsCollectionView.reloadData()
+    }
+    
+    func hasEvent(for date: Date) -> Bool {
+        // Usar o mesmo calendar configurado que foi usado no loadEventsForCurrentMonth
+        var calendarForCheck = Calendar.current
+        calendarForCheck.timeZone = TimeZone(secondsFromGMT: 0)!
+        
+        let dayKey = calendarForCheck.startOfDay(for: date)
+        return !(eventsCache[dayKey]?.isEmpty ?? true)
+    }
+    
     func goToNextMonth() {
         guard currentMonthIndex < months.count - 1 else { return }
         
@@ -157,6 +260,8 @@ class CalendarCollectionView: UIView {
         
         updateHeaderLabel()
         delegate?.didChangeMonth(currentDate)
+        
+        loadEventsForVisibleDates()
     }
     
     func goToPreviousMonth() {
@@ -170,11 +275,13 @@ class CalendarCollectionView: UIView {
         
         updateHeaderLabel()
         delegate?.didChangeMonth(currentDate)
+        
+        loadEventsForVisibleDates()
     }
     
     func goToMonth(_ date: Date, animated: Bool = true) {
-        guard let targetIndex = months.firstIndex(where: { 
-            calendar.isDate($0, equalTo: date, toGranularity: .month) 
+        guard let targetIndex = months.firstIndex(where: {
+            calendar.isDate($0, equalTo: date, toGranularity: .month)
         }) else { return }
         
         currentMonthIndex = targetIndex

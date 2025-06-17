@@ -11,7 +11,6 @@ import CloudKit
 class DriverRankingCell: UITableViewCell {
     static let reuseIdentifier = "DriverRankingCell"
     
-    let cloudKitModel = Database.shared
     
     lazy var positionLabel: UILabel = {
         let label = UILabel()
@@ -91,24 +90,13 @@ class DriverRankingCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func config(with driver: CKRecord, position: Int, cellIndex: Int) {
+    func config(with driver: DriverModel, position: Int, cellIndex: Int) {
         positionLabel.text = "\(position)"
-        
-        if let driverName = driver["name"] as? String {
-            nameLabel.text = formatDriverName(driverName)
-        }
-        
-        if let points = driver["points"] as? Int {
-            pointsLabel.text = "\(points)"
-        }
-        
-        if let scuderiaName = driver["scuderia"] as? String {
-            scuderiaLabel.text = scuderiaName
-        }
-        
+        nameLabel.text = formatDriverName(driver.name)
+        pointsLabel.text = "\(driver.points)"
+        scuderiaLabel.text = driver.scuderia
         driverImageView.image = UIImage(systemName: "person.circle.fill")
         driverImageView.tintColor = .systemGray3
-        
         setupBackgroundColor(for: cellIndex)
     }
     

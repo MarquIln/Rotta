@@ -18,6 +18,7 @@ extension RankingTableView: UITableViewDataSource {
             return UITableViewCell()
         }
         let position = indexPath.row + 1
+        
         cell.config(with: driver, position: position, cellIndex: indexPath.row)
         cell.selectionStyle = .none
         return cell

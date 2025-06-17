@@ -38,12 +38,15 @@ extension CalendarCollectionView: UIScrollViewDelegate {
             currentDate = months[currentMonthIndex]
             updateHeaderLabel()
             delegate?.didChangeMonth(currentDate)
+            
+            loadEventsForVisibleDates()
         }
     }
 }
 
 extension CalendarCollectionView: MonthCellDelegate {
     func didSelectDate(_ date: Date) {
+        isUserInteracting = true
         selectedDate = date
         delegate?.didSelectDate(date)
         
@@ -51,6 +54,10 @@ extension CalendarCollectionView: MonthCellDelegate {
             if let monthCell = cell as? MonthCell {
                 monthCell.updateSelectedDate(selectedDate)
             }
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.isUserInteracting = false
         }
     }
 }
