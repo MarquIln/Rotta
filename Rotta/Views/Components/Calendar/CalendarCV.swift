@@ -18,7 +18,13 @@ class CalendarCollectionView: UIView {
     var currentDate = Date()
     var selectedDate: Date?
     let calendar = Calendar.current
-    var days: [Date?] = []
+    
+    var months: [Date] = []
+    var currentMonthIndex = 0
+    
+    private let eventService = EventService()
+    private var eventsCache: [Date: [EventModel]] = [:]
+    private var loadedMonths: Set<String> = []
     
     private lazy var headerLabel: UILabel = {
         let label = UILabel()
@@ -48,45 +54,43 @@ class CalendarCollectionView: UIView {
         return stack
     }()
     
-    private lazy var collectionView: UICollectionView = {
+    lazy var monthsCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 8
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 0
         layout.minimumInteritemSpacing = 0
         
-        let calendar = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        calendar.backgroundColor = .clear
-        calendar.delegate = self
-        calendar.dataSource = self
-        calendar.translatesAutoresizingMaskIntoConstraints = false
-        calendar.register(CalendarDayCell.self, forCellWithReuseIdentifier: "CalendarDayCell")
-        calendar.showsVerticalScrollIndicator = false
-        return calendar
-    }()
-    
-    private lazy var panGesture: UIPanGestureRecognizer = {
-        let gesture = UIPanGestureRecognizer(target: self, action: #selector(handleGesture(_:)))
-        return gesture
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = .clear
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.register(MonthCell.self, forCellWithReuseIdentifier: "MonthCell")
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.isPagingEnabled = true
+        collectionView.decelerationRate = .fast
+        return collectionView
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
-        updateCalendar()
+        setupMonths()
+        updateHeaderLabel()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupView()
-        updateCalendar()
+        setupMonths()
+        updateHeaderLabel()
     }
     
     private func setupView() {
         backgroundColor = .clear
         addSubview(headerLabel)
         addSubview(weekdayStackView)
-        addSubview(collectionView)
-        
-        addGestureRecognizer(panGesture)
+        addSubview(monthsCollectionView)
         
         setupConstraints()
     }
@@ -101,71 +105,192 @@ class CalendarCollectionView: UIView {
             weekdayStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
             weekdayStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30),
             
-            collectionView.topAnchor.constraint(equalTo: weekdayStackView.bottomAnchor, constant: 8),
-            collectionView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
-            collectionView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30),
-            collectionView.heightAnchor.constraint(equalToConstant: 500)
+            monthsCollectionView.topAnchor.constraint(equalTo: weekdayStackView.bottomAnchor, constant: 8),
+            monthsCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
+            monthsCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30),
+            monthsCollectionView.heightAnchor.constraint(equalToConstant: 500)
         ])
     }
     
-    @objc private func handleGesture(_ gesture: UIPanGestureRecognizer) {
-        let translation = gesture.translation(in: self)
+    func setupMonths() {
+        months.removeAll()
         
-        if gesture.state == .ended {
-            if translation.x > 50 {
-                changeMonth(-1)
-            } else if translation.x < -50 {
-                changeMonth(1)
+        let startMonth = calendar.date(byAdding: .month, value: -12, to: currentDate) ?? currentDate
+        
+        for i in 0..<25 {
+            if let month = calendar.date(byAdding: .month, value: i, to: startMonth) {
+                months.append(month)
             }
+        }
+        
+        currentMonthIndex = 12
+        
+        monthsCollectionView.reloadData()
+        
+        DispatchQueue.main.async {
+            let indexPath = IndexPath(item: self.currentMonthIndex, section: 0)
+            self.monthsCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
         }
     }
     
-    private func changeMonth(_ direction: Int) {
-        currentDate = calendar.date(byAdding: .month, value: direction, to: currentDate) ?? currentDate
-        updateCalendar()
-        delegate?.didChangeMonth(currentDate)
-    }
-    
-    private func updateCalendar() {
+    func updateHeaderLabel() {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "pt_BR")
         formatter.dateFormat = "MMM"
         headerLabel.text = formatter.string(from: currentDate).capitalized
-        
-        generateDaysInMonth()
-        
-        UIView.transition(with: collectionView, duration: 0.1, options: .transitionCrossDissolve) {
-            self.collectionView.reloadData()
-        }
-    }
-    
-    private func generateDaysInMonth() {
-        days.removeAll()
-        
-        guard let monthInterval = calendar.dateInterval(of: .month, for: currentDate) else { return }
-        
-        let firstOfMonth = monthInterval.start
-        let firstWeekday = calendar.component(.weekday, from: firstOfMonth)
-
-        for _ in 1..<firstWeekday {
-            days.append(nil)
-        }
-        
-        let numberOfDays = calendar.range(of: .day, in: .month, for: currentDate)?.count ?? 0
-        
-        for day in 1...numberOfDays {
-            if let date = calendar.date(byAdding: .day, value: day - 1, to: firstOfMonth) {
-                days.append(date)
-            }
-        }
-        
-        while days.count % 7 != 0 {
-            days.append(nil)
-        }
     }
     
     func selectDate(_ date: Date) {
         selectedDate = date
-        collectionView.reloadData()
+        
+        for cell in monthsCollectionView.visibleCells {
+            if let monthCell = cell as? MonthCell {
+                monthCell.updateSelectedDate(selectedDate)
+            }
+        }
+    }
+    
+    func preloadAllEvents() {
+        Task {
+            await loadAllEventsAtOnce()
+        }
+    }
+    
+    @MainActor
+    private func loadAllEventsAtOnce() async {
+        let allEvents = await eventService.getAll()
+        
+        var calendar = Calendar.current
+        calendar.timeZone = TimeZone(secondsFromGMT: 0)!
+        
+        eventsCache.removeAll()
+        
+        for event in allEvents {
+            guard let eventDate = event.date else { continue }
+            let dayKey = calendar.startOfDay(for: eventDate)
+            
+            if eventsCache[dayKey] == nil {
+                eventsCache[dayKey] = []
+            }
+            eventsCache[dayKey]?.append(event)
+        }
+        
+        let startYear = 2024
+        let endYear = 2026
+        for year in startYear...endYear {
+            for month in 1...12 {
+                let monthKey = String(format: "%04d-%02d", year, month)
+                loadedMonths.insert(monthKey)
+            }
+        }
+        
+        monthsCollectionView.reloadData()
+    }
+    
+    func loadEventsForVisibleDates() {
+        guard !isUserInteracting else { return }
+        
+        Task {
+            await loadEventsForCurrentMonth()
+        }
+    }
+    
+    var isUserInteracting: Bool = false
+    
+    @MainActor
+    private func loadEventsForCurrentMonth() async {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM"
+        let monthKey = formatter.string(from: currentDate)
+        
+        guard !loadedMonths.contains(monthKey) else {
+            monthsCollectionView.reloadData()
+            return
+        }
+        
+        var calendar = Calendar.current
+        calendar.timeZone = TimeZone(secondsFromGMT: 0)!
+
+        let startOfMonth = calendar.dateInterval(of: .month, for: currentDate)?.start ?? currentDate
+        let endOfMonth = calendar.dateInterval(of: .month, for: currentDate)?.end ?? currentDate
+        
+        let allEvents = await eventService.getEventsInRange(startDate: startOfMonth, endDate: endOfMonth)
+        
+        let daysInMonth = calendar.range(of: .day, in: .month, for: currentDate)?.count ?? 30
+        for day in 1...daysInMonth {
+            if let date = calendar.date(byAdding: .day, value: day - 1, to: startOfMonth) {
+                let dayKey = calendar.startOfDay(for: date)
+                eventsCache[dayKey] = []
+            }
+        }
+        
+        for event in allEvents {
+            guard let eventDate = event.date else { continue }
+            let dayKey = calendar.startOfDay(for: eventDate)
+            
+            if eventsCache[dayKey] == nil {
+                eventsCache[dayKey] = []
+            }
+            eventsCache[dayKey]?.append(event)
+        }
+        
+        // Marcar este mês como carregado
+        loadedMonths.insert(monthKey)
+        
+        monthsCollectionView.reloadData()
+    }
+    
+    func hasEvent(for date: Date) -> Bool {
+        // Usar o mesmo calendar configurado que foi usado no loadEventsForCurrentMonth
+        var calendarForCheck = Calendar.current
+        calendarForCheck.timeZone = TimeZone(secondsFromGMT: 0)!
+        
+        let dayKey = calendarForCheck.startOfDay(for: date)
+        return !(eventsCache[dayKey]?.isEmpty ?? true)
+    }
+    
+    func goToNextMonth() {
+        guard currentMonthIndex < months.count - 1 else { return }
+        
+        currentMonthIndex += 1
+        currentDate = months[currentMonthIndex]
+        
+        let indexPath = IndexPath(item: currentMonthIndex, section: 0)
+        monthsCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+        
+        updateHeaderLabel()
+        delegate?.didChangeMonth(currentDate)
+        
+        loadEventsForVisibleDates()
+    }
+    
+    func goToPreviousMonth() {
+        guard currentMonthIndex > 0 else { return }
+        
+        currentMonthIndex -= 1
+        currentDate = months[currentMonthIndex]
+        
+        let indexPath = IndexPath(item: currentMonthIndex, section: 0)
+        monthsCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+        
+        updateHeaderLabel()
+        delegate?.didChangeMonth(currentDate)
+        
+        loadEventsForVisibleDates()
+    }
+    
+    func goToMonth(_ date: Date, animated: Bool = true) {
+        guard let targetIndex = months.firstIndex(where: {
+            calendar.isDate($0, equalTo: date, toGranularity: .month)
+        }) else { return }
+        
+        currentMonthIndex = targetIndex
+        currentDate = months[currentMonthIndex]
+        
+        let indexPath = IndexPath(item: currentMonthIndex, section: 0)
+        monthsCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: animated)
+        
+        updateHeaderLabel()
+        delegate?.didChangeMonth(currentDate)
     }
 }

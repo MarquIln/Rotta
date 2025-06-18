@@ -27,7 +27,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
       
         window?.makeKeyAndVisible()
 
+        let window = UIWindow(windowScene: windowScene)
+
+        let homeVC = MainTabController() 
+        let navController = UINavigationController(rootViewController: homeVC)
+
+        window.rootViewController = navController
+        self.window = window
+        window.makeKeyAndVisible()
     }
+
 
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
@@ -59,7 +68,5 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Save changes in the application's managed object context when the application transitions to the background.
         (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
     }
-
-
 }
 

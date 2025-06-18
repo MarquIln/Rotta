@@ -88,7 +88,7 @@ class MainTabController: UIViewController {
 
     let viewControllers: [UIViewController] = [
         CalendarViewController(),
-        RankingViewController(),
+        RankingVC(),
         InfosViewController()
     ]
 
