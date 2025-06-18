@@ -6,11 +6,11 @@
 //
 
 import UIKit
+import SkeletonView
 import CloudKit
 
 class DriverRankingCell: UITableViewCell {
     static let reuseIdentifier = "DriverRankingCell"
-    
     
     lazy var positionLabel: UILabel = {
         let label = UILabel()
@@ -18,6 +18,7 @@ class DriverRankingCell: UITableViewCell {
         label.font = Fonts.Title2
         label.textColor = .white
         label.textAlignment = .center
+        label.isSkeletonable = true
         return label
     }()
     
@@ -26,6 +27,7 @@ class DriverRankingCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = Fonts.Subtitle2
         label.textColor = .white
+        label.isSkeletonable = true
         return label
     }()
     
@@ -44,6 +46,7 @@ class DriverRankingCell: UITableViewCell {
         label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
         label.textColor = .lightGray
         label.textAlignment = .center
+        label.isSkeletonable = true
         return label
     }()
     
@@ -52,6 +55,7 @@ class DriverRankingCell: UITableViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
+        imageView.isSkeletonable = true
         return imageView
     }()
     
@@ -97,15 +101,6 @@ class DriverRankingCell: UITableViewCell {
         scuderiaLabel.text = driver.scuderia
         driverImageView.image = UIImage(systemName: "person.circle.fill")
         driverImageView.tintColor = .systemGray3
-        setupBackgroundColor(for: cellIndex)
-    }
-    
-    private func setupBackgroundColor(for cellIndex: Int) {
-        if cellIndex % 2 == 0 {
-            backgroundColor = UIColor(named: "white4")
-        } else {
-            backgroundColor = UIColor(named: "white5")
-        }
     }
     
     private func formatDriverName(_ fullName: String) -> String {
