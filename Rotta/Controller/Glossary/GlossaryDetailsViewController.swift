@@ -9,14 +9,18 @@ import UIKit
 
 class GlossaryDetailsViewController: UIViewController {
     
-    var term: GlossaryModel? = nil {
-        didSet {
-            print(term)
-        }
-    }
+    var term: GlossaryModel?
+//    = nil {
+//        didSet {
+//            print(term)
+//        }
+//    }
     
     lazy var component: GlossaryDetails = {
-        var component =  GlossaryDetails()
+        guard let termUnwrapped = term else {
+            fatalError("GlossaryModel não pode ser nil ao criar o componente.")
+        }
+        var component =  GlossaryDetails(frame: .zero, term: termUnwrapped)
         component.translatesAutoresizingMaskIntoConstraints = false
         return component
     }()
