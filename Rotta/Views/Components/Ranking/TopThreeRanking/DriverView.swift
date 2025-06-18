@@ -7,8 +7,7 @@
 
 import UIKit
 
-class DriversCell: UICollectionViewCell {
-    static let reuseIdentifier = "DriversCell"
+class DriverView: UIView {
     private lazy var positionLabel: UILabel = {
         let label = UILabel()
         label.font = Fonts.Title2
@@ -16,12 +15,14 @@ class DriversCell: UICollectionViewCell {
         label.textAlignment = .center
         return label
     }()
+    
     private lazy var driverImageView: UIImageView = {
         let image = UIImageView(image: UIImage(systemName: "person.circle.fill"))
         image.contentMode = .scaleAspectFit
         image.tintColor = .systemGray3
         return image
     }()
+    
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.font = Fonts.FootnoteEmphasized
@@ -30,6 +31,7 @@ class DriversCell: UICollectionViewCell {
         label.numberOfLines = 1
         return label
     }()
+    
     private lazy var pointsLabel: UILabel = {
         let label = UILabel()
         label.font = Fonts.FootnoteRegular
@@ -39,10 +41,10 @@ class DriversCell: UICollectionViewCell {
     }()
     private lazy var stackView: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [driverImageView, positionLabel, nameLabel, pointsLabel])
+        stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .vertical
         stack.alignment = .center
-        stack.spacing = 4
-        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.spacing = 8
         return stack
     }()
 
@@ -59,24 +61,30 @@ class DriversCell: UICollectionViewCell {
         positionLabel.text = "\(rank)"
         let parts = driver.name.split(separator: " ")
         nameLabel.text = parts.count >= 2 ? "\(parts.first!.prefix(1)). \(parts.last!)" : driver.name
-        pointsLabel.text = "\(driver.points) points"
+        pointsLabel.text = "\(driver.points) pontos"
+        driverImageView.image = UIImage(systemName: "person.circle.fill")
+        if rank == 1 {
+            driverImageView.heightAnchor.constraint(equalToConstant: 80).isActive = true
+            driverImageView.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        } else {
+            driverImageView.widthAnchor.constraint(equalToConstant: 60).isActive = true
+            driverImageView.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        }
     }
 }
 
 // MARK: - ViewCodeProtocol
-extension DriversCell: ViewCodeProtocol {
+extension DriverView: ViewCodeProtocol {
     func addSubviews() {
-        contentView.addSubview(stackView)
+        addSubview(stackView)
     }
     
     func setupConstraints() {
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
-            driverImageView.widthAnchor.constraint(equalToConstant: 60),
-            driverImageView.heightAnchor.constraint(equalToConstant: 60)
+            stackView.topAnchor.constraint(equalTo: topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
     }
 }

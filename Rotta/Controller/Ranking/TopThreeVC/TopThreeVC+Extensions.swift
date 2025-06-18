@@ -9,15 +9,15 @@ import UIKit
 
 extension TopThreeVC: ViewCodeProtocol {
     func addSubviews() {
-        view.addSubview(stackView)
+        view.addSubview(mainDriverStack)
     }
 
     func setupConstraints() {
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,constant: 20),
-            stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor,constant: 16),
-            stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor,constant: -16),
-            stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            mainDriverStack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,constant: 60),
+            mainDriverStack.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            mainDriverStack.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            driverHeaderView.centerXAnchor.constraint(equalTo: mainDriverStack.centerXAnchor),
         ])
     }
 }
