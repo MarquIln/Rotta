@@ -13,7 +13,7 @@ class MainTabController: UIViewController {
         RankingViewController(),
         InfosViewController(),
        //GlossaryDetailsViewController()
-       //TestController()
+      //TestController()
     ]
 
     var currentVC: UIViewController?
