@@ -18,18 +18,18 @@ class RankingVC: UIViewController {
         let view = RankingTableView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.isUserInteractionEnabled = true
-        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-        tap.cancelsTouchesInView = false
-        tap.delegate = self
-        view.addGestureRecognizer(tap)
+//        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+//        tap.cancelsTouchesInView = false
+//        tap.delegate = self
+//        view.addGestureRecognizer(tap)
 
         return view
     }()
     
-    @objc func handleTap() {
-        let vc = OnBoardingVC()
-        navigationController?.pushViewController(vc, animated: true)
-    }
+//    @objc func handleTap() {
+//        let vc = OnBoardingVC()
+//        navigationController?.pushViewController(vc, animated: true)
+//    }
     
     lazy var backButton: UIButton = {
         let button = UIButton(type: .system)
@@ -54,6 +54,7 @@ class RankingVC: UIViewController {
         super.viewDidLoad()
 
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+        navigationController?.isNavigationBarHidden = false
 
         navigationItem.title = "Drivers Ranking"
 

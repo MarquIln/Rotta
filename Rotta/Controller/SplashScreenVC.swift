@@ -70,5 +70,6 @@ class SplashScreenVC: UIViewController {
         }
 
         navigationController?.setViewControllers([nextVC], animated: true)
+        navigationController?.isNavigationBarHidden = true
     }
 }
