@@ -26,8 +26,9 @@ class GlossaryService {
                     let record = try result.1.get()
                     let term = GlossaryModel(
                         id: UUID(uuidString: record["id"] as? String ?? "") ?? UUID(),
-                        name: record["name"] as? String ?? "",
-                        details: record["details"] as? String ?? ""
+                        title: record["title"] as? String ?? "",
+                        details: record["details"] as? String ?? "",
+                        subtitle: record["subtitle"] as? String ?? ""
                     )
                     terms.append(term)
                 } catch {
@@ -46,8 +47,9 @@ class GlossaryService {
             let record = try await privateDatabase.record(for: recordID)
             return GlossaryModel(
                 id: UUID(uuidString: record["id"] as? String ?? "") ?? UUID(),
-                name: record["name"] as? String ?? "",
-                details: record["details"] as? String ?? ""
+                title: record["title"] as? String ?? "",
+                details: record["details"] as? String ?? "",
+                subtitle: record["subtitle"] as? String ?? ""
             )
         } catch {
             print("Erro ao buscar Glossary por ID: \(error.localizedDescription)")
@@ -55,12 +57,13 @@ class GlossaryService {
         }
     }
 
-    func add(name: String? = nil, details: String? = nil) async {
-        let uuid = UUID().uuidString
+    func add(title: String? = nil, details: String? = nil, subtitle: String? = nil) async {
         let record = CKRecord(recordType: "Glossary")
+        let uuid = UUID().uuidString
         record["id"] = uuid
-        if let name = name { record["name"] = name }
-        if let details = details { record["details"] = details }
+        if let title { record["title"] = title }
+        if let details { record["details"] = details }
+        if let subtitle { record["subtitle"] = subtitle }
         do {
             let saved = try await privateDatabase.save(record)
             print("Glossary term salvo com sucesso: \(saved.recordID.recordName)")

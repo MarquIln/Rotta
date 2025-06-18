@@ -9,10 +9,16 @@ import UIKit
 
 class GlossaryDetails: UIView {
     
+    var term: GlossaryModel? = nil {
+        didSet {
+            configure(with: term!)
+        }
+    }
+    
     lazy var label: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "DRS"
+        label.text = term?.title
         label.textColor = .white
         label.textAlignment = .center
         label.font = Fonts.Title1
@@ -22,9 +28,7 @@ class GlossaryDetails: UIView {
     lazy var descripText: UILabel = {
         var label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = """
-Significa Sistema de Redução de Arrasto (Drag Reduction System em inglês) e é um sistema que reduz o arrasto aerodinâmico dos carros, permitindo-lhes alcançar velocidades máximas mais elevadas e, consequentemente, facilitando as ultrapassagens.
-"""
+        label.text = term?.details
         label.textColor = .white
         label.font = Fonts.BodyRegular
         label.textAlignment = .center
@@ -44,7 +48,7 @@ Significa Sistema de Redução de Arrasto (Drag Reduction System em inglês) e �
 
     lazy var descrip2Title: UILabel = {
         var label = UILabel()
-        label.text = "Zona de DRS"
+        label.text = term?.subtitle
         label.textColor = .white
         label.font = Fonts.Subtitle1
         label.textAlignment = .center
@@ -54,9 +58,7 @@ Significa Sistema de Redução de Arrasto (Drag Reduction System em inglês) e �
     
     lazy var descrip2Text: UILabel = {
         var label = UILabel()
-        label.text = """
-O DRS pode ser usado pelos pilotos em zonas designadas durante os treinos livres, classificação e corridas. A pista tem zonas específicas onde o DRS pode ser ativado, com o carro perseguidor precisando estar a menos de um segundo do carro da frente para que a aba traseira se abra. O DRS é desativado ao final das zonas designadas e quando o piloto utiliza os freios
-"""
+        label.text = term?.details
         label.textColor = .white
         label.textAlignment = .center
         label.font = Fonts.BodyRegular
@@ -103,8 +105,9 @@ O DRS pode ser usado pelos pilotos em zonas designadas durante os treinos livres
         return stack
     }()
     
-    override init(frame: CGRect) {
+    init(frame: CGRect, term: GlossaryModel) {
         super.init(frame: frame)
+        self.term = term
         setup()
     }
     
@@ -126,7 +129,7 @@ extension GlossaryDetails: ViewCodeProtocol {
         NSLayoutConstraint.activate([
             
             
-            mainStack.topAnchor.constraint(equalTo: self.topAnchor),
+            mainStack.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 150),
             mainStack.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             mainStack.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             mainStack.trailingAnchor.constraint(equalTo: self.trailingAnchor),
@@ -151,6 +154,17 @@ extension GlossaryDetails: ViewCodeProtocol {
            exploreContainer.heightAnchor.constraint(equalToConstant: 156)
     
         ])
+    }
+}
+
+extension GlossaryDetails {
+    
+    func configure(with model: GlossaryModel) {
+        label.text = model.title
+        descripText.text = model.details
+        descrip2Title.text = model.subtitle
+        descrip2Text.text = model.details
+        
     }
 }
     

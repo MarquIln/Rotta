@@ -115,7 +115,7 @@ extension EventDayComponent: ViewCodeProtocol {
             eventStack.topAnchor.constraint(equalTo: self.topAnchor),
             eventStack.bottomAnchor.constraint(equalTo: self.bottomAnchor),
 
-//            eventStack.heightAnchor.constraint(equalToConstant: 66),
+
 
         ])
     }
