@@ -25,7 +25,6 @@ xcuserdata/
 *.xcodeproj/*.xcuserdatad
 *.xcodeproj/*.xcuserdata/
 *.xcodeproj/*.xcworkspace/
-*.xcodeproj/*.xcworkspace/xcuserdata/
 
 # Arquivos temporários do Xcode
 *.moved-aside

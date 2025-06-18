@@ -1,23 +1,24 @@
 //
-//  RankingTableView.swift
+//  TopThreeTableView.swift
 //  Rotta
 //
-//  Created by Marcos on 13/06/25.
+//  Created by Marcos on 14/06/25.
 //
+
 
 import UIKit
 import CloudKit
 
-protocol RankingTableViewDelegate: AnyObject {
+protocol TopThreeTableViewDelegate: AnyObject {
     func numberOfDrivers() -> Int
-    func driver(at index: Int) -> DriverModel
+    func driver(at index: Int) -> DriverModel?
     func didScrollWithPosition(_ position: CGFloat, difference: CGFloat)
     func willBeginDragging(at position: CGFloat)
     func didEndDecelerating(at position: CGFloat)
 }
 
-class RankingTableView: UIView {
-    weak var delegate: RankingTableViewDelegate?
+class TopThreeTableView: UIView {
+    weak var delegate: TopThreeTableViewDelegate?
 
     lazy var driverLabel: UILabel = {
         let label = UILabel()
@@ -81,6 +82,26 @@ class RankingTableView: UIView {
         
         return table
     }()
+    
+    lazy var standingsButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = .rottaYellow
+        button.setTitle("View all Standings", for: .normal)
+        button.addTarget(
+            self,
+            action: #selector(viewAllDrivers),
+            for: .touchUpInside
+        )
+        button.layer.cornerRadius = 16
+
+        return button
+    }()
+
+    @objc private func viewAllDrivers() {
+        print("vai ver todos os drivers sim.")
+    }
+
     
     override init(frame: CGRect) {
         super.init(frame: frame)
