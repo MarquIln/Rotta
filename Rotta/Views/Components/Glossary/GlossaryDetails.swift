@@ -153,4 +153,15 @@ extension GlossaryDetails: ViewCodeProtocol {
         ])
     }
 }
+
+extension GlossaryDetails {
+    
+    func configure(with model: GlossaryModel) {
+        label.text = model.title
+        descripText.text = model.details
+        descrip2Title.text = model.subtitle
+        descrip2Text.text = model.details
+        
+    }
+}
     

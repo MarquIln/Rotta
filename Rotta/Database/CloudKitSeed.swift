@@ -355,35 +355,37 @@ class CloudKitSeed {
             return
         }
         
-        let glossaryTerms = [
-            ("DRS", "A movable flap on the rear wing that reduces drag and increases straight-line speed."),
-            ("ERS", "A system that recovers energy from braking and exhaust heat to provide additional power."),
-            ("Pole Position", "The first position on the starting grid, awarded to the fastest qualifier."),
-            ("Fastest Lap", "The quickest lap time recorded during a race, often rewarded with an extra championship point."),
-            ("DNF", "When a driver fails to complete the race due to mechanical failure, accident, or other issues."),
-            ("DNS", "When a driver is unable to start the race."),
-            ("DSQ", "When a driver is excluded from race results due to rule violations."),
-            ("Safety Car", "A car deployed to slow down the field during dangerous conditions on track."),
-            ("Virtual Safety Car", "An electronic system that limits drivers' speeds during caution periods."),
-            ("Pit Stop", "A planned stop in the pit lane for tire changes, fuel, or repairs."),
-            ("Undercut", "Gaining track position by pitting earlier than a rival and using fresh tires."),
-            ("Overcut", "Staying out longer than rivals to gain track position through tire strategy."),
-            ("Slipstream", "Following closely behind another car to reduce air resistance and increase speed."),
-            ("Dirty Air", "Disturbed airflow behind a car that reduces downforce for following vehicles."),
-            ("Apex", "The innermost point of a corner where drivers aim to position their car."),
-            ("Chicane", "A sequence of tight turns designed to slow cars down."),
-            ("Kerb", "Raised or painted strips marking the edge of the racing surface."),
-            ("Marshals", "Volunteers who ensure safety and enforce rules during racing events."),
-            ("Parc Fermé", "Rules that limit car modifications between qualifying and race."),
-            ("Formation Lap", "A lap completed before the race start to warm up tires and check conditions.")
-        ]
-         
-        for term in glossaryTerms {
-            await database.addGlossaryTerm(
-                name: term.0,
-                details: term.1
-            )
-        }
+        let glossaryTerms: [(title: String, subtitle: String, details: String)] = [
+                    ("DRS", "Drag Reduction System", "A movable flap on the rear wing that reduces drag and increases straight-line speed."),
+                    ("ERS", "Energy Recovery System", "A system that recovers energy from braking and exhaust heat to provide additional power."),
+                    ("Pole Position", "Posição de Pista", "The first position on the starting grid, awarded to the fastest qualifier."),
+                    ("Fastest Lap", "Volta Mais Rápida", "The quickest lap time recorded during a race, often rewarded with an extra championship point."),
+                    ("DNF", "Did Not Finish", "When a driver fails to complete the race due to mechanical failure, accident, or other issues."),
+                    ("DNS", "Did Not Start", "When a driver is unable to start the race."),
+                    ("DSQ", "Disqualified", "When a driver is excluded from race results due to rule violations."),
+                    ("Safety Car", "Carro de Segurança", "A car deployed to slow down the field during dangerous conditions on track."),
+                    ("Virtual Safety Car", "Carro Virtual de Segurança", "An electronic system that limits drivers' speeds during caution periods."),
+                    ("Pit Stop", "Parada nos Boxes", "A planned stop in the pit lane for tire changes, fuel, or repairs."),
+                    ("Undercut", "Undercut", "Gaining track position by pitting earlier than a rival and using fresh tires."),
+                    ("Overcut", "Overcut", "Staying out longer than rivals to gain track position through tire strategy."),
+                    ("Slipstream", "Efeito esteira", "Following closely behind another car to reduce air resistance and increase speed."),
+                    ("Dirty Air", "Ar Turvo", "Disturbed airflow behind a car that reduces downforce for following vehicles."),
+                    ("Apex", "Vértice", "The innermost point of a corner where drivers aim to position their car."),
+                    ("Chicane", "Chicane", "A sequence of tight turns designed to slow cars down."),
+                    ("Kerb", "Meio-Fio", "Raised or painted strips marking the edge of the racing surface."),
+                    ("Marshals", "Comissários", "Volunteers who ensure safety and enforce rules during racing events."),
+                    ("Parc Fermé", "Parc Fermé", "Rules that limit car modifications between qualifying and race."),
+                    ("Formation Lap", "Volta de Formação", "A lap completed before the race start to warm up tires and check conditions.")
+                ]
+
+                for term in glossaryTerms {
+                    await database.addGlossaryTerm(
+                        title:    term.title,
+                        details:  term.details,
+                        subtitle: term.subtitle,
+                       
+                    )
+                }
      }
     
     private func seedAllRules() async {

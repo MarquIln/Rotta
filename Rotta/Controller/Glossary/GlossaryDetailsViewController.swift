@@ -8,7 +8,11 @@
 import UIKit
 
 class GlossaryDetailsViewController: UIViewController {
-
+    
+    var glossaryID: UUID!
+    
+    private let service = GlossaryService()
+    
     lazy var component: GlossaryDetails = {
         var component =  GlossaryDetails()
         component.translatesAutoresizingMaskIntoConstraints = false

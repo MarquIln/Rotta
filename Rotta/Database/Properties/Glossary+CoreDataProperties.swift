@@ -16,9 +16,10 @@ extension Glossary {
         return NSFetchRequest<Glossary>(entityName: "Glossary")
     }
 
-    @NSManaged public var details: String?
     @NSManaged public var id: UUID?
-    @NSManaged public var name: String?
+    @NSManaged public var title: String?
+    @NSManaged public var subtitle: String?
+    @NSManaged public var details: String?
 
 }
 

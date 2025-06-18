@@ -173,8 +173,8 @@ class Database {
         return await glossaryService.get(by: id)
     }
     
-    func addGlossaryTerm(name: String? = nil, details: String? = nil) async {
-        await glossaryService.add(name: name, details: details)
+    func addGlossaryTerm(title: String? = nil, details: String? = nil, subtitle: String? = nil) async {
+        await glossaryService.add(title: title, details: details, subtitle: subtitle)
     }
     
     func deleteAllRecords(of recordTypes: [String]) async {

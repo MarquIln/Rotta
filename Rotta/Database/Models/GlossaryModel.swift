@@ -9,19 +9,22 @@ import Foundation
 import CloudKit
 
 struct GlossaryModel {
-    var name: String?
+    var title: String?
     var details: String?
     let id: UUID
+    var subtitle: String?
     
-    init(name: String? = nil, details: String? = nil) {
-        self.name = name
+    init(title: String? = nil, details: String? = nil, subtitle: String? = nil) {
+        self.title = title
         self.details = details
         self.id = UUID()
+        self.subtitle = subtitle
     }
     
-    init(id: UUID, name: String? = nil, details: String? = nil) {
+    init(id: UUID, title: String? = nil, details: String? = nil, subtitle: String? = nil) {
         self.id = id
-        self.name = name
+        self.title = title
         self.details = details
+        self.subtitle = subtitle
     }
 }
