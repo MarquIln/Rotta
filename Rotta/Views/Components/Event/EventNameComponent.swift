@@ -64,7 +64,7 @@ class EventNameComponent: UIView {
     lazy var separator: UIView = {
         var separator = UIView()
         separator.translatesAutoresizingMaskIntoConstraints = false
-        separator.backgroundColor = .dividerPrimary
+        separator.backgroundColor = .sprintFormula2
         return separator
     }()
     
