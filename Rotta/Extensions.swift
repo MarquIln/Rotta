@@ -37,6 +37,14 @@ extension UIView {
         gradientLayer.locations = [0.15, 0.6]
         self.layer.insertSublayer(gradientLayer, at: 0)
     }
+    
+    func shake(duration: CFTimeInterval = 0.4, values: [CGFloat] = [-8, 8, -6, 6, -4, 4, 0]) {
+        let animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
+        animation.timingFunction = CAMediaTimingFunction(name: .linear)
+        animation.duration = duration
+        animation.values = values
+        layer.add(animation, forKey: "shake")
+    }
 }
 
 extension String {

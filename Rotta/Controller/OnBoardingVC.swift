@@ -34,8 +34,6 @@ class OnBoardingVC: UIViewController {
     }
     
     @objc func handleGoNext() {
-        print("🔥 handleGoNext chamado!")
-        
         let nextVC = MainTabController()
         
         if let navController = navigationController {

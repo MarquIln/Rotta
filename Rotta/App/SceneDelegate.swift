@@ -16,17 +16,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         window = UIWindow(windowScene: windowScene)
-        
-        if CloudKitSeed.isSeedCompleted() {
-            let navigationController = UINavigationController(rootViewController: MainTabController())
-            window?.rootViewController = navigationController
-        } else {
-            let navigationController = UINavigationController(rootViewController: OnBoardingVC())
-            window?.rootViewController = navigationController
-        }
-        
+        let navigationController = UINavigationController(rootViewController: SplashScreenVC())
+        window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
-
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

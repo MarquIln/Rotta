@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		5277B9AE2E02F9CF00D87F1E /* SkeletonView in Frameworks */ = {isa = PBXBuildFile; productRef = 5277B9AD2E02F9CF00D87F1E /* SkeletonView */; };
+		5277B9B12E02F9E000D87F1E /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 5277B9B02E02F9E000D87F1E /* Lottie */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		5294CB992DF896A6000E60FE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -22,6 +27,19 @@
 			remoteInfo = Rotta;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		5277B9B52E02F9FD00D87F1E /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		5294CB7E2DF896A5000E60FE /* Rotta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Rotta.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -55,6 +73,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5277B9AE2E02F9CF00D87F1E /* SkeletonView in Frameworks */,
+				5277B9B12E02F9E000D87F1E /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -103,6 +123,7 @@
 				5294CB7A2DF896A5000E60FE /* Sources */,
 				5294CB7B2DF896A5000E60FE /* Frameworks */,
 				5294CB7C2DF896A5000E60FE /* Resources */,
+				5277B9B52E02F9FD00D87F1E /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -113,6 +134,8 @@
 			);
 			name = Rotta;
 			packageProductDependencies = (
+				5277B9AD2E02F9CF00D87F1E /* SkeletonView */,
+				5277B9B02E02F9E000D87F1E /* Lottie */,
 			);
 			productName = Rotta;
 			productReference = 5294CB7E2DF896A5000E60FE /* Rotta.app */;
@@ -190,6 +213,10 @@
 			);
 			mainGroup = 5294CB752DF896A5000E60FE;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				5277B9AC2E02F9CF00D87F1E /* XCRemoteSwiftPackageReference "SkeletonView" */,
+				5277B9AF2E02F9E000D87F1E /* XCRemoteSwiftPackageReference "lottie-ios" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5294CB7F2DF896A5000E60FE /* Products */;
 			projectDirPath = "";
@@ -565,6 +592,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		5277B9AC2E02F9CF00D87F1E /* XCRemoteSwiftPackageReference "SkeletonView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Juanpe/SkeletonView.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.31.0;
+			};
+		};
+		5277B9AF2E02F9E000D87F1E /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5277B9AD2E02F9CF00D87F1E /* SkeletonView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5277B9AC2E02F9CF00D87F1E /* XCRemoteSwiftPackageReference "SkeletonView" */;
+			productName = SkeletonView;
+		};
+		5277B9B02E02F9E000D87F1E /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5277B9AF2E02F9E000D87F1E /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = Lottie;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 5294CB762DF896A5000E60FE /* Project object */;
 }
