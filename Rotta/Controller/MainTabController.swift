@@ -51,8 +51,19 @@ class MainTabController: UIViewController {
             var buttonConfig = UIButton.Configuration.plain()
             buttonConfig.title = option
             buttonConfig.baseForegroundColor = .labelsPrimary
-            buttonConfig.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 31, bottom: 0, trailing: 0)
+            buttonConfig.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 0)
             buttonConfig.titleAlignment = .leading
+            
+            if option == selected {
+                // item selecionado: mostra check e padding menor
+                buttonConfig.image = UIImage(systemName: "checkmark")
+                buttonConfig.imagePlacement = .leading
+                buttonConfig.imagePadding = 8
+                buttonConfig.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
+            } else {
+                // itens sem check: aumenta só o leading
+                buttonConfig.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 31, bottom: 0, trailing: 0)
+            }
             
             
             let button = UIButton(configuration: buttonConfig)
@@ -60,11 +71,11 @@ class MainTabController: UIViewController {
             button.semanticContentAttribute = .forceLeftToRight
             button.addTarget(self, action: #selector(didSelectDropdownOption(_:)), for: .touchUpInside)
             
-            //check mark
-            if option == selected {
-                button.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
-                button.semanticContentAttribute = .forceLeftToRight
-            }
+//            //check mark
+//            if option == selected {
+//                button.setImage(UIImage(systemName: "checkmark"), for: .normal)
+//                button.semanticContentAttribute = .forceLeftToRight
+//            }
             
             stack.isUserInteractionEnabled = true
 
@@ -135,8 +146,13 @@ class MainTabController: UIViewController {
 
 
     private func resetArrow() {
-        UIView.animate(withDuration: 0.3) {
-            self.titleSelectorButton.imageView?.transform = .identity
+        UIView.animate(withDuration: 0.2, animations: {
+          self.titleSelectorButton.imageView?.alpha = 0
+        }) { _ in
+          self.titleSelectorButton.imageView?.transform = .identity
+          UIView.animate(withDuration: 0.2) {
+            self.titleSelectorButton.imageView?.alpha = 1
+          }
         }
         isArrowRotated = false
     }
