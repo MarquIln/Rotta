@@ -129,7 +129,7 @@ extension GlossaryDetails: ViewCodeProtocol {
         NSLayoutConstraint.activate([
             
             
-            mainStack.topAnchor.constraint(equalTo: self.topAnchor),
+            mainStack.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 150),
             mainStack.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             mainStack.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             mainStack.trailingAnchor.constraint(equalTo: self.trailingAnchor),
