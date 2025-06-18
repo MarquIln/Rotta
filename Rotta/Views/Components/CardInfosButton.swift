@@ -15,14 +15,14 @@ class CardInfosButton: UIButton {
         let label = UILabel()
         label.text = title
         label.font = Fonts.Title1
-        label.textColor = .label
+        label.textColor = .labelsPrimary
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
 
     lazy var cardSubtitleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .label
+        label.textColor = .labelsPrimary
         label.font = Fonts.BodyRegular
         label.numberOfLines = 2
         label.textAlignment = .center
