@@ -9,10 +9,11 @@ import UIKit
 
 class GlossaryDetailsViewController: UIViewController {
     
-    var glossaryID: UUID!
-    
-    private let service = GlossaryService()
-    private var terms: [GlossaryModel] = []
+    var term: GlossaryModel? = nil {
+        didSet {
+            print(term)
+        }
+    }
     
     lazy var component: GlossaryDetails = {
         var component =  GlossaryDetails()
@@ -70,22 +71,7 @@ class GlossaryDetailsViewController: UIViewController {
         setupGestures()
         setup()
         addGradientGlossary()
-        fetchGlossaryTerm()
     }
-    
-    private func fetchGlossaryTerm() {
-            Task {
-                // 1) busca do CloudKit pelo ID
-                guard let model = await service.get(by: glossaryID) else {
-                    // trate o erro / placeholder aqui
-                    return
-                }
-                // 2) no main thread atualiza a UI
-                await MainActor.run {
-                    self.component.configure(with: model)
-                }
-            }
-        }
     
     private func setupGestures() {
         navigationController?.interactivePopGestureRecognizer?.isEnabled = true

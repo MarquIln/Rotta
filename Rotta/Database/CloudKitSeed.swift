@@ -378,14 +378,13 @@ class CloudKitSeed {
                     ("Formation Lap", "Volta de Formação", "A lap completed before the race start to warm up tires and check conditions.")
                 ]
 
-                for term in glossaryTerms {
-                    await database.addGlossaryTerm(
-                        title:    term.title,
-                        details:  term.details,
-                        subtitle: term.subtitle,
-                       
-                    )
-                }
+        for term in glossaryTerms {
+            await database.addGlossaryTerm(
+                title:    term.title,
+                details:  term.details,
+                subtitle: term.subtitle,
+            )
+        }
      }
     
     private func seedAllRules() async {

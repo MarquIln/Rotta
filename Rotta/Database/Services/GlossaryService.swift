@@ -58,12 +58,12 @@ class GlossaryService {
     }
 
     func add(title: String? = nil, details: String? = nil, subtitle: String? = nil) async {
-        let uuid = UUID().uuidString
         let record = CKRecord(recordType: "Glossary")
+        let uuid = UUID().uuidString
         record["id"] = uuid
-        if let title = title { record["title"] = title }
-        if let details = details { record["details"] = details }
-        if let subtitle = subtitle { record["subtitle"] = subtitle }
+        if let title { record["title"] = title }
+        if let details { record["details"] = details }
+        if let subtitle { record["subtitle"] = subtitle }
         do {
             let saved = try await privateDatabase.save(record)
             print("Glossary term salvo com sucesso: \(saved.recordID.recordName)")

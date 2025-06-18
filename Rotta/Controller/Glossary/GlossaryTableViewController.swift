@@ -8,6 +8,11 @@ import UIKit
 
 class GlossaryTableViewController: UIViewController {
 
+    private let service = GlossaryService()
+    let database = Database.shared
+    
+    private var terms: [GlossaryModel] = []
+    
     private let impactFeedback = UIImpactFeedbackGenerator(style: .light)
     private var lastScrollPosition: CGFloat = 0
     private let scrollThreshold: CGFloat = 30.0
@@ -47,6 +52,17 @@ class GlossaryTableViewController: UIViewController {
         impactFeedback.prepare()
         addGradientGlossary()
         setupCustomBackButton()
+        loadGlossary()
+    }
+    
+    private func loadGlossary() {
+        Task {
+            terms = await database.getAllGlossaryTerms()
+            
+            await MainActor.run {
+                self.glossaryTableView.reloadData()
+            }
+        }
     }
 
     private func setupCustomBackButton() {
@@ -127,25 +143,16 @@ class GlossaryTableViewController: UIViewController {
 extension GlossaryTableViewController: GlossaryTableViewDelegate {
 
     func numberOfItems() -> Int {
-        return totalCells
+        return terms.count
     }
 
     func item(at index: Int) -> (title: String, imageName: String) {
-        return ("DRS", "carro")
+        return (terms[index].title ?? "no title", "carro")
     }
 
     func didSelectItem(at index: Int) {
-        
-    //    let terms = terms[IndexPath.row]
         let glossaryVC = GlossaryDetailsViewController()
-     //   glossaryVC.glossaryID = terms.id
-        navigationController?.pushViewController(glossaryVC, animated: true)
-    }
-}
-
-extension GlossaryTableViewController: GlossaryCellDelegate {
-    func didTapChevron(in cell: GlossaryCell) {
-        let glossaryVC = GlossaryDetailsViewController()
+        glossaryVC.term = terms[index]
         navigationController?.pushViewController(glossaryVC, animated: true)
     }
 }
