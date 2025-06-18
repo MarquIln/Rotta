@@ -15,19 +15,16 @@ class TopThreeVC: UIViewController {
 
     lazy var driverFirstPlaceView: DriverView = {
         let view = DriverView()
-
         return view
     }()
     
     lazy var driverSecondPlaceView: DriverView = {
         let view = DriverView()
-
         return view
     }()
     
     lazy var driverThirdPlaceView: DriverView = {
         let view = DriverView()
-
         return view
     }()
     
@@ -37,7 +34,6 @@ class TopThreeVC: UIViewController {
         view.font = Fonts.Title2
         view.textColor = .white
         view.textAlignment = .center
-//        view.backgroundColor = .green
         return view
     }()
     
@@ -48,23 +44,39 @@ class TopThreeVC: UIViewController {
         return button
     }()
     
+    lazy var seeAllScuderiasButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "chevron.right.circle.fill"), for: .normal)
+        button.tintColor = .rottaYellow
+        return button
+    }()
+    
     lazy var headerStackView: UIStackView = {
-        let view = UIStackView(arrangedSubviews: [driverHeaderView, seeAllButton])
-        view.translatesAutoresizingMaskIntoConstraints = false
-//        view.backgroundColor = .red
-        return view
+        let stack = UIStackView(arrangedSubviews: [driverHeaderView, seeAllButton])
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .horizontal
+        stack.alignment = .center
+        stack.distribution = .fill
+        
+        stack.layoutMargins = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        stack.isLayoutMarginsRelativeArrangement = true
+        
+        driverHeaderView.centerXAnchor.constraint(equalTo: stack.centerXAnchor).isActive = true
+        
+        return stack
     }()
     
     lazy var driverStackView: UIStackView = {
         let view = UIStackView(arrangedSubviews: [driverSecondPlaceView, driverFirstPlaceView, driverThirdPlaceView])
         view.translatesAutoresizingMaskIntoConstraints = false
-        
+        view.distribution = .fillEqually
+        view.alignment = .bottom
+
         view.isUserInteractionEnabled = true
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         view.addGestureRecognizer(tap)
         view.backgroundColor = .f2Corrida
         view.layer.cornerRadius = 32
-        view.distribution = .fillEqually
 
         return view
     }()
@@ -84,42 +96,79 @@ class TopThreeVC: UIViewController {
     
     lazy var scuderiaFirstPlaceView: ScuderiaView = {
         let view = ScuderiaView()
-
         return view
     }()
     
     lazy var scuderiaSecondPlaceView: ScuderiaView = {
         let view = ScuderiaView()
-
         return view
     }()
     
     lazy var scuderiaThirdPlaceView: ScuderiaView = {
         let view = ScuderiaView()
+        return view
+    }()
+    
+    lazy var scuderiaHeaderView: UILabel = {
+        let view = UILabel()
+        view.text = "Scuderias"
+        view.font = Fonts.Title2
+        view.textColor = .white
+        view.textAlignment = .center
+        return view
+    }()
+    
+    lazy var headerStack: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [scuderiaHeaderView, seeAllScuderiasButton])
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .horizontal
+        stack.alignment = .center
+        stack.distribution = .fill
+
+        stack.layoutMargins = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        stack.isLayoutMarginsRelativeArrangement = true
+        
+        scuderiaHeaderView.centerXAnchor.constraint(equalTo: stack.centerXAnchor).isActive = true
+        
+        return stack
+    }()
+    
+    lazy var scuderiaStackView: UIStackView = {
+        let view = UIStackView(arrangedSubviews: [scuderiaSecondPlaceView, scuderiaFirstPlaceView, scuderiaThirdPlaceView])
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.distribution = .fillEqually
+        view.alignment = .bottom
+
+        view.isUserInteractionEnabled = true
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        view.addGestureRecognizer(tap)
+        view.backgroundColor = .f2Corrida
+        view.layer.cornerRadius = 32
         
         return view
     }()
     
-//    lazy var scuderiaStackView: UIStackView = {
-//        let view = UIStackView(arrangedSubviews: [scuderiaSecondPlaceView, scuderiaFirstPlaceView ,scuderiaThirdPlaceView])
-//        view.translatesAutoresizingMaskIntoConstraints = false
-//        view.isUserInteractionEnabled = true
-//        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-//        view.addGestureRecognizer(tap)
-//        view.backgroundColor = .f2Corrida
-//        view.distribution = .fillEqually
-//        
-//        return view
-//    }()
+    lazy var mainScuderiaStack: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [headerStack, scuderiaStackView])
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .vertical
+        stack.backgroundColor = .f2Corrida
+        stack.spacing = 8
+        stack.layer.cornerRadius = 12
+        stack.layoutMargins = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
+        stack.isLayoutMarginsRelativeArrangement = true
+        
+        return stack
+    }()
     
-//    lazy var stackView: UIStackView = {
-//        let view = UIStackView(arrangedSubviews: [driverStackView, scuderiaStackView])
-//        view.axis = .vertical
-//        view.distribution = .fill
-//        view.spacing = 16
-//        view.translatesAutoresizingMaskIntoConstraints = false
-//        return view
-//    }()
+    lazy var stackView: UIStackView = {
+        let view = UIStackView(arrangedSubviews: [mainDriverStack, mainScuderiaStack])
+        view.axis = .vertical
+        view.distribution = .fill
+        view.spacing = 16
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     
     @objc func handleTap() {
         let vc = RankingVC()
