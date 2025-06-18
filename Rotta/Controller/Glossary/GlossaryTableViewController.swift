@@ -135,7 +135,10 @@ extension GlossaryTableViewController: GlossaryTableViewDelegate {
     }
 
     func didSelectItem(at index: Int) {
+        
+    //    let terms = terms[IndexPath.row]
         let glossaryVC = GlossaryDetailsViewController()
+     //   glossaryVC.glossaryID = terms.id
         navigationController?.pushViewController(glossaryVC, animated: true)
     }
 }
