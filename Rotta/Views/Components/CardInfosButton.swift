@@ -4,30 +4,32 @@
 //
 //  Created by Isadora Ferreira Guerra on 11/06/25.
 //
+
 import UIKit
+
 class CardInfosButton: UIButton {
     var title: String
     var subtitle: String
-    
+
     lazy var cardTitleLabel: UILabel = {
         let label = UILabel()
         label.text = title
         label.font = Fonts.Title1
-        label.textColor = .label
+        label.textColor = .labelsPrimary
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
+
     lazy var cardSubtitleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .label
+        label.textColor = .labelsPrimary
         label.font = Fonts.BodyRegular
         label.numberOfLines = 2
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
+
     lazy var stackTitleSubtitle: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [cardTitleLabel, cardSubtitleLabel])
         stackView.axis = .vertical
@@ -37,30 +39,32 @@ class CardInfosButton: UIButton {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
-    
+
     lazy var imageBackground: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
-//        imageView.image = .categoryInfos
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.isUserInteractionEnabled = false
         return imageView
     }()
-    
+
     lazy var gradientView: UIView = {
         let gradient = UIView()
         gradient.translatesAutoresizingMaskIntoConstraints = false
         gradient.isUserInteractionEnabled = false
         return gradient
     }()
-    
+
     init(title: String, subtitle: String, image: UIImage) {
         self.title = title
         self.subtitle = subtitle
         super.init(frame: .zero)
-        self.backgroundColor = .cardInfosBackground
+        self.backgroundColor = .backgroundPrimary
+
         imageBackground.image = image
         cardTitleLabel.text = title
         cardSubtitleLabel.text = subtitle
+
         setup()
         addGradientCardInfos()
     }
@@ -68,14 +72,14 @@ class CardInfosButton: UIButton {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    @objc func addGradientCardInfos(){
+
+    @objc func addGradientCardInfos() {
         DispatchQueue.main.async {
             self.gradientView.addGradientCardInfos()
         }
     }
-
 }
+
 
 extension CardInfosButton: ViewCodeProtocol {
     func setup() {

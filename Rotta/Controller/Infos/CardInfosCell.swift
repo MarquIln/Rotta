@@ -15,6 +15,10 @@ class CardInfosCell: UICollectionViewCell {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+    
+    var cardButtonPublic: CardInfosButton {
+        return cardButton
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -32,10 +36,10 @@ class CardInfosCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configure(with title: String, subtitle: String, image: UIImage) {
-        cardButton.setTitle(title, for: .normal)
+    func configure(with title: String, subtitle: String, image: UIImage, target: Any, action: Selector) {
         cardButton.cardTitleLabel.text = title
         cardButton.cardSubtitleLabel.text = subtitle
         cardButton.imageBackground.image = image
+        cardButton.addTarget(target, action: action, for: .touchUpInside)
     }
 }
