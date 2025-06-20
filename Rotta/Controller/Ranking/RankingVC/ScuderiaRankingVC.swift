@@ -7,15 +7,15 @@
 
 import UIKit
 
-class RankingVC: UIViewController {
-    var drivers: [DriverModel] = []
+class ScuderiaRankingVC: UIViewController {
+    var scuderias: [ScuderiaModel] = []
     let database = Database.shared
     private let impactFeedback = UIImpactFeedbackGenerator(style: .light)
     private var lastScrollPosition: CGFloat = 0
     private let scrollThreshold: CGFloat = 30.0
 
-    lazy var rankingTableView: RankingTableView = {
-        let view = RankingTableView()
+    lazy var rankingTableView: ScuderiaRankingTableView = {
+        let view = ScuderiaRankingTableView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.isUserInteractionEnabled = true
 //        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
@@ -58,7 +58,7 @@ class RankingVC: UIViewController {
 
         navigationItem.title = "Drivers Ranking"
 
-        loadDrivers()
+        loadScuderias()
         setup()
         impactFeedback.prepare()
     }
@@ -72,20 +72,20 @@ class RankingVC: UIViewController {
         navigationController?.popViewController(animated: true)
     }
 
-    private func loadDrivers() {
+    private func loadScuderias() {
         Task {
-            drivers = await database.getAllDrivers()
+            scuderias = await database.getAllScuderias()
 
-            drivers.sort { $0.points > $1.points }
+            scuderias.sort { $0.points > $1.points }
             await MainActor.run {
-                self.rankingTableView.configure(with: drivers)
+                self.rankingTableView.configure(with: scuderias)
             }
         }
     }
 }
 
 // MARK: - UIGestureRecognizerDelegate
-extension RankingVC: UIGestureRecognizerDelegate {
+extension ScuderiaRankingVC: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }

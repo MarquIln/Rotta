@@ -47,20 +47,11 @@ class ScuderiaView: UIView {
         stack.spacing = 8
         return stack
     }()
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setup()
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
 
     func configure(with model: ScuderiaModel, rank: Int) {
         positionLabel.text = "\(rank)"
         nameLabel.text = model.name
-        pointsLabel.text = "\(Int(model.points)) pontos"
+        pointsLabel.text = "\(model.points) pontos"
         imageView.image = UIImage(systemName: "person.circle.fill")
         if rank == 1 {
             imageView.heightAnchor.constraint(equalToConstant: 80).isActive = true
@@ -69,6 +60,15 @@ class ScuderiaView: UIView {
             imageView.widthAnchor.constraint(equalToConstant: 60).isActive = true
             imageView.heightAnchor.constraint(equalToConstant: 60).isActive = true
         }
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
 
@@ -86,3 +86,4 @@ extension ScuderiaView: ViewCodeProtocol {
         ])
     }
 }
+

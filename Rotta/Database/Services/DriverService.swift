@@ -7,6 +7,7 @@
 
 import Foundation
 import CloudKit
+import UIKit
 
 class DriverService {
     private let privateDatabase: CKDatabase
@@ -42,6 +43,37 @@ class DriverService {
             print("Erro ao buscar Drivers: \(error.localizedDescription)")
         }
         return drivers
+    }
+    
+    func getDriverWithScuderiaIcon(by id: UUID) async -> DriverModel? {
+        do {
+            let driverRecord = try await privateDatabase.record(for: CKRecord.ID(recordName: id.uuidString))
+            
+            guard let scuderiaIDString = driverRecord["idScuderia"] as? String,
+                  let scuderiaID = UUID(uuidString: scuderiaIDString) else {
+                return nil
+            }
+
+            let scuderiaRecord = try await privateDatabase.record(for: CKRecord.ID(recordName: scuderiaID.uuidString))
+
+            if let base64 = scuderiaRecord["logo"] as? String,
+               let imageData = Data(base64Encoded: base64),
+               let image = UIImage(data: imageData) {
+                
+                return DriverModel(
+                    id: id,
+                    name: driverRecord["name"] as? String ?? "",
+                    points: driverRecord["points"] as? Int16 ?? 0,
+                    scuderiaLogo: image
+                )
+            } else {
+                print("⚠️ Não foi possível converter a imagem da scuderia.")
+                return nil
+            }
+        } catch {
+            print("❌ Erro ao buscar registros do CloudKit: \(error.localizedDescription)")
+            return nil
+        }
     }
     
     func getByFormula(idFormula: UUID) async -> [DriverModel] {

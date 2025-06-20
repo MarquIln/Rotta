@@ -9,18 +9,18 @@ import UIKit
 import CloudKit
 import SkeletonView
 
-class RankingTableView: UIView {
+class ScuderiaRankingTableView: UIView {
     let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
     var lastScrollPosition: CGFloat = 0
     let scrollThreshold: CGFloat = 20
     var lastFeedbackTime: CFTimeInterval = 0
 
-    var drivers: [DriverModel] = []
+    var scuderias: [ScuderiaModel] = []
 
-    lazy var driverLabel: UILabel = {
+    lazy var scuderiaLabel: UILabel = {
         let label = UILabel()
         label.font = Fonts.Subtitle2
-        label.text = "Driver"
+        label.text = "Scuderia"
         label.textAlignment = .center
         label.textColor = .white
         label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -39,21 +39,11 @@ class RankingTableView: UIView {
         return label
     }()
 
-    lazy var scuderiaLabel: UILabel = {
-        let label = UILabel()
-        label.font = Fonts.Subtitle2
-        label.textAlignment = .center
-        label.text = "Scuderia"
-        label.textColor = .white
-
-        return label
-    }()
-
     lazy var headerStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [driverLabel, pointsLabel, scuderiaLabel])
+        let stack = UIStackView(arrangedSubviews: [scuderiaLabel, pointsLabel])
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .horizontal
-        stack.distribution = .fillEqually
+        stack.distribution = .fill
         stack.backgroundColor = .f2Corrida
         stack.alignment = .fill
         stack.layer.cornerRadius = 12
@@ -81,7 +71,7 @@ class RankingTableView: UIView {
         table.layer.cornerRadius = 8
         table.layer.maskedCorners = [.layerMinXMinYCorner]
         
-        table.register(DriverRankingCell.self, forCellReuseIdentifier: DriverRankingCell.reuseIdentifier)
+        table.register(ScuderiaRankingCell.self, forCellReuseIdentifier: ScuderiaRankingCell.reuseIdentifier)
         table.isSkeletonable = true
 
         return table
@@ -99,8 +89,8 @@ class RankingTableView: UIView {
         setup()
     }
         
-    func configure(with drivers: [DriverModel]) {
-        self.drivers = drivers
+    func configure(with scuderias: [ScuderiaModel]) {
+        self.scuderias = scuderias
         tableView.reloadData()
         tableView.hideSkeleton()
     }

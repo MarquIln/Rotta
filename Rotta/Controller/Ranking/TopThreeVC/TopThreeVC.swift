@@ -73,7 +73,7 @@ class TopThreeVC: UIViewController {
         view.alignment = .bottom
 
         view.isUserInteractionEnabled = true
-        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        let tap = UITapGestureRecognizer(target: self, action: #selector(driverTapped))
         view.addGestureRecognizer(tap)
         view.backgroundColor = .f2Corrida
         view.layer.cornerRadius = 32
@@ -109,7 +109,7 @@ class TopThreeVC: UIViewController {
         return view
     }()
     
-    lazy var scuderiaHeaderView: UILabel = {
+    lazy var scuderiaLabel: UILabel = {
         let view = UILabel()
         view.text = "Scuderias"
         view.font = Fonts.Title2
@@ -118,8 +118,8 @@ class TopThreeVC: UIViewController {
         return view
     }()
     
-    lazy var headerStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [scuderiaHeaderView, seeAllScuderiasButton])
+    lazy var scuderiaHeader: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [scuderiaLabel, seeAllScuderiasButton])
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .horizontal
         stack.alignment = .center
@@ -128,7 +128,7 @@ class TopThreeVC: UIViewController {
         stack.layoutMargins = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         stack.isLayoutMarginsRelativeArrangement = true
         
-        scuderiaHeaderView.centerXAnchor.constraint(equalTo: stack.centerXAnchor).isActive = true
+        scuderiaLabel.centerXAnchor.constraint(equalTo: stack.centerXAnchor).isActive = true
         
         return stack
     }()
@@ -140,7 +140,7 @@ class TopThreeVC: UIViewController {
         view.alignment = .bottom
 
         view.isUserInteractionEnabled = true
-        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        let tap = UITapGestureRecognizer(target: self, action: #selector(scuderiasTapped))
         view.addGestureRecognizer(tap)
         view.backgroundColor = .f2Corrida
         view.layer.cornerRadius = 32
@@ -149,7 +149,7 @@ class TopThreeVC: UIViewController {
     }()
     
     lazy var mainScuderiaStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [headerStack, scuderiaStackView])
+        let stack = UIStackView(arrangedSubviews: [scuderiaHeader, scuderiaStackView])
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .vertical
         stack.backgroundColor = .f2Corrida
@@ -170,8 +170,13 @@ class TopThreeVC: UIViewController {
         return view
     }()
     
-    @objc func handleTap() {
-        let vc = RankingVC()
+    @objc func driverTapped() {
+        let vc = DriverRankingVC()
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc func scuderiasTapped() {
+        let vc = ScuderiaRankingVC()
         navigationController?.pushViewController(vc, animated: true)
     }
 

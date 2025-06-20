@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension RankingVC: ViewCodeProtocol {
+extension DriverRankingVC: ViewCodeProtocol {
     func addSubviews() {
         view.addSubview(rankingTableView)
     }

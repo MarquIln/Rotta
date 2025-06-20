@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension RankingTableView: UITableViewDataSource {
+extension DriverRankingTableView: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return drivers.count
     }
@@ -25,7 +25,7 @@ extension RankingTableView: UITableViewDataSource {
     }
 }
 
-extension RankingTableView: UITableViewDelegate {
+extension DriverRankingTableView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 44
     }
@@ -52,7 +52,7 @@ extension RankingTableView: UITableViewDelegate {
     }
 }
 
-extension RankingTableView: ViewCodeProtocol {
+extension DriverRankingTableView: ViewCodeProtocol {
     func addSubviews() {
         addSubview(headerStack)
         addSubview(tableView)
