@@ -12,7 +12,7 @@ class RuleService {
     private let privateDatabase: CKDatabase
 
     init(container: CKContainer = .init(identifier: "iCloud.Rotta.CloudRotta")) {
-        privateDatabase = container.privateCloudDatabase
+        privateDatabase = container.publicCloudDatabase
     }
 
     func getAll() async -> [RuleModel] {
