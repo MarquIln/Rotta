@@ -37,6 +37,30 @@ extension UIView {
         gradientLayer.locations = [0.15, 0.6]
         self.layer.insertSublayer(gradientLayer, at: 0)
     }
+    
+    func addGradientGlossary(colors: [CGColor]? = nil) {
+        self.layer.sublayers?.removeAll(where: { $0 is CAGradientLayer })
+
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = self.bounds
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
+        gradientLayer.endPoint   = CGPoint(x: 0.5, y: 1.0)
+
+        gradientLayer.colors = colors ?? [
+            (UIColor(named: "SprintFormula2") ?? .clear).withAlphaComponent(0.8).cgColor,
+            (UIColor(named: "RaceFormula2") ?? .black).withAlphaComponent(0.7).cgColor
+        ]
+        gradientLayer.locations = [0.4, 0.9]
+        self.layer.insertSublayer(gradientLayer, at: 0)
+    }
+    
+    func shake(duration: CFTimeInterval = 0.4, values: [CGFloat] = [-8, 8, -6, 6, -4, 4, 0]) {
+        let animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
+        animation.timingFunction = CAMediaTimingFunction(name: .linear)
+        animation.duration = duration
+        animation.values = values
+        layer.add(animation, forKey: "shake")
+    }
 }
 
 extension String {
