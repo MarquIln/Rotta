@@ -51,6 +51,16 @@ class TopThreeVC: UIViewController {
         return button
     }()
     
+    lazy var gradientView: UIView = {
+        let gradient = UIView()
+        gradient.translatesAutoresizingMaskIntoConstraints = false
+        gradient.layer.cornerRadius = 12
+        gradient.clipsToBounds = true
+        gradient.isUserInteractionEnabled = false
+        
+        return gradient
+    }()
+    
     lazy var headerStackView: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [driverHeaderView, seeAllButton])
         stack.translatesAutoresizingMaskIntoConstraints = false
@@ -179,6 +189,12 @@ class TopThreeVC: UIViewController {
         let vc = ScuderiaRankingVC()
         navigationController?.pushViewController(vc, animated: true)
     }
+    
+    @objc func addGradient() {
+        DispatchQueue.main.async {
+            self.gradientView.addGradientRankingView()
+        }
+    }
 
 
     override func viewDidLoad() {
@@ -186,6 +202,7 @@ class TopThreeVC: UIViewController {
         loadDrivers()
         loadScuderias()
         setup()
+        addGradient()
     }
 
     private func loadDrivers() {
