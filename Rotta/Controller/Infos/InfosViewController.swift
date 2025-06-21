@@ -15,13 +15,13 @@ class InfosViewController: UIViewController {
             image: .glossaryCategoryInfos
         ),
         (
-            title: "Peças",
-            subtitle: "Conheça as principais peças dos carros da Fórmula 2",
+            title: "Scuderias",
+            subtitle: "Conheça as scuderias da Fórmula 2",
             image: .componentsCategoryInfos
         ),
         (
-            title: "Peças",
-            subtitle: "Conheça as principais peças dos carros da Fórmula 2",
+            title: "Pilotos",
+            subtitle: "Conheça os pilotos da Fórmula 2",
             image: .componentsCategoryInfos
         )
     ]
@@ -31,7 +31,7 @@ class InfosViewController: UIViewController {
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 16
         layout.estimatedItemSize = .zero
-
+        
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .clear
@@ -41,27 +41,57 @@ class InfosViewController: UIViewController {
         collectionView.register(CardInfosCell.self, forCellWithReuseIdentifier: CardInfosCell.identifier)
         return collectionView
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundPrimary
         setup()
     }
-
-//    @objc private func cardInfoTapped(_ sender: CardInfosButton) {
-//        print("CardInfosButton foi tocado!")
+    
+    //    @objc private func cardInfoTapped(_ sender: CardInfosButton) {
+    //        print("CardInfosButton foi tocado!")
+    //    }
+    
+//    @objc private func cardInfoTapped(_ sender: UIButton) {
+//        let index = sender.tag
+//        let selectedCard = cardsData[index]
+//
+//        switch selectedCard.title {
+//        case "Glossário":
+//            let vc = GlossaryTableViewController()
+//            navigationController?.pushViewController(vc, animated: true)
+//
+//        case "Scuderias":
+//            let vc = ScuderiaTableViewController()
+//            navigationController?.pushViewController(vc, animated: true)
+//
+//        default:
+//            print("Card \(selectedCard.title) ainda não tem ação associada.")
+//        }
 //    }
     
     @objc private func cardInfoTapped(_ sender: UIButton) {
         let index = sender.tag
-        _ = cardsData[index]
-        print("clicou")
-        let vc = GlossaryTableViewController()
-        navigationController?.pushViewController(vc, animated: true)
+        guard index < cardsData.count else { return }
         
-//        let modal = GlossaryTableViewController()
-//        modal.modalPresentationStyle = UIModalPresentationStyle.fullScreen
-//        present(modal, animated: true , completion: nil)
+        let selectedCard = cardsData[index]
+        
+        switch selectedCard.title {
+        case "Glossário":
+            let vc = GlossaryTableViewController()
+            navigationController?.pushViewController(vc, animated: true)
+
+        case "Scuderias":
+            let vc = ScuderiaTableViewController()
+            navigationController?.pushViewController(vc, animated: true)
+
+        case "Pilotos":
+            let vc = DriverTableViewController()
+            navigationController?.pushViewController(vc, animated: true)
+
+        default:
+            print("Card não reconhecido")
+        }
     }
 
 }
@@ -102,8 +132,9 @@ extension InfosViewController: UICollectionViewDelegate, UICollectionViewDataSou
             with: item.title,
             subtitle: item.subtitle,
             image: item.image,
+            tag: indexPath.item,
             target: self,
-            action: #selector(cardInfoTapped(_:)),
+            action: #selector(cardInfoTapped(_:))
         )
         return cell
     }

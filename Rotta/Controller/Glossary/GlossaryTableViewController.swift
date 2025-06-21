@@ -51,7 +51,6 @@ class GlossaryTableViewController: UIViewController {
         setupView()
         impactFeedback.prepare()
         addGradientGlossary()
-        setupCustomBackButton()
         loadGlossary()
     }
     
@@ -64,10 +63,8 @@ class GlossaryTableViewController: UIViewController {
             }
         }
     }
-
-    private func setupCustomBackButton() {
-        navigationItem.hidesBackButton = true
-
+    
+    lazy var backButton: UIButton = {
         let backButton = UIButton(type: .system)
         backButton.setImage(
             UIImage(systemName: "chevron.left.circle.fill"),
@@ -84,10 +81,9 @@ class GlossaryTableViewController: UIViewController {
         )
 
         backButton.frame = CGRect(x: 0, y: 0, width: 32, height: 32)
-
-        let barButton = UIBarButtonItem(customView: backButton)
-        navigationItem.leftBarButtonItem = barButton
-    }
+        
+        return backButton
+    }()
 
     @objc private func customBackTapped() {
         navigationController?.popViewController(animated: true)
@@ -96,6 +92,9 @@ class GlossaryTableViewController: UIViewController {
     private func setupView() {
         view.backgroundColor = .systemBackground
         title = "Glossário"
+        navigationController?.isNavigationBarHidden = false
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
 
         view.addSubview(gradientView)
         view.addSubview(headerView)
@@ -141,7 +140,6 @@ class GlossaryTableViewController: UIViewController {
 }
 
 extension GlossaryTableViewController: GlossaryTableViewDelegate {
-
     func numberOfItems() -> Int {
         return terms.count
     }

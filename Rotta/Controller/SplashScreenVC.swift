@@ -54,7 +54,7 @@ class SplashScreenVC: UIViewController {
 
         view.addSubview(animationView)
 
-        animationView.play(fromProgress: 0.0, toProgress: 0.98, loopMode: .playOnce) { [weak self] _ in
+        animationView.play(fromProgress: 0.0, toProgress: 0.1, loopMode: .playOnce) { [weak self] _ in
             self?.currentIndex += 1
             self?.playNextAnimation()
         }
