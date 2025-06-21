@@ -10,199 +10,59 @@ import UIKit
 class TopThreeVC: UIViewController {
     var drivers: [DriverModel] = []
     var scuderias: [ScuderiaModel] = []
-    
+
     let database = Database.shared
 
-    lazy var driverFirstPlaceView: DriverView = {
-        let view = DriverView()
-        return view
-    }()
-    
-    lazy var driverSecondPlaceView: DriverView = {
-        let view = DriverView()
-        return view
-    }()
-    
-    lazy var driverThirdPlaceView: DriverView = {
-        let view = DriverView()
-        return view
-    }()
-    
-    lazy var driverHeaderView: UILabel = {
-        let view = UILabel()
-        view.text = "Pilotos"
-        view.font = Fonts.Title2
-        view.textColor = .white
-        view.textAlignment = .center
-        return view
-    }()
-    
-    lazy var seeAllButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "chevron.right.circle.fill"), for: .normal)
-        button.tintColor = .rottaYellow
-        return button
-    }()
-    
-    lazy var seeAllScuderiasButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "chevron.right.circle.fill"), for: .normal)
-        button.tintColor = .rottaYellow
-        return button
-    }()
-    
-    lazy var gradientView: UIView = {
-        let gradient = UIView()
-        gradient.translatesAutoresizingMaskIntoConstraints = false
-        gradient.layer.cornerRadius = 12
-        gradient.clipsToBounds = true
-        gradient.isUserInteractionEnabled = false
-        
-        return gradient
-    }()
-    
-    lazy var headerStackView: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [driverHeaderView, seeAllButton])
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.axis = .horizontal
-        stack.alignment = .center
-        stack.distribution = .fill
-        
-        stack.layoutMargins = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        stack.isLayoutMarginsRelativeArrangement = true
-        
-        driverHeaderView.centerXAnchor.constraint(equalTo: stack.centerXAnchor).isActive = true
-        
-        return stack
-    }()
-    
-    lazy var driverStackView: UIStackView = {
-        let view = UIStackView(arrangedSubviews: [driverSecondPlaceView, driverFirstPlaceView, driverThirdPlaceView])
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.distribution = .fillEqually
-        view.alignment = .bottom
-
-        view.isUserInteractionEnabled = true
-        let tap = UITapGestureRecognizer(target: self, action: #selector(driverTapped))
-        view.addGestureRecognizer(tap)
-        view.backgroundColor = .f2Corrida
-        view.layer.cornerRadius = 32
+    lazy var driverPodium: DriverPodium = {
+        let view = DriverPodium()
+        view.addGestureRecognizer(
+            UITapGestureRecognizer(
+                target: self,
+                action: #selector(seeAllDrivers)
+            )
+        )
 
         return view
     }()
-    
-    lazy var mainDriverStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [headerStackView, driverStackView])
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.axis = .vertical
-        stack.backgroundColor = .f2Corrida
-        stack.spacing = 8
-        stack.layer.cornerRadius = 12
-        stack.layoutMargins = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
-        stack.isLayoutMarginsRelativeArrangement = true
-        
-        return stack
-    }()
-    
-    lazy var scuderiaFirstPlaceView: ScuderiaView = {
-        let view = ScuderiaView()
-        return view
-    }()
-    
-    lazy var scuderiaSecondPlaceView: ScuderiaView = {
-        let view = ScuderiaView()
-        return view
-    }()
-    
-    lazy var scuderiaThirdPlaceView: ScuderiaView = {
-        let view = ScuderiaView()
-        return view
-    }()
-    
-    lazy var scuderiaLabel: UILabel = {
-        let view = UILabel()
-        view.text = "Scuderias"
-        view.font = Fonts.Title2
-        view.textColor = .white
-        view.textAlignment = .center
-        return view
-    }()
-    
-    lazy var scuderiaHeader: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [scuderiaLabel, seeAllScuderiasButton])
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.axis = .horizontal
-        stack.alignment = .center
-        stack.distribution = .fill
 
-        stack.layoutMargins = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        stack.isLayoutMarginsRelativeArrangement = true
-        
-        scuderiaLabel.centerXAnchor.constraint(equalTo: stack.centerXAnchor).isActive = true
-        
-        return stack
-    }()
-    
-    lazy var scuderiaStackView: UIStackView = {
-        let view = UIStackView(arrangedSubviews: [scuderiaSecondPlaceView, scuderiaFirstPlaceView, scuderiaThirdPlaceView])
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.distribution = .fillEqually
-        view.alignment = .bottom
+    @objc func seeAllDrivers() {
+        let vc = DriverRankingVC()
+        vc.drivers = drivers
+        navigationController?.pushViewController(vc, animated: true)
+    }
 
-        view.isUserInteractionEnabled = true
-        let tap = UITapGestureRecognizer(target: self, action: #selector(scuderiasTapped))
-        view.addGestureRecognizer(tap)
-        view.backgroundColor = .f2Corrida
-        view.layer.cornerRadius = 32
-        
+    lazy var scuderiaPodium: ScuderiaPodium = {
+        let view = ScuderiaPodium()
+        view.addGestureRecognizer(
+            UITapGestureRecognizer(
+                target: self,
+                action: #selector(seeAllScuderias)
+            )
+        )
+
         return view
     }()
-    
-    lazy var mainScuderiaStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [scuderiaHeader, scuderiaStackView])
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.axis = .vertical
-        stack.backgroundColor = .f2Corrida
-        stack.spacing = 8
-        stack.layer.cornerRadius = 12
-        stack.layoutMargins = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
-        stack.isLayoutMarginsRelativeArrangement = true
-        
-        return stack
-    }()
-    
+
+    @objc func seeAllScuderias() {
+        let vc = ScuderiaRankingVC()
+        vc.scuderias = scuderias
+        navigationController?.pushViewController(vc, animated: true)
+    }
+
     lazy var stackView: UIStackView = {
-        let view = UIStackView(arrangedSubviews: [mainDriverStack, mainScuderiaStack])
+        let view = UIStackView(arrangedSubviews: [driverPodium, scuderiaPodium])
         view.axis = .vertical
         view.distribution = .fill
         view.spacing = 16
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
-    @objc func driverTapped() {
-        let vc = DriverRankingVC()
-        navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    @objc func scuderiasTapped() {
-        let vc = ScuderiaRankingVC()
-        navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    @objc func addGradient() {
-        DispatchQueue.main.async {
-            self.gradientView.addGradientRankingView()
-        }
-    }
-
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setup()
         loadDrivers()
         loadScuderias()
-        setup()
-        addGradient()
     }
 
     private func loadDrivers() {
@@ -212,33 +72,57 @@ class TopThreeVC: UIViewController {
             drivers.sort { $0.points > $1.points }
             await MainActor.run {
                 if drivers.count > 0 {
-                    self.driverFirstPlaceView.configure(with: drivers[0], rank: 1)
+                    self.driverPodium.firstPlaceView.configure(
+                        with: drivers[0],
+                        rank: 1
+                    )
                 }
                 if drivers.count > 1 {
-                    self.driverSecondPlaceView.configure(with: drivers[1], rank: 2)
+                    self.driverPodium.secondPlaceView.configure(
+                        with: drivers[1],
+                        rank: 2
+                    )
                 }
                 if drivers.count > 2 {
-                    self.driverThirdPlaceView.configure(with: drivers[2], rank: 3)
+                    self.driverPodium.thirdPlaceView.configure(
+                        with: drivers[2],
+                        rank: 3
+                    )
                 }
+            }
+            await MainActor.run {
+                self.driverPodium.update(with: drivers)
             }
         }
     }
-    
+
     private func loadScuderias() {
         Task {
             scuderias = await database.getAllScuderias()
-            
+
             scuderias.sort { $0.points > $1.points }
             await MainActor.run {
                 if scuderias.count > 0 {
-                    self.scuderiaFirstPlaceView.configure(with: scuderias[0], rank: 1)
+                    self.scuderiaPodium.firstPlaceView.configure(
+                        with: scuderias[0],
+                        rank: 1
+                    )
                 }
                 if scuderias.count > 1 {
-                    self.scuderiaSecondPlaceView.configure(with: scuderias[1], rank: 2)
+                    self.scuderiaPodium.secondPlaceView.configure(
+                        with: scuderias[1],
+                        rank: 2
+                    )
                 }
                 if scuderias.count > 2 {
-                    self.scuderiaThirdPlaceView.configure(with: scuderias[2], rank: 3)
+                    self.scuderiaPodium.thirdPlaceView.configure(
+                        with: scuderias[2],
+                        rank: 3
+                    )
                 }
+            }
+            await MainActor.run {
+                self.scuderiaPodium.update(with: scuderias)
             }
         }
     }

@@ -51,7 +51,7 @@ class ScuderiaView: UIView {
     func configure(with model: ScuderiaModel, rank: Int) {
         positionLabel.text = "\(rank)"
         nameLabel.text = model.name
-        pointsLabel.text = "\(model.points) pontos"
+        pointsLabel.text = "\(Int(model.points)) pontos"
         imageView.image = UIImage(systemName: "person.circle.fill")
         if rank == 1 {
             imageView.heightAnchor.constraint(equalToConstant: 80).isActive = true
