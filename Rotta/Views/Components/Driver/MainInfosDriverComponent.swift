@@ -103,14 +103,14 @@ class MainInfosDriverComponent: UIView {
     lazy var divider1: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .dividerPrimary
+        view.backgroundColor = .fillsTextbox
         return view
     }()
     
     lazy var divider2: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .dividerPrimary
+        view.backgroundColor = .fillsTextbox
         return view
     }()
     
