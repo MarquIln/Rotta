@@ -5,7 +5,6 @@
 //  Created by Marcos on 13/06/25.
 //
 
-import Foundation
 import CloudKit
 import UIKit
 
@@ -13,7 +12,7 @@ class DriverService {
     private let privateDatabase: CKDatabase
 
     init(container: CKContainer = .init(identifier: "iCloud.Rotta.CloudRotta")) {
-        privateDatabase = container.privateCloudDatabase
+        privateDatabase = container.publicCloudDatabase
     }
 
     func getAll() async -> [DriverModel] {
@@ -32,7 +31,9 @@ class DriverService {
                         number: record["number"] as? Int16 ?? 0,
                         points: record["points"] as? Int16 ?? 0,
                         scuderia: record["scuderia"] as? String ?? "",
-                        idFormula: UUID(uuidString: record["idFormula"] as? String ?? "") ?? UUID()
+                        idFormula: UUID(uuidString: record["idFormula"] as? String ?? "") ?? UUID(),
+                        photo: record["photo"] as? String ?? "",
+                        scuderiaLogo: record["scuderiaLogo"] as? String ?? ""
                     )
                     drivers.append(driver)
                 } catch {
@@ -55,21 +56,19 @@ class DriverService {
             }
 
             let scuderiaRecord = try await privateDatabase.record(for: CKRecord.ID(recordName: scuderiaID.uuidString))
+            
+            let photoName = driverRecord["photo"] as? String ?? "defaultDriver"
+            
+            let scuderiaLogoName = scuderiaRecord["logo"] as? String ?? "defaultScuderia"
 
-            if let base64 = scuderiaRecord["logo"] as? String,
-               let imageData = Data(base64Encoded: base64),
-               let image = UIImage(data: imageData) {
-                
-                return DriverModel(
-                    id: id,
-                    name: driverRecord["name"] as? String ?? "",
-                    points: driverRecord["points"] as? Int16 ?? 0,
-                    scuderiaLogo: image
-                )
-            } else {
-                print("⚠️ Não foi possível converter a imagem da scuderia.")
-                return nil
-            }
+            return DriverModel(
+                id: id,
+                name: driverRecord["name"] as? String ?? "",
+                points: driverRecord["points"] as? Int16 ?? 0,
+                photo: photoName,
+                scuderiaLogo: scuderiaLogoName
+            )
+
         } catch {
             print("❌ Erro ao buscar registros do CloudKit: \(error.localizedDescription)")
             return nil
@@ -98,7 +97,7 @@ class DriverService {
         return drivers
     }
 
-    func add(name: String, country: String, number: Int16, points: Double, scuderia: UUID, idFormula: UUID) async {
+    func add(name: String, country: String, number: Int16, points: Double, scuderia: UUID, idFormula: UUID, photo: String, scuderiaLogo: String) async {
         let uuid = UUID().uuidString
         let record = CKRecord(recordType: "Driver")
         record["id"] = uuid
@@ -108,6 +107,8 @@ class DriverService {
         record["points"] = points
         record["scuderia"] = scuderia.uuidString
         record["idFormula"] = idFormula.uuidString
+        record["photo"] = photo
+        record["scuderiaLogo"] = scuderiaLogo
         do {
             let saved = try await privateDatabase.save(record)
             print("Driver salvo com sucesso: \(saved.recordID.recordName)")

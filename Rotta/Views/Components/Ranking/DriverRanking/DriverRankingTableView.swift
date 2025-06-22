@@ -7,7 +7,6 @@
 
 import UIKit
 import CloudKit
-import SkeletonView
 
 class DriverRankingTableView: UIView {
     let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
@@ -16,7 +15,6 @@ class DriverRankingTableView: UIView {
     var lastFeedbackTime: CFTimeInterval = 0
 
     var drivers: [DriverModel] = []
-    var scuderias: [ScuderiaModel] = []
 
     lazy var driverLabel: UILabel = {
         let label = UILabel()
@@ -83,7 +81,6 @@ class DriverRankingTableView: UIView {
         table.layer.maskedCorners = [.layerMinXMinYCorner]
         
         table.register(DriverRankingCell.self, forCellReuseIdentifier: DriverRankingCell.reuseIdentifier)
-        table.isSkeletonable = true
 
         return table
     }()
@@ -103,6 +100,5 @@ class DriverRankingTableView: UIView {
     func configure(with drivers: [DriverModel]) {
         self.drivers = drivers
         tableView.reloadData()
-        tableView.hideSkeleton()
     }
 }

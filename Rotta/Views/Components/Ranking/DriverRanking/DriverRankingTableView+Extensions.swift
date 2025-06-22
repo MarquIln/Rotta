@@ -19,6 +19,13 @@ extension DriverRankingTableView: UITableViewDataSource {
         let driver = drivers[indexPath.row]
         let position = indexPath.row + 1
         cell.config(with: driver, position: position, cellIndex: indexPath.row)
+        
+        if indexPath.row % 2 == 0 {
+            cell.backgroundColor = UIColor.white.withAlphaComponent(0.08)
+        } else {
+            cell.backgroundColor = UIColor.white.withAlphaComponent(0.15)
+        }
+        
         cell.selectionStyle = .none
         
         return cell

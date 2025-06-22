@@ -13,7 +13,7 @@ class Database {
     
     private let container = CKContainer(identifier: "iCloud.Rotta.CloudRotta")
     private var privateDatabase: CKDatabase {
-        return container.privateCloudDatabase
+        return container.publicCloudDatabase
     }
     
     private let formulaService = FormulaService()
@@ -54,8 +54,8 @@ class Database {
         return await driverService.getByScuderia(scuderiaId: scuderiaId)
     }
     
-    func addDriver(name: String, country: String, number: Int16, points: Double, scuderia: UUID, idFormula: UUID) async {
-        await driverService.add(name: name, country: country, number: number, points: points, scuderia: scuderia, idFormula: idFormula)
+    func addDriver(name: String, country: String, number: Int16, points: Double, scuderia: UUID, idFormula: UUID, photo: String, scuderiaLogo: String) async {
+        await driverService.add(name: name, country: country, number: number, points: points, scuderia: scuderia, idFormula: idFormula, photo: photo, scuderiaLogo: scuderiaLogo)
     }
     
     // MARK: - Scuderia Functions

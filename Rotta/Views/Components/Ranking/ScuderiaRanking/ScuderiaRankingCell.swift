@@ -80,8 +80,7 @@ class ScuderiaRankingCell: UITableViewCell {
         positionLabel.text = "\(position)"
         nameLabel.text = scuderia.name
         pointsLabel.text = "\(Int(scuderia.points))"
-        scuderiaImageView.image = UIImage(systemName: "person.circle.fill")
-        scuderiaImageView.tintColor = .systemGray3
+        scuderiaImageView.image = UIImage(named: scuderia.logo) ?? UIImage(systemName: "person.fill")
     }
 }
 

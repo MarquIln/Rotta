@@ -21,6 +21,8 @@ class ScuderiaPodium: UIView {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "chevron.right.circle.fill"), for: .normal)
         button.tintColor = .rottaYellow
+        button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        
         return button
     }()
     
@@ -31,7 +33,10 @@ class ScuderiaPodium: UIView {
     private lazy var headerStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [headerLabel, seeAllButton])
         stack.axis = .horizontal
-        stack.distribution = .fillEqually
+        stack.distribution = .fill
+        stack.layoutMargins = UIEdgeInsets(top: 0, left: 32, bottom: 0, right: 16)
+        stack.isLayoutMarginsRelativeArrangement = true
+        
         return stack
     }()
     

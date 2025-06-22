@@ -6,56 +6,44 @@
 //
 
 import UIKit
-import SkeletonView
-import CloudKit
 
 class DriverRankingCell: UITableViewCell {
     static let reuseIdentifier = "DriverRankingCell"
     
     lazy var positionLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = Fonts.Title2
         label.textColor = .white
         label.textAlignment = .center
-        label.isSkeletonable = true
         return label
     }()
     
     lazy var nameLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = Fonts.Subtitle2
         label.textColor = .white
-        label.isSkeletonable = true
         return label
     }()
     
     lazy var pointsLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = Fonts.Subtitle2
         label.textColor = .white
         label.textAlignment = .right
         return label
     }()
     
-    lazy var scuderiaLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
-        label.textColor = .lightGray
-        label.textAlignment = .center
-        label.isSkeletonable = true
-        return label
+    lazy var scuderiaLabel: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        return imageView
     }()
     
     lazy var driverImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
-        imageView.isSkeletonable = true
         return imageView
     }()
     
@@ -87,6 +75,8 @@ class DriverRankingCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        backgroundColor = .clear
+        contentView.backgroundColor = .clear
         setup()
     }
     
@@ -98,9 +88,8 @@ class DriverRankingCell: UITableViewCell {
         positionLabel.text = "\(position)"
         nameLabel.text = formatDriverName(driver.name)
         pointsLabel.text = "\(driver.points)"
-        scuderiaLabel.text = driver.scuderia
-        driverImageView.image = UIImage(systemName: "person.circle.fill")
-        driverImageView.tintColor = .systemGray3
+        driverImageView.image = UIImage(named: driver.photo!) ?? UIImage(systemName: "person.fill")
+        scuderiaLabel.image = UIImage(named: driver.scuderiaLogo!) ?? UIImage(systemName: "flag.fill")
     }
     
     private func formatDriverName(_ fullName: String) -> String {

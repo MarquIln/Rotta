@@ -14,6 +14,7 @@ class DriverPodium: UIView {
         label.font = Fonts.Title2
         label.textColor = .white
         label.textAlignment = .center
+
         return label
     }()
     
@@ -21,6 +22,8 @@ class DriverPodium: UIView {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "chevron.right.circle.fill"), for: .normal)
         button.tintColor = .rottaYellow
+        button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        
         return button
     }()
     
@@ -38,8 +41,11 @@ class DriverPodium: UIView {
     
     private lazy var headerStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [headerLabel, seeAllButton])
-        stack.alignment = .center
-        stack.distribution = .fillEqually
+        stack.axis = .horizontal
+        stack.distribution = .fill
+        stack.layoutMargins = UIEdgeInsets(top: 0, left: 32, bottom: 0, right: 12)
+        stack.isLayoutMarginsRelativeArrangement = true
+
         return stack
     }()
     
@@ -105,7 +111,7 @@ extension DriverPodium: ViewCodeProtocol {
             containerStack.topAnchor.constraint(equalTo: topAnchor),
             containerStack.leadingAnchor.constraint(equalTo: leadingAnchor),
             containerStack.trailingAnchor.constraint(equalTo: trailingAnchor),
-            containerStack.bottomAnchor.constraint(equalTo: bottomAnchor)
+            containerStack.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
     }
 }

@@ -251,15 +251,30 @@ class CloudKitSeed {
             ("Isack Hadjar", "France", 22, "Van Amersfoort Racing", 0.0)
         ]
         
+        func imageName(for fullName: String) -> String {
+            return fullName
+                .lowercased()
+                .replacingOccurrences(of: " ", with: "_")
+                .replacingOccurrences(of: "í", with: "i")
+                .replacingOccurrences(of: "é", with: "e")
+                .replacingOccurrences(of: "ã", with: "a")
+                .replacingOccurrences(of: "ó", with: "o")
+                .replacingOccurrences(of: "ç", with: "c")
+        }
+        
         for driver in f2Drivers {
             if let scuderia = allScuderias.first(where: { $0.name == driver.3 && $0.idFormula == f2Id }) {
+                let driverImage = imageName(for: driver.0)
+                let scuderiaImage = imageName(for: driver.3)
                 await database.addDriver(
                     name: driver.0,
                     country: driver.1,
                     number: Int16(driver.2),
                     points: driver.4,
                     scuderia: scuderia.id,
-                    idFormula: f2Id
+                    idFormula: f2Id,
+                    photo: driverImage,
+                    scuderiaLogo: scuderiaImage
                 )
             }
         }
