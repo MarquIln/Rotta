@@ -13,7 +13,7 @@ class HeightAndBornComponent: UIView {
         let label = UILabel()
         label.text = "Altura"
         label.textColor = .labelsPrimary
-        label.font = Fonts.FootnoteRegular
+        label.font = Fonts.Subtitle2
         return label
     }()
     
@@ -55,14 +55,29 @@ class HeightAndBornComponent: UIView {
     
     lazy var birthDayLabel: UILabel = {
         let label = UILabel()
-        label.text = "Nascido em \(birthDate)"
+        label.text = "Nascido em"
+        label.textColor = .labelsPrimary
+        label.font = Fonts.Subtitle2
+        return label
+    }()
+    lazy var birthDayVariable: UILabel = {
+        let label = UILabel()
+        label.text = birthDate
         label.textColor = .labelsPrimary
         label.font = Fonts.FootnoteRegular
         return label
     }()
+    lazy var birthDayStack: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [birthDayLabel, birthDayVariable])
+        stack.axis = .horizontal
+        stack.distribution = .fillProportionally
+        stack.spacing = 4
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
     
     lazy var componentStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [coloredStack, birthDayLabel])
+        let stack = UIStackView(arrangedSubviews: [coloredStack, birthDayStack])
         stack.axis = .horizontal
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.spacing = 27.5
@@ -98,23 +113,10 @@ extension HeightAndBornComponent: ViewCodeProtocol {
         setupConstraints()
     }
     func addSubviews() {
-//        addSubview(heightLabel)
-//        addSubview(birthDateLabel)
-//        addSubview(divider)
         addSubview(componentStack)
     }
     func setupConstraints() {
         NSLayoutConstraint.activate([
-//            heightLabel.topAnchor.constraint(equalTo: topAnchor, constant: 12),
-//            heightLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 27.5),
-//            heightLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12),
-//            
-//            divider.leadingAnchor.constraint(equalTo: heightLabel.trailingAnchor, constant: 27.5),
-//            divider.widthAnchor.constraint(equalToConstant: 1),
-//            
-//            birthDateLabel.topAnchor.constraint(equalTo: topAnchor, constant: 12),
-//            birthDateLabel.leadingAnchor.constraint(equalTo: divider.trailingAnchor, constant: 27.5)
-            
             componentStack.topAnchor.constraint(equalTo: topAnchor),
             componentStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
             componentStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -27.5),

@@ -14,6 +14,12 @@ class TestController: UIViewController {
         return driver
     }()
     
+    lazy var champion: ChampionComponent = {
+        let driver = ChampionComponent(champion: "Campeonato de fórmula 3 da FIA de 2024")
+        driver.translatesAutoresizingMaskIntoConstraints = false
+        return driver
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
@@ -30,6 +36,7 @@ extension TestController: ViewCodeProtocol {
     func addSubviews() {
         view.addSubview(mainInfos)
         view.addSubview(heightAndBirth)
+        view.addSubview(champion)
     }
     
     func setupConstraints() {
@@ -43,6 +50,11 @@ extension TestController: ViewCodeProtocol {
             heightAndBirth.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             heightAndBirth.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             heightAndBirth.heightAnchor.constraint(equalToConstant: 46),
+            
+            champion.topAnchor.constraint(equalTo: heightAndBirth.bottomAnchor, constant: 20),
+            champion.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            champion.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            champion.heightAnchor.constraint(equalToConstant: 46),
         ])
     }
 }
