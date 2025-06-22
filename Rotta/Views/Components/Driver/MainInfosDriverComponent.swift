@@ -24,7 +24,6 @@ class MainInfosDriverComponent: UIView {
         let label = UILabel()
         label.text = country.getCountryFlag()
         label.textColor = .labelsPrimary
-        label.font = .systemFont(ofSize: 17, weight: .bold)
         return label
     }()
     
@@ -32,7 +31,10 @@ class MainInfosDriverComponent: UIView {
         let stack = UIStackView(arrangedSubviews: [countryTitle, countryLabel])
         stack.axis = .vertical
         stack.alignment = .center
-        stack.spacing = 8
+        stack.distribution = .equalSpacing
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.isLayoutMarginsRelativeArrangement = true
+        stack.layoutMargins = .init(top: 12, left: 0, bottom: 12, right: 0)
         return stack
     }()
     
@@ -49,7 +51,7 @@ class MainInfosDriverComponent: UIView {
         let label = UILabel()
         label.text = driverNumber
         label.textColor = .labelsPrimary
-        label.font = Fonts.Subtitle1
+        label.font = Fonts.Title1
         return label
     }()
     
@@ -57,7 +59,11 @@ class MainInfosDriverComponent: UIView {
         let stack = UIStackView(arrangedSubviews: [carTitle, carLabel])
         stack.axis = .vertical
         stack.alignment = .center
-        stack.spacing = 8
+        stack.distribution = .equalSpacing
+        stack.backgroundColor = .fillsTextboxSecondary
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.isLayoutMarginsRelativeArrangement = true
+        stack.layoutMargins = .init(top: 12, left: 0, bottom: 12, right: 0)
         return stack
     }()
     
@@ -70,18 +76,25 @@ class MainInfosDriverComponent: UIView {
         return label
     }()
     
-    lazy var scuderiaLabel: UILabel = {
-        let label = UILabel()
-        label.text = scuderia
-        label.textColor = .labelsPrimary
-        label.font = Fonts.BodyRegular
-        return label
+    lazy var scuderiaLabel: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        imageView.image = UIImage(named: "rodin")
+        imageView.backgroundColor = .clear
+        imageView.isOpaque = false
+        
+        return imageView
     }()
     
     lazy var scuderiaStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [scuderiaTitle, scuderiaLabel])
         stack.axis = .vertical
-        stack.spacing = 8
+        stack.distribution = .equalSpacing
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.isLayoutMarginsRelativeArrangement = true
+        stack.layoutMargins = .init(top: 12, left: 0, bottom: 12, right: 0)
         stack.alignment = .center
         return stack
     }()
@@ -106,9 +119,8 @@ class MainInfosDriverComponent: UIView {
         let stack = UIStackView(arrangedSubviews: [countryStack, divider1, carStack, divider2, scuderiaStack])
         stack.axis = .horizontal
         stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.alignment = .center
+        stack.alignment = .fill
         stack.distribution = .fill
-//        stack.spacing = 34.17
         return stack
     }()
     
@@ -140,18 +152,24 @@ extension MainInfosDriverComponent: ViewCodeProtocol {
     }
     func setupConstraints() {
         NSLayoutConstraint.activate([
-            generalStack.topAnchor.constraint(equalTo: topAnchor, constant: 12),
+            generalStack.topAnchor.constraint(equalTo: topAnchor),
             generalStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             generalStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            generalStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12),
-
+            generalStack.bottomAnchor.constraint(equalTo: bottomAnchor),
+            
             divider1.widthAnchor.constraint(equalToConstant: 1),
-            divider1.heightAnchor.constraint(equalTo: generalStack.heightAnchor),
+            divider1.heightAnchor.constraint(equalTo: self.heightAnchor),
             divider2.widthAnchor.constraint(equalToConstant: 1),
-            divider2.heightAnchor.constraint(equalTo: generalStack.heightAnchor),
-
+            divider2.heightAnchor.constraint(equalTo: self.heightAnchor),
+            
             countryStack.widthAnchor.constraint(equalTo: carStack.widthAnchor),
             carStack.widthAnchor.constraint(equalTo: scuderiaStack.widthAnchor),
+            
+            scuderiaLabel.widthAnchor.constraint(equalToConstant: 67),
+            scuderiaLabel.heightAnchor.constraint(equalToConstant: 37.79),
+            
+            countryLabel.widthAnchor.constraint(equalToConstant: 34),
+            countryLabel.heightAnchor.constraint(equalToConstant: 41)
         ])
     }
 }
