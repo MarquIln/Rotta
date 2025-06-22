@@ -2,44 +2,35 @@ import UIKit
 
 class TestController: UIViewController {
     
-        private lazy var scroll: GlossaryExploreCell = {
-            let scroll = GlossaryExploreCell()
-            scroll.translatesAutoresizingMaskIntoConstraints = false
+    lazy var driver: MainInfosDriverComponent = {
+        let driver = MainInfosDriverComponent(country: "itália", driverNumber: 1, scuderia: "Invicta")
+        driver.translatesAutoresizingMaskIntoConstraints = false
+        return driver
+    }()
     
-            return scroll
-        }()
-    
-    //    private lazy var glossaryTableView: GlossaryTableView = {
-    //        let tableView = GlossaryTableView()
-    //        tableView.translatesAutoresizingMaskIntoConstraints = false
-    //        tableView.backgroundColor = .red
-    //
-    //        return tableView
-    //    }()
-    //
-        override func viewDidLoad() {
-            super.viewDidLoad()
-            setup()
-    //        view.backgroundColor = .backgroundPrimary
-        }
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setup()
+        view.backgroundColor = .white
     }
-    //
+}
+//
 extension TestController: ViewCodeProtocol {
+    func setup() {
+        addSubviews()
+        setupConstraints()
+    }
+    
     func addSubviews() {
-        //        view.addSubview(headerView)
-        view.addSubview(scroll)
+        view.addSubview(driver)
     }
     
     func setupConstraints() {
         NSLayoutConstraint.activate([
-            //            headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
-            //            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            //            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            //            headerView.heightAnchor.constraint(equalToConstant: 100),
-            
-            scroll.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
-            scroll.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            scroll.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
+            driver.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 306),
+            driver.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            driver.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            driver.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -319),
         ])
     }
 }
