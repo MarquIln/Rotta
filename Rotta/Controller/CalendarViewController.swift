@@ -56,12 +56,6 @@ extension CalendarViewController: CalendarCollectionViewDelegate {
     func didSelectDate(_ date: Date) {
         print("Data selecionada: \(date)")
 
-//        Task {
-//            let events = await eventService.getOnDate(date)
-//            DispatchQueue.main.async {
-//                self.event.update(with: events)
-//            }
-//        }
         Task {
             let eventsOfTheDay = await eventService.getOnDate(date)
             
