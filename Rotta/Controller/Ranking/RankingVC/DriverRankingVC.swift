@@ -7,7 +7,7 @@
 
 import UIKit
 
-class RankingVC: UIViewController {
+class DriverRankingVC: UIViewController {
     var drivers: [DriverModel] = []
     let database = Database.shared
     private let impactFeedback = UIImpactFeedbackGenerator(style: .light)
@@ -85,7 +85,7 @@ class RankingVC: UIViewController {
 }
 
 // MARK: - UIGestureRecognizerDelegate
-extension RankingVC: UIGestureRecognizerDelegate {
+extension DriverRankingVC: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
