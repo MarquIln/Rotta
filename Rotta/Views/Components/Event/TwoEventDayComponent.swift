@@ -90,7 +90,7 @@ class TwoEventDayComponent: UIView {
     lazy var separator: UIView = {
         var separator = UIView()
         separator.translatesAutoresizingMaskIntoConstraints = false
-        separator.backgroundColor = .sprintFormula2
+        separator.backgroundColor = .dividerSecondary
         return separator
     }()
     

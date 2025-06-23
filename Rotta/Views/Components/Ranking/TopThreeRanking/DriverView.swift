@@ -28,7 +28,6 @@ class DriverView: UIView {
         label.font = Fonts.FootnoteEmphasized
         label.textColor = .white
         label.textAlignment = .center
-        label.numberOfLines = 1
         return label
     }()
     

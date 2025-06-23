@@ -5,8 +5,8 @@
 //  Created by Marcos on 13/06/25.
 //
 
-import Foundation
 import CloudKit
+import UIKit
 
 class DriverService {
     private let privateDatabase: CKDatabase
@@ -31,7 +31,9 @@ class DriverService {
                         number: record["number"] as? Int16 ?? 0,
                         points: record["points"] as? Int16 ?? 0,
                         scuderia: record["scuderia"] as? String ?? "",
-                        idFormula: UUID(uuidString: record["idFormula"] as? String ?? "") ?? UUID()
+                        idFormula: UUID(uuidString: record["idFormula"] as? String ?? "") ?? UUID(),
+                        photo: record["photo"] as? String ?? "",
+                        scuderiaLogo: record["scuderiaLogo"] as? String ?? ""
                     )
                     drivers.append(driver)
                 } catch {
@@ -42,6 +44,35 @@ class DriverService {
             print("Erro ao buscar Drivers: \(error.localizedDescription)")
         }
         return drivers
+    }
+    
+    func getDriverWithScuderiaIcon(by id: UUID) async -> DriverModel? {
+        do {
+            let driverRecord = try await privateDatabase.record(for: CKRecord.ID(recordName: id.uuidString))
+            
+            guard let scuderiaIDString = driverRecord["idScuderia"] as? String,
+                  let scuderiaID = UUID(uuidString: scuderiaIDString) else {
+                return nil
+            }
+
+            let scuderiaRecord = try await privateDatabase.record(for: CKRecord.ID(recordName: scuderiaID.uuidString))
+            
+            let photoName = driverRecord["photo"] as? String ?? "defaultDriver"
+            
+            let scuderiaLogoName = scuderiaRecord["logo"] as? String ?? "defaultScuderia"
+
+            return DriverModel(
+                id: id,
+                name: driverRecord["name"] as? String ?? "",
+                points: driverRecord["points"] as? Int16 ?? 0,
+                photo: photoName,
+                scuderiaLogo: scuderiaLogoName
+            )
+
+        } catch {
+            print("❌ Erro ao buscar registros do CloudKit: \(error.localizedDescription)")
+            return nil
+        }
     }
     
     func getByFormula(idFormula: UUID) async -> [DriverModel] {
@@ -66,7 +97,7 @@ class DriverService {
         return drivers
     }
 
-    func add(name: String, country: String, number: Int16, points: Double, scuderia: UUID, idFormula: UUID) async {
+    func add(name: String, country: String, number: Int16, points: Double, scuderia: UUID, idFormula: UUID, photo: String, scuderiaLogo: String) async {
         let uuid = UUID().uuidString
         let record = CKRecord(recordType: "Driver")
         record["id"] = uuid
@@ -76,6 +107,8 @@ class DriverService {
         record["points"] = points
         record["scuderia"] = scuderia.uuidString
         record["idFormula"] = idFormula.uuidString
+        record["photo"] = photo
+        record["scuderiaLogo"] = scuderiaLogo
         do {
             let saved = try await privateDatabase.save(record)
             print("Driver salvo com sucesso: \(saved.recordID.recordName)")
