@@ -21,8 +21,14 @@ extension Driver {
     @NSManaged public var idFormula: UUID?
     @NSManaged public var name: String?
     @NSManaged public var number: Int16
-    @NSManaged public var points: Double
-    @NSManaged public var scuderia: UUID?
+    @NSManaged public var points: Int16
+    @NSManaged public var scuderia: String?
+    @NSManaged public var photo: String?
+    @NSManaged public var scuderiaLogo: String?
+    @NSManaged public var height: String?
+    @NSManaged public var birthDate: Date?
+    @NSManaged public var championship: String?
+    @NSManaged public var details: String?
 
 }
 

@@ -33,7 +33,11 @@ class DriverService {
                         scuderia: record["scuderia"] as? String ?? "",
                         idFormula: UUID(uuidString: record["idFormula"] as? String ?? "") ?? UUID(),
                         photo: record["photo"] as? String ?? "",
-                        scuderiaLogo: record["scuderiaLogo"] as? String ?? ""
+                        scuderiaLogo: record["scuderiaLogo"] as? String ?? "",
+                        height: record["height"] as? String ?? "",
+                        birthDate: record["birthDate"] as? Date ?? Date(),
+                        championship: record["championship"] as? String ?? "",
+                        details: record["details"] as? String ?? ""
                     )
                     drivers.append(driver)
                 } catch {
@@ -64,9 +68,17 @@ class DriverService {
             return DriverModel(
                 id: id,
                 name: driverRecord["name"] as? String ?? "",
+                country: driverRecord["country"] as? String ?? "",
+                number: driverRecord["number"] as? Int16 ?? 0,
                 points: driverRecord["points"] as? Int16 ?? 0,
+                scuderia: driverRecord["scuderia"] as? String ?? "",
                 photo: photoName,
-                scuderiaLogo: scuderiaLogoName
+                scuderiaLogo: scuderiaLogoName,
+                height: driverRecord["height"] as? String ?? "",
+                birthDate: driverRecord["birthDate"] as? Date ?? Date(),
+                championship: driverRecord["championship"] as? String ?? "",
+                details: driverRecord["details"] as? String ?? "",
+                
             )
 
         } catch {
@@ -97,7 +109,7 @@ class DriverService {
         return drivers
     }
 
-    func add(name: String, country: String, number: Int16, points: Double, scuderia: UUID, idFormula: UUID, photo: String, scuderiaLogo: String) async {
+    func add(name: String, country: String, number: Int16, points: Int16, scuderia: String, idFormula: UUID, photo: String, scuderiaLogo: String, height: String, birthDate: Date, championship: String, details: String) async {
         let uuid = UUID().uuidString
         let record = CKRecord(recordType: "Driver")
         record["id"] = uuid
@@ -105,10 +117,14 @@ class DriverService {
         record["country"] = country
         record["number"] = number
         record["points"] = points
-        record["scuderia"] = scuderia.uuidString
+        record["scuderia"] = scuderia
         record["idFormula"] = idFormula.uuidString
         record["photo"] = photo
         record["scuderiaLogo"] = scuderiaLogo
+        record["height"] = height
+        record["birthDate"] = birthDate
+        record["championship"] = championship
+        record["details"] = details
         do {
             let saved = try await privateDatabase.save(record)
             print("Driver salvo com sucesso: \(saved.recordID.recordName)")
