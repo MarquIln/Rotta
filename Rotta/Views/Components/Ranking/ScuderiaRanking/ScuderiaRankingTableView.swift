@@ -7,7 +7,6 @@
 
 import UIKit
 import CloudKit
-import SkeletonView
 
 class ScuderiaRankingTableView: UIView {
     let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
@@ -23,7 +22,7 @@ class ScuderiaRankingTableView: UIView {
         label.text = "Scuderia"
         label.textAlignment = .center
         label.textColor = .white
-        label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
 
         return label
     }()
@@ -32,9 +31,8 @@ class ScuderiaRankingTableView: UIView {
         let label = UILabel()
         label.font = Fonts.Subtitle2
         label.textAlignment = .center
-        label.text = "Points"
+        label.text = "Pontos"
         label.textColor = .white
-
 
         return label
     }()
@@ -47,6 +45,9 @@ class ScuderiaRankingTableView: UIView {
         stack.backgroundColor = .f2Corrida
         stack.alignment = .fill
         stack.layer.cornerRadius = 12
+        
+        stack.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 8)
+        stack.isLayoutMarginsRelativeArrangement = true
 
         stack.layer.maskedCorners = [
              .layerMinXMinYCorner,
@@ -72,7 +73,6 @@ class ScuderiaRankingTableView: UIView {
         table.layer.maskedCorners = [.layerMinXMinYCorner]
         
         table.register(ScuderiaRankingCell.self, forCellReuseIdentifier: ScuderiaRankingCell.reuseIdentifier)
-        table.isSkeletonable = true
 
         return table
     }()
@@ -92,6 +92,5 @@ class ScuderiaRankingTableView: UIView {
     func configure(with scuderias: [ScuderiaModel]) {
         self.scuderias = scuderias
         tableView.reloadData()
-        tableView.hideSkeleton()
     }
 }

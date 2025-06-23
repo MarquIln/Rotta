@@ -63,8 +63,8 @@ extension UIView {
         gradientLayer.endPoint   = CGPoint(x: 0.0, y: 1.0)
 
         gradientLayer.colors = colors ?? [
-            (UIColor(named: "SprintFormula2") ?? .clear).withAlphaComponent(0.3).cgColor,
-            (UIColor(named: "RaceFormula2") ?? .black).withAlphaComponent(0.8).cgColor
+            (UIColor(named: "RaceFormula2") ?? .clear).withAlphaComponent(0.7).cgColor,
+            (UIColor(named: "SprintFormula2") ?? .black).withAlphaComponent(0.5).cgColor
         ]
         gradientLayer.locations = [0.0, 1.0]
         self.layer.insertSublayer(gradientLayer, at: 0)

@@ -19,10 +19,10 @@ class DriverRankingTableView: UIView {
     lazy var driverLabel: UILabel = {
         let label = UILabel()
         label.font = Fonts.Subtitle2
-        label.text = "Driver"
+        label.text = "Piloto"
         label.textAlignment = .center
         label.textColor = .white
-        label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
 
         return label
     }()
@@ -31,7 +31,7 @@ class DriverRankingTableView: UIView {
         let label = UILabel()
         label.font = Fonts.Subtitle2
         label.textAlignment = .center
-        label.text = "Points"
+        label.text = "Pontos"
         label.textColor = .white
 
 
@@ -52,14 +52,16 @@ class DriverRankingTableView: UIView {
         let stack = UIStackView(arrangedSubviews: [driverLabel, pointsLabel, scuderiaLabel])
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .horizontal
-        stack.distribution = .fillEqually
+        stack.distribution = .fill
         stack.backgroundColor = .f2Corrida
-        stack.alignment = .fill
         stack.layer.cornerRadius = 12
+        stack.layoutMargins = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 3)
+        stack.spacing = 12
+        stack.isLayoutMarginsRelativeArrangement = true
 
         stack.layer.maskedCorners = [
              .layerMinXMinYCorner,
-             .layerMaxXMinYCorner
+             .layerMaxXMinYCorner,
          ]
          stack.layer.masksToBounds = true
 
@@ -78,7 +80,7 @@ class DriverRankingTableView: UIView {
         
         table.layer.masksToBounds = true
         table.layer.cornerRadius = 8
-        table.layer.maskedCorners = [.layerMinXMinYCorner]
+        table.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
         
         table.register(DriverRankingCell.self, forCellReuseIdentifier: DriverRankingCell.reuseIdentifier)
 

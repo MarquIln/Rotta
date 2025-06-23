@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SkeletonView
 import CloudKit
 
 class ScuderiaRankingCell: UITableViewCell {
@@ -18,7 +17,6 @@ class ScuderiaRankingCell: UITableViewCell {
         label.font = Fonts.Title2
         label.textColor = .white
         label.textAlignment = .center
-        label.isSkeletonable = true
         return label
     }()
     
@@ -27,7 +25,6 @@ class ScuderiaRankingCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = Fonts.Subtitle2
         label.textColor = .white
-        label.isSkeletonable = true
         return label
     }()
     
@@ -45,7 +42,6 @@ class ScuderiaRankingCell: UITableViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
-        imageView.isSkeletonable = true
         return imageView
     }()
     
@@ -69,6 +65,8 @@ class ScuderiaRankingCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        backgroundColor = .clear
+        contentView.backgroundColor = .clear
         setup()
     }
     
@@ -95,13 +93,12 @@ extension ScuderiaRankingCell: ViewCodeProtocol {
             mainStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
             mainStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
             mainStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            mainStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+            mainStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             
             positionLabel.widthAnchor.constraint(equalToConstant: 34),
-            scuderiaImageView.widthAnchor.constraint(equalToConstant: 28),
-            scuderiaImageView.heightAnchor.constraint(equalToConstant: 28),
-            pointsLabel.widthAnchor.constraint(equalToConstant: 40),
-            scuderiaImageView.widthAnchor.constraint(equalToConstant: 120)
+            scuderiaImageView.widthAnchor.constraint(equalToConstant: 36),
+            scuderiaImageView.heightAnchor.constraint(equalToConstant: 20),
+//            pointsLabel.widthAnchor.constraint(equalToConstant: 40),
         ])
     }
 }

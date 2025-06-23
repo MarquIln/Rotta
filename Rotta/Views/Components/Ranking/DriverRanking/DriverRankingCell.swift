@@ -22,6 +22,7 @@ class DriverRankingCell: UITableViewCell {
         let label = UILabel()
         label.font = Fonts.Subtitle2
         label.textColor = .white
+//        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         return label
     }()
     
@@ -47,19 +48,39 @@ class DriverRankingCell: UITableViewCell {
         return imageView
     }()
     
+    lazy var driverFlag: UILabel = {
+        let label = UILabel()
+        label.font = Fonts.Subtitle2
+        
+        return label
+    }()
+    
+    private lazy var driverStackView: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [nameLabel, driverFlag])
+        stack.axis = .horizontal
+        stack.spacing = 4
+        stack.distribution = .fillProportionally
+
+        return stack
+    }()
+    
     private lazy var nameStackView: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [positionLabel, driverImageView, nameLabel])
+        let stack = UIStackView(arrangedSubviews: [positionLabel, driverImageView, driverStackView])
         stack.axis = .horizontal
         stack.spacing = 8
         stack.alignment = .center
+        stack.distribution = .fill
+        stack.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        
         return stack
     }()
     
     private lazy var performanceStackView: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [pointsLabel, scuderiaLabel])
         stack.axis = .horizontal
-        stack.spacing = 16
+        stack.spacing = 24
         stack.alignment = .center
+        
         return stack
     }()
     
@@ -67,7 +88,6 @@ class DriverRankingCell: UITableViewCell {
         let stack = UIStackView(arrangedSubviews: [nameStackView, performanceStackView])
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .horizontal
-        stack.spacing = 16
         stack.alignment = .center
         stack.distribution = .fill
         return stack
@@ -87,6 +107,7 @@ class DriverRankingCell: UITableViewCell {
     func config(with driver: DriverModel, position: Int, cellIndex: Int) {
         positionLabel.text = "\(position)"
         nameLabel.text = formatDriverName(driver.name)
+        driverFlag.text = driver.country?.getCountryFlag()
         pointsLabel.text = "\(driver.points)"
         driverImageView.image = UIImage(named: driver.photo!) ?? UIImage(systemName: "person.fill")
         scuderiaLabel.image = UIImage(named: driver.scuderiaLogo!) ?? UIImage(systemName: "flag.fill")
@@ -119,8 +140,7 @@ extension DriverRankingCell: ViewCodeProtocol {
             positionLabel.widthAnchor.constraint(equalToConstant: 34),
             driverImageView.widthAnchor.constraint(equalToConstant: 28),
             driverImageView.heightAnchor.constraint(equalToConstant: 28),
-            pointsLabel.widthAnchor.constraint(equalToConstant: 40),
-            scuderiaLabel.widthAnchor.constraint(equalToConstant: 120)
+            scuderiaLabel.widthAnchor.constraint(equalToConstant: 70)
         ])
     }
 }

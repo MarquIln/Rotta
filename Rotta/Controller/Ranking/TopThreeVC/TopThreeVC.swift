@@ -28,7 +28,7 @@ class TopThreeVC: UIViewController {
     @objc func seeAllDrivers() {
         let vc = DriverRankingVC()
         vc.drivers = drivers
-        navigationController?.pushViewController(vc, animated: true)
+        navigationController?.pushViewController(vc, animated: false)
     }
 
     lazy var scuderiaPodium: ScuderiaPodium = {
