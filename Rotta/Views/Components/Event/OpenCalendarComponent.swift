@@ -194,8 +194,8 @@ class OpenCalendarComponent: UIView {
 extension OpenCalendarComponent: ViewCodeProtocol {
     func addSubviews() {
         addSubview(backgroundContainer)
-        backgroundImageView.addSubview(gradientView)
         backgroundContainer.addSubview(backgroundImageView)
+        backgroundImageView.addSubview(gradientView)
         backgroundContainer.addSubview(eventCalendarStack)
     }
     
@@ -206,15 +206,16 @@ extension OpenCalendarComponent: ViewCodeProtocol {
             backgroundContainer.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             backgroundContainer.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             
-            gradientView.topAnchor.constraint(equalTo: self.topAnchor),
-            gradientView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            gradientView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            gradientView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            gradientView.topAnchor.constraint(equalTo: backgroundImageView.topAnchor),
+            gradientView.leadingAnchor.constraint(equalTo: backgroundImageView.leadingAnchor),
+            gradientView.trailingAnchor.constraint(equalTo: backgroundImageView.trailingAnchor),
+            gradientView.bottomAnchor.constraint(equalTo: backgroundImageView.bottomAnchor),
+            gradientView.heightAnchor.constraint(equalToConstant: 500),
             
-            backgroundImageView.topAnchor.constraint(equalTo: gradientView.topAnchor),
-            backgroundImageView.leadingAnchor.constraint(equalTo: gradientView.leadingAnchor),
-            backgroundImageView.trailingAnchor.constraint(equalTo: gradientView.trailingAnchor),
-            backgroundImageView.bottomAnchor.constraint(equalTo: gradientView.bottomAnchor),
+            backgroundImageView.topAnchor.constraint(equalTo: self.topAnchor),
+            backgroundImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            backgroundImageView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            backgroundImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             
             eventCalendarStack.topAnchor.constraint(equalTo: gradientView.topAnchor, constant: 16),
             eventCalendarStack.leadingAnchor.constraint(equalTo: gradientView.leadingAnchor, constant: 16),
