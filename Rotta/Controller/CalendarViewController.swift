@@ -36,7 +36,9 @@ class CalendarViewController: UIViewController {
 
         return event
     }()
-
+    
+    private let eventService = EventService()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
@@ -52,8 +54,32 @@ class CalendarViewController: UIViewController {
 extension CalendarViewController: CalendarCollectionViewDelegate {
     func didSelectDate(_ date: Date) {
         print("Data selecionada: \(date)")
+
+//        Task {
+//            let events = await eventService.getOnDate(date)
+//            DispatchQueue.main.async {
+//                self.event.update(with: events)
+//            }
+//        }
+        Task {
+            let eventsOfTheDay = await eventService.getOnDate(date)
+            
+            guard let roundNumber = eventsOfTheDay.first?.roundNumber else {
+                print("Nenhum evento nesse dia")
+                return
+            }
+            
+            let allEvents = await eventService.getAll()
+            let eventsOfRound = allEvents.filter { $0.roundNumber == roundNumber }
+            
+            DispatchQueue.main.async {
+                self.event.update(with: eventsOfRound)
+            }
+        }
+
     }
 
+    
     func didChangeMonth(_ date: Date) {
         print("Mês alterado para: \(date)")
     }
@@ -111,22 +137,10 @@ extension CalendarViewController: ViewCodeProtocol {
             ),
             customCalendarView.heightAnchor.constraint(equalToConstant: 500),
 
-            event.leadingAnchor.constraint(
-                equalTo: contentView.leadingAnchor,
-                constant: 16
-            ),
-            event.trailingAnchor.constraint(
-                equalTo: contentView.trailingAnchor,
-                constant: -16
-            ),
-            event.topAnchor.constraint(
-                equalTo: customCalendarView.bottomAnchor,
-                constant: 19
-            ),
-            event.bottomAnchor.constraint(
-                equalTo: contentView.bottomAnchor,
-                constant: 0
-            ),
+                   event.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+                   event.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+                   event.topAnchor.constraint(equalTo: customCalendarView.bottomAnchor, constant: 20),
+                   event.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0)
 
         ])
     }

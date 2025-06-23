@@ -26,8 +26,12 @@ class EventService {
                     let record = try result.1.get()
                     let event = EventModel(
                         id: UUID(uuidString: record["id"] as? String ?? "") ?? UUID(),
+                        roundNumber: record["roundNumber"] as? Int16 ?? 0,
+                        country: record["country"] as? String ?? "",
+                        name: record["name"] as? String ?? "",
                         date: record["date"] as? Date,
-                        startTime: record["startTime"] as? Date,
+                        startTime: record["startTime"] as? String ?? "",
+                        endTime: record["endTime"] as? String ?? "",
                         idFormula: UUID(uuidString: record["idFormula"] as? String ?? "")
                     )
                     events.append(event)
@@ -47,8 +51,12 @@ class EventService {
             let record = try await privateDatabase.record(for: recordID)
             return EventModel(
                 id: UUID(uuidString: record["id"] as? String ?? "") ?? UUID(),
+                roundNumber: record["roundNumber"] as? Int16 ?? 0,
+                country: record["country"] as? String ?? "",
+                name: record["name"] as? String ?? "",
                 date: record["date"] as? Date,
-                startTime: record["startTime"] as? Date,
+                startTime: record["startTime"] as? String ?? "",
+                endTime: record["endTime"] as? String ?? "",
                 idFormula: UUID(uuidString: record["idFormula"] as? String ?? "")
             )
         } catch {
@@ -68,8 +76,12 @@ class EventService {
                     let record = try result.1.get()
                     let event = EventModel(
                         id: UUID(uuidString: record["id"] as? String ?? "") ?? UUID(),
+                        roundNumber: record["roundNumber"] as? Int16 ?? 0,
+                        country: record["country"] as? String ?? "",
+                        name: record["name"] as? String ?? "",
                         date: record["date"] as? Date,
-                        startTime: record["startTime"] as? Date,
+                        startTime: record["startTime"] as? String ?? "",
+                        endTime: record["endTime"] as? String ?? "",
                         idFormula: UUID(uuidString: record["idFormula"] as? String ?? "")
                     )
                     events.append(event)
@@ -118,13 +130,16 @@ class EventService {
         return filtered
     }
 
-    func add(name: String, date: Date? = nil, startTime: Date? = nil, idFormula: UUID? = nil) async {
+    func add(roundNumber: Int16, country: String, name: String, date: Date? = nil, startTime: String, endTime: String, idFormula: UUID? = nil) async {
         let uuid = UUID().uuidString
         let record = CKRecord(recordType: "Event")
         record["id"] = uuid
+        record["roundNumber"] = roundNumber
+        record["country"] = country
         record["name"] = name
         if let date = date { record["date"] = date }
-        if let startTime = startTime { record["startTime"] = startTime }
+        record["startTime"] = startTime
+        record["endTime"] = endTime
         if let idFormula = idFormula { record["idFormula"] = idFormula.uuidString }
         do {
             let saved = try await privateDatabase.save(record)

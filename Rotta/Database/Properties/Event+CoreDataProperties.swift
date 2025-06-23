@@ -16,10 +16,15 @@ extension Event {
         return NSFetchRequest<Event>(entityName: "Event")
     }
 
+    @NSManaged public var roundNumber: Int16
+    @NSManaged public var country: String
+    @NSManaged public var name: String
     @NSManaged public var date: Date?
     @NSManaged public var id: UUID?
     @NSManaged public var idFormula: UUID?
-    @NSManaged public var startTime: Date?
+    @NSManaged public var startTime: String
+    @NSManaged public var endTime: String
+
 
 }
 

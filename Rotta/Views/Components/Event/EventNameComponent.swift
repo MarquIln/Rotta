@@ -20,17 +20,6 @@ class EventNameComponent: UIView {
     }()
     
     //MARK: Country Flag
-//    private lazy var countryFlag: UIImageView = {
-//        var icon = UIImageView()
-//        icon.image = UIImage(systemName: "flag")
-//        icon.tintColor = .blue
-//        icon.translatesAutoresizingMaskIntoConstraints = false
-//        icon.contentMode = .scaleAspectFit
-//        icon.setContentHuggingPriority(.required, for: .horizontal)
-//        icon.setContentCompressionResistancePriority(.required, for: .horizontal)
-//        
-//        return icon
-//    }()
     private lazy var countryFlag: UILabel = {
         var flag = UILabel()
         flag.translatesAutoresizingMaskIntoConstraints = false
@@ -72,7 +61,7 @@ class EventNameComponent: UIView {
     private lazy var raceEventStack: UIStackView = {
         var stack = UIStackView(arrangedSubviews: [raceNumberLabel, countryStack])
         stack.axis = .vertical
-        stack.spacing = 4
+        stack.spacing = 10
         stack.translatesAutoresizingMaskIntoConstraints = false
         
         stack.layoutMargins = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
@@ -123,15 +112,12 @@ extension EventNameComponent: ViewCodeProtocol {
             raceEventStack.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             raceEventStack.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             raceEventStack.topAnchor.constraint(equalTo: self.topAnchor),
-            raceEventStack.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            raceEventStack.bottomAnchor.constraint(equalTo: separator.topAnchor, constant: -12),
             
-            separator.topAnchor.constraint(equalTo: countryStack.bottomAnchor, constant: 8),
-            separator.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             separator.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             separator.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            separator.heightAnchor.constraint(equalToConstant: 0.25),
-
+            separator.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            separator.heightAnchor.constraint(equalToConstant: 0.5),
         ])
     }
 }
-

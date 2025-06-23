@@ -92,8 +92,8 @@ class Database {
         return await eventService.getOnDate(date)
     }
     
-    func addEvent(name: String, date: Date? = nil, startTime: Date? = nil, idFormula: UUID? = nil) async {
-        await eventService.add(name: name, date: date, startTime: startTime, idFormula: idFormula)
+    func addEvent(roundNumber: Int16, country: String, name: String, date: Date? = nil, startTime: String, endTime: String, idFormula: UUID? = nil) async {
+        await eventService.add(roundNumber: roundNumber, country: country, name: name, date: date, startTime: startTime, endTime: endTime, idFormula: idFormula)
     }
     
     // MARK: - Car Functions
