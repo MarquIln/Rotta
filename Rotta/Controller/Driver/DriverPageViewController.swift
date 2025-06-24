@@ -49,9 +49,10 @@ class DriverPageViewController: UIViewController {
     
     lazy var NameLabel: UILabel = {
         let label = UILabel()
-        label.text = "Campeão:"
+        label.text = "Leonardo Fornaroli"
         label.textColor = .labelsPrimary
-        label.font = Fonts.Subtitle2
+        label.font = Fonts.Title1
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -85,14 +86,14 @@ class DriverPageViewController: UIViewController {
         return description
     }()
     
-    // 1. ScrollView que vai rolar o conteúdo verticalmente
     private lazy var scrollView: UIScrollView = {
         let sv = UIScrollView()
         sv.translatesAutoresizingMaskIntoConstraints = false
+        sv.showsVerticalScrollIndicator = false
+        sv.showsHorizontalScrollIndicator = false
         return sv
     }()
     
-    // 2. ContentView onde ficará todo o seu conteúdo
     private lazy var contentView: UIView = {
         let cv = UIView()
         cv.translatesAutoresizingMaskIntoConstraints = false
@@ -102,8 +103,7 @@ class DriverPageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .sprintFormula2
-//        view.backgroundColor = .white
+        view.backgroundColor = .raceFormula2
         
         descriptionComponent.setContentHuggingPriority(.required, for: .vertical)
         
@@ -112,16 +112,8 @@ class DriverPageViewController: UIViewController {
         
         title = "Pilotos"
         
-        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.frame = view.bounds
-        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.addSubview(blurEffectView)
-        
-        blurEffectView.topAnchor.constraint(equalTo: view.topAnchor, constant: 200).isActive = true
-        blurEffectView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        blurEffectView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        blurEffectView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        scrollView.delegate = self
+        scrollView.alwaysBounceVertical = true
         
         setup()
         
@@ -133,7 +125,7 @@ class DriverPageViewController: UIViewController {
         }
     }
 }
-//
+
 extension DriverPageViewController: ViewCodeProtocol {
     func setup() {
         addSubviews()
@@ -141,34 +133,14 @@ extension DriverPageViewController: ViewCodeProtocol {
     }
     
     func addSubviews() {
-        //        view.addSubview(imagebackground)
-        //        view.addSubview(backgroundColor)
-        //        view.addSubview(gradientView)
-        //
-        //        view.addSubview(scrollView)
-        //        // 2️⃣ adiciona o contentView dentro dele
-        //        scrollView.addSubview(contentView)
-        //
-        ////        view.addSubview(headerView)
-        ////        view.addSubview(mainInfos)
-        ////        view.addSubview(heightAndBirth)
-        ////        view.addSubview(champion)
-        ////        view.addSubview(descriptionComponent)
-        //
-        //        contentView.addSubview(mainInfos)
-        //        contentView.addSubview(heightAndBirth)
-        //        contentView.addSubview(champion)
-        //        contentView.addSubview(descriptionComponent)
-        
-        
         view.addSubview(imagebackground)
         view.addSubview(backgroundColor)
-//        view.addSubview(gradientView)
         
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         contentView.addSubview(gradientView)
         
+        contentView.addSubview(NameLabel)
         contentView.addSubview(mainInfos)
         contentView.addSubview(heightAndBirth)
         contentView.addSubview(champion)
@@ -178,73 +150,6 @@ extension DriverPageViewController: ViewCodeProtocol {
     
     func setupConstraints() {
         NSLayoutConstraint.activate([
-            
-            //            // 3. Pregar a scrollView na tela
-            //            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            //            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            //            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            //            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            //
-            //            // 4. Pregar a contentView dentro da scrollView
-            //            contentView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
-            //            contentView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
-            //            contentView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
-            //            contentView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
-            //            // 5. Largura fixa igual à largura visível da scrollView (sem rolar horizontal)
-            //            contentView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
-            //
-            //            imagebackground.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
-            //            imagebackground.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
-            //            imagebackground.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
-            //            imagebackground.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.5),
-            //
-            //            backgroundColor.topAnchor.constraint(equalTo: view.topAnchor),
-            //            backgroundColor.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            //            backgroundColor.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            //            backgroundColor.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            //
-            //            gradientView.topAnchor.constraint(equalTo: view.topAnchor, constant: 200),
-            //            gradientView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            //            gradientView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            //            gradientView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            //
-            //            mainInfos.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 200),
-            //            mainInfos.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            //            mainInfos.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            //            mainInfos.heightAnchor.constraint(equalToConstant: 95),
-            //
-            //            heightAndBirth.topAnchor.constraint(equalTo: mainInfos.bottomAnchor, constant: 20),
-            //            heightAndBirth.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            //            heightAndBirth.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            //            heightAndBirth.heightAnchor.constraint(equalToConstant: 46),
-            //
-            //            champion.topAnchor.constraint(equalTo: heightAndBirth.bottomAnchor, constant: 20),
-            //            champion.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            //            champion.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            //            champion.heightAnchor.constraint(equalToConstant: 46),
-            //
-            //            descriptionComponent.topAnchor.constraint(equalTo: champion.bottomAnchor, constant: 20),
-            //            descriptionComponent.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            //            descriptionComponent.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            ////            descriptionComponent.heightAnchor.constraint(equalToConstant: 222),
-            //            descriptionComponent.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-            //
-            //            descriptionComponent2.topAnchor.constraint(equalTo: descriptionComponent.bottomAnchor, constant: 20),
-            //            descriptionComponent2.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            //            descriptionComponent2.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            ////            descriptionComponent.heightAnchor.constraint(equalToConstant: 222),
-            //            descriptionComponent2.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-            
-            
-            
-            
-            
-            
-            // === BACKGROUND & GRADIENT ===
-            //            backgroundColor.topAnchor.constraint(equalTo: view.topAnchor),
-            //            backgroundColor.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            //            backgroundColor.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            //            backgroundColor.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             imagebackground.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
             imagebackground.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
             imagebackground.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
@@ -260,7 +165,6 @@ extension DriverPageViewController: ViewCodeProtocol {
             gradientView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             gradientView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
-            // === SCROLLVIEW & CONTENTVIEW ===
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -272,8 +176,12 @@ extension DriverPageViewController: ViewCodeProtocol {
             contentView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
             
-            // === SUAS SUBVIEWS DENTRO DO contentView ===
-            mainInfos.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 265),
+            NameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 265),
+            NameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            NameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+//            NameLabel.bottomAnchor.constraint(equalTo: contentView.topAnchor, constant: 265),
+            
+            mainInfos.topAnchor.constraint(equalTo: NameLabel.bottomAnchor, constant: 20),
             mainInfos.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             mainInfos.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             mainInfos.heightAnchor.constraint(equalToConstant: 95),
@@ -297,5 +205,13 @@ extension DriverPageViewController: ViewCodeProtocol {
             descriptionComponent2.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             descriptionComponent2.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
         ])
+    }
+}
+
+extension DriverPageViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView.contentOffset.y < 0 {
+            scrollView.contentOffset.y = 0
+        }
     }
 }

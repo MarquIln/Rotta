@@ -79,9 +79,7 @@ extension UIView {
     }
     
     func addGradientDriverDetails(colors: [CGColor]? = nil) {
-        // 1) Remove gradientes antigos
         layer.sublayers?.removeAll(where: { $0 is CAGradientLayer })
-        // 2) Cria e insere o gradiente
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = bounds
         gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.0)
