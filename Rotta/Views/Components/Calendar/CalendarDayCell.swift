@@ -37,21 +37,22 @@ class CalendarDayCell: UICollectionViewCell {
         let calendar = Calendar.current
         let day = calendar.component(.day, from: date)
         dayLabel.text = "\(day)"
-        
-        if isToday {
-            dayLabel.font = .boldSystemFont(ofSize: 16)
-        } else {
-            dayLabel.font = .systemFont(ofSize: 16)
-        }
 
-        if hasEvent {
+        if isSelected && hasEvent {
+            dayLabel.font = .boldSystemFont(ofSize: 16)
+            dayLabel.textColor = .f2Sprint
+            decorationView.isHidden = false
+            decorationView.backgroundColor = .f2Sprint
+        } else if hasEvent {
             dayLabel.textColor = .rottaYellow
+            dayLabel.font = .boldSystemFont(ofSize: 16)
             decorationView.isHidden = false
             decorationView.backgroundColor = .rottaYellow
         } else {
             dayLabel.textColor = .rottaGray
             decorationView.isHidden = true
         }
+
     }
 
     override init(frame: CGRect) {
