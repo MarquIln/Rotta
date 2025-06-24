@@ -63,6 +63,10 @@ class RankingVC: UIViewController {
         impactFeedback.prepare()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationController?.isNavigationBarHidden = true
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         view.addGradientCardInfos()

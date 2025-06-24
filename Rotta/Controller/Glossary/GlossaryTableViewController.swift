@@ -53,6 +53,11 @@ class GlossaryTableViewController: UIViewController {
         addGradientGlossary()
         setupCustomBackButton()
         loadGlossary()
+        navigationController?.isNavigationBarHidden = false
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationController?.isNavigationBarHidden = true
     }
     
     private func loadGlossary() {
@@ -141,7 +146,6 @@ class GlossaryTableViewController: UIViewController {
 }
 
 extension GlossaryTableViewController: GlossaryTableViewDelegate {
-
     func numberOfItems() -> Int {
         return terms.count
     }

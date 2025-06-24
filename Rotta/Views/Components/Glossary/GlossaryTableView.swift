@@ -64,9 +64,8 @@ extension GlossaryTableView: UITableViewDataSource {
               let item = delegate?.item(at: indexPath.row) else {
             return UITableViewCell()
         }
-        
-        let image = UIImage(named: item.imageName)
-        cell.configure(with: item.title, image: image)
+
+        cell.configure(with: item.title)
         cell.delegate = delegate as? GlossaryCellDelegate
         return cell
     }
