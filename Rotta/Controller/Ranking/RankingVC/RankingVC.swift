@@ -14,8 +14,8 @@ class RankingVC: UIViewController {
     private var lastScrollPosition: CGFloat = 0
     private let scrollThreshold: CGFloat = 30.0
 
-    lazy var rankingTableView: RankingTableView = {
-        let view = RankingTableView()
+    lazy var rankingTableView: DriverRankingTableView = {
+        let view = DriverRankingTableView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.isUserInteractionEnabled = true
 //        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))

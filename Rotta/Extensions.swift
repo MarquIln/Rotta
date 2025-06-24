@@ -27,14 +27,14 @@ extension UIView {
 
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = self.bounds
-        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
-        gradientLayer.endPoint   = CGPoint(x: 0.5, y: 1.0)
+        gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.0)
+        gradientLayer.endPoint   = CGPoint(x: 0.0, y: 1.0)
 
         gradientLayer.colors = colors ?? [
             (UIColor(named: "CalendarGradientStart") ?? .clear).withAlphaComponent(1.0).cgColor,
-            (UIColor(named: "CalendarGradientEnd") ?? .black).withAlphaComponent(0.5).cgColor
+            (UIColor(named: "CalendarGradientEnd") ?? .black).withAlphaComponent(0.7).cgColor
         ]
-        gradientLayer.locations = [0.15, 0.6]
+        gradientLayer.locations = [0.1, 0.9]
         self.layer.insertSublayer(gradientLayer, at: 0)
     }
     
@@ -43,14 +43,30 @@ extension UIView {
 
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = self.bounds
-        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
-        gradientLayer.endPoint   = CGPoint(x: 0.5, y: 1.0)
+        gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.0)
+        gradientLayer.endPoint   = CGPoint(x: 0.0, y: 1.0)
 
         gradientLayer.colors = colors ?? [
             (UIColor(named: "SprintFormula2") ?? .clear).withAlphaComponent(0.8).cgColor,
             (UIColor(named: "RaceFormula2") ?? .black).withAlphaComponent(0.7).cgColor
         ]
         gradientLayer.locations = [0.4, 0.9]
+        self.layer.insertSublayer(gradientLayer, at: 0)
+    }
+    
+    func addGradientRankingView(colors: [CGColor]? = nil) {
+        self.layer.sublayers?.removeAll(where: { $0 is CAGradientLayer })
+
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = self.bounds
+        gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.0)
+        gradientLayer.endPoint   = CGPoint(x: 0.0, y: 1.0)
+
+        gradientLayer.colors = colors ?? [
+            (UIColor(named: "RaceFormula2") ?? .clear).withAlphaComponent(0.7).cgColor,
+            (UIColor(named: "SprintFormula2") ?? .black).withAlphaComponent(0.5).cgColor
+        ]
+        gradientLayer.locations = [0.0, 1.0]
         self.layer.insertSublayer(gradientLayer, at: 0)
     }
     
@@ -71,68 +87,75 @@ extension String {
             "brazil": "🇧🇷",
             "ireland": "🇮🇪",
             "united kingdom": "🇬🇧",
-            "england": "��🇧",
-            "france": "��🇷",
+            "england": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+            "france": "🇫🇷",
             "spain": "🇪🇸",
             "italy": "🇮🇹",
-            "germany": "�🇪",
+            "germany": "🇩🇪",
             "netherlands": "🇳🇱",
-            "monaco": "��",
+            "monaco": "🇲🇨",
             "australia": "🇦🇺",
             "argentina": "🇦🇷",
             "colombia": "🇨🇴",
             "sweden": "🇸🇪",
-            "india": "��",
+            "india": "🇮🇳",
             "czech republic": "🇨🇿",
             "paraguay": "🇵🇾",
             "mexico": "🇲🇽",
-            "japan": "🇯�",
+            "japan": "🇯🇵",
             "belgium": "🇧🇪",
             "estonia": "🇪🇪",
             "bulgaria": "🇧🇬",
             "austria": "🇦🇹",
-            "finland": "��",
+            "finland": "🇫🇮",
             "poland": "🇵🇱",
-            "singapore": "��",
+            "singapore": "🇸🇬",
             "norway": "🇳🇴",
-            "denmark": "��",
-            "thailand": "��",
-            "united states": "�🇸",
+            "denmark": "🇩🇰",
+            "thailand": "🇹🇭",
+            "united states": "🇺🇸",
             "peru": "🇵🇪",
             "united arab emirates": "🇦🇪",
+            "bahrain": "🇧🇭",
             
-            "brasil": "��",
-            "irlanda": "🇮�",
+            "brasil": "🇧🇷",
+            "irlanda":  "🇮🇪",
             "reino unido": "🇬🇧",
-            "frança": "��",
-            "espanha": "�🇪🇸",
+            "frança": "🇫🇷",
+            "espanha": "🇪🇸",
             "itália": "🇮🇹",
             "alemanha": "🇩🇪",
             "holanda": "🇳🇱",
             "mônaco": "🇲🇨",
             "austrália": "🇦🇺",
-            "estados unidos": "��",
+            "estados unidos": "🇺🇸",
             "colômbia": "🇨🇴",
             "suécia": "🇸🇪",
-            "índia": "��🇳",
+            "índia": "🇮🇳",
             "república tcheca": "🇨🇿",
-            "paraguai": "🇵�",
+            "paraguai": "🇵🇾",
             "méxico": "🇲🇽",
             "japão": "🇯🇵",
-            "bélgica": "��",
-            "estônia": "��",
+            "bélgica": "🇧🇪",
+            "estônia": "🇪🇪",
             "bulgária": "🇧🇬",
             "áustria": "🇦🇹",
             "finlândia": "🇫🇮",
-            "polônia": "��",
+            "polônia": "🇵🇱",
             "singapura": "🇸🇬",
             "noruega": "🇳🇴",
             "dinamarca": "🇩🇰",
             "tailândia": "🇹🇭",
-            "emirados árabes unidos": "🇦�"
+            "emirados árabes unidos": "🇦🇪",
+            "UAE": "🇦🇪",
+            "Arábia Saudita": "🇸🇦",
+            "Azerbaijão": "🇦🇿",
+            "Hungria": "🇭🇺",
+            "UK": "🇬🇧",
+
+            
         ]
         
         return flagMapping[country] ?? "🏁"
     }
 }
-

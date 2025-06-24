@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension RankingTableView: UITableViewDataSource {
+extension DriverRankingTableView: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return drivers.count
     }
@@ -19,13 +19,20 @@ extension RankingTableView: UITableViewDataSource {
         let driver = drivers[indexPath.row]
         let position = indexPath.row + 1
         cell.config(with: driver, position: position, cellIndex: indexPath.row)
+        
+        if indexPath.row % 2 == 0 {
+            cell.backgroundColor = UIColor.white.withAlphaComponent(0.08)
+        } else {
+            cell.backgroundColor = UIColor.white.withAlphaComponent(0.15)
+        }
+        
         cell.selectionStyle = .none
         
         return cell
     }
 }
 
-extension RankingTableView: UITableViewDelegate {
+extension DriverRankingTableView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 44
     }
@@ -52,7 +59,7 @@ extension RankingTableView: UITableViewDelegate {
     }
 }
 
-extension RankingTableView: ViewCodeProtocol {
+extension DriverRankingTableView: ViewCodeProtocol {
     func addSubviews() {
         addSubview(headerStack)
         addSubview(tableView)

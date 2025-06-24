@@ -8,75 +8,67 @@
 import UIKit
 
 class ScuderiaView: UIView {
-    private lazy var imageView: UIImageView = {
-        let image = UIImageView()
-        image.translatesAutoresizingMaskIntoConstraints = false
-        image.contentMode = .scaleAspectFit
-        image.backgroundColor = .red
-        return image
-    }()
-
     private lazy var positionLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = Fonts.Title2
         label.textColor = .white
         label.textAlignment = .center
-        label.backgroundColor = .green
         return label
+    }()
+
+    private lazy var imageView: UIImageView = {
+        let image = UIImageView(image: UIImage(systemName: "person.circle.fill"))
+        image.contentMode = .scaleAspectFill
+        image.tintColor = .systemGray3
+        return image
     }()
 
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = Fonts.FootnoteEmphasized
         label.textColor = .white
         label.textAlignment = .center
-        label.backgroundColor = .yellow
+        label.numberOfLines = 1
         return label
     }()
 
     private lazy var pointsLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = Fonts.FootnoteRegular
         label.textColor = .white
         label.textAlignment = .center
-        label.backgroundColor = .purple
         return label
     }()
-    
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [imageView, positionLabel, nameLabel, pointsLabel])
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .vertical
-        stackView.alignment = .center
-        stackView.distribution = .fillEqually
-        return stackView
+        let stack = UIStackView(arrangedSubviews: [imageView, positionLabel, nameLabel, pointsLabel])
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .vertical
+        stack.alignment = .center
+        stack.spacing = 8
+        return stack
     }()
 
+    func configure(with model: ScuderiaModel, rank: Int) {
+        positionLabel.text = "\(rank)"
+        nameLabel.text = model.name
+        pointsLabel.text = "\(Int(model.points)) pontos"
+        imageView.image = UIImage(named: model.name)
+        if rank == 1 {
+            imageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
+            imageView.widthAnchor.constraint(equalToConstant: 65).isActive = true
+        } else {
+            imageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
+            imageView.heightAnchor.constraint(equalToConstant: 16).isActive = true
+        }
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
     }
 
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        setup()
-    }
-
-    func configure(with model: ScuderiaModel, rank: Int) {
-        positionLabel.text = "\(rank)"
-        nameLabel.text = model.name
-        pointsLabel.text = "\(model.points) pontos"
-        imageView.image = UIImage(systemName: "person.circle.fill")
-        if rank == 1 {
-            imageView.heightAnchor.constraint(equalToConstant: 80).isActive = true
-            imageView.widthAnchor.constraint(equalToConstant: 80).isActive = true
-        } else {
-            imageView.widthAnchor.constraint(equalToConstant: 60).isActive = true
-            imageView.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        }
+        fatalError("init(coder:) has not been implemented")
     }
 }
 
@@ -87,10 +79,11 @@ extension ScuderiaView: ViewCodeProtocol {
     
     func setupConstraints() {
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
-            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
-            stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
+            stackView.topAnchor.constraint(equalTo: topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
     }
 }
+

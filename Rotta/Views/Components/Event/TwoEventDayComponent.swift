@@ -90,7 +90,7 @@ class TwoEventDayComponent: UIView {
     lazy var separator: UIView = {
         var separator = UIView()
         separator.translatesAutoresizingMaskIntoConstraints = false
-        separator.backgroundColor = .sprintFormula2
+        separator.backgroundColor = .dividerSecondary
         return separator
     }()
     
@@ -143,14 +143,56 @@ extension TwoEventDayComponent: ViewCodeProtocol {
             backgroundContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
             backgroundContainer.bottomAnchor.constraint(equalTo: bottomAnchor),
 
-            contentStack.topAnchor.constraint(equalTo: backgroundContainer.topAnchor, constant: 12),
+            contentStack.topAnchor.constraint(equalTo: backgroundContainer.topAnchor),
             contentStack.leadingAnchor.constraint(equalTo: backgroundContainer.leadingAnchor, constant: 12),
             contentStack.trailingAnchor.constraint(equalTo: backgroundContainer.trailingAnchor, constant: -12),
             contentStack.bottomAnchor.constraint(equalTo: backgroundContainer.bottomAnchor, constant: -12),
 
-            separator.heightAnchor.constraint(equalToConstant: 0.50),
+            separator.heightAnchor.constraint(equalToConstant: 0.5),
             
-            dayNumberStack.topAnchor.constraint(equalTo: firstEvent.topAnchor)
+            dayNumberStack.topAnchor.constraint(equalTo: contentStack.topAnchor, constant: 16)
+            
         ])
+    }
+}
+
+extension TwoEventDayComponent {
+    func configure(with events: [EventModel]) {
+        guard events.count >= 2 else { return }
+        
+        let formatter = DateFormatter()
+        
+        formatter.dateFormat = "EEEE"
+        if let date = events[0].date {
+            self.dayName = formatter.string(from: date)
+        } else {
+            self.dayName = "-"
+        }
+        
+        formatter.dateFormat = "d"
+        if let date = events[0].date {
+            self.dayNumber = formatter.string(from: date)
+        } else {
+            self.dayNumber = "-"
+        }
+        
+        self.firstEventTitle = events[0].name
+//        if let startTime = events[0].startTime,
+//           let endTime = events[0].endTime {
+//            self.firstEventTime = "\(startTime) - \(endTime)"
+//        } else {
+//            self.firstEventTime = "-"
+//        }
+        firstEventTime = "\(events[0].startTime) - \(events[0].endTime)"
+
+        
+        self.secondEventTitle = events[1].name
+//        if let startTime = events[1].startTime, let endTime = events[1].endTime {
+//            self.secondEventTime = "\(startTime) - \(endTime)"
+//        } else {
+//            self.secondEventTime = "-"
+//        }
+        secondEventTime = "\(events[1].startTime) - \(events[1].endTime)"
+
     }
 }
