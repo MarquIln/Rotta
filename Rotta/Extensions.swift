@@ -77,6 +77,22 @@ extension UIView {
         animation.values = values
         layer.add(animation, forKey: "shake")
     }
+    
+    func addGradientDriverDetails(colors: [CGColor]? = nil) {
+        // 1) Remove gradientes antigos
+        layer.sublayers?.removeAll(where: { $0 is CAGradientLayer })
+        // 2) Cria e insere o gradiente
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = bounds
+        gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.0)
+        gradientLayer.endPoint   = CGPoint(x: 0.0, y: 1.0)
+        gradientLayer.colors = colors ?? [
+            (UIColor(named: "SprintFormula2") ?? .clear).withAlphaComponent(0.0).cgColor,
+            (UIColor(named: "RaceFormula2")   ?? .black).withAlphaComponent(1.0).cgColor
+        ]
+        gradientLayer.locations = [0.1, 0.2]
+        layer.insertSublayer(gradientLayer, at: 0)
+    }
 }
 
 extension String {
