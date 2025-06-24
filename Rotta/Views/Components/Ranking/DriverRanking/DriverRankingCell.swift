@@ -22,7 +22,6 @@ class DriverRankingCell: UITableViewCell {
         let label = UILabel()
         label.font = Fonts.Subtitle2
         label.textColor = .white
-//        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         return label
     }()
     
@@ -43,8 +42,9 @@ class DriverRankingCell: UITableViewCell {
     
     lazy var driverImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
+        
         return imageView
     }()
     
@@ -100,6 +100,11 @@ class DriverRankingCell: UITableViewCell {
         setup()
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        driverImageView.layer.cornerRadius = 14
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -140,7 +145,10 @@ extension DriverRankingCell: ViewCodeProtocol {
             positionLabel.widthAnchor.constraint(equalToConstant: 34),
             driverImageView.widthAnchor.constraint(equalToConstant: 28),
             driverImageView.heightAnchor.constraint(equalToConstant: 28),
-            scuderiaLabel.widthAnchor.constraint(equalToConstant: 70)
+            scuderiaLabel.widthAnchor.constraint(equalToConstant: 56),
+            scuderiaLabel.heightAnchor.constraint(equalToConstant: 12)
+            
+            
         ])
     }
 }

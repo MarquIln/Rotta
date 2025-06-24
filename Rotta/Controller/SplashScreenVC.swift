@@ -8,9 +8,6 @@
 import UIKit
 import Lottie
 
-import UIKit
-import Lottie
-
 class SplashScreenVC: UIViewController {
     
     private var animationView: LottieAnimationView?

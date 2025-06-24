@@ -194,8 +194,6 @@ class CloudKitSeed {
             print("Formulas not found")
             return
         }
-        
-        let allScuderias = await database.getAllScuderias()
         //
         //        let f1AcademyDrivers = [
         //            ("Maya Weug", "Spain", 47, "Campos Racing", 64.0),
