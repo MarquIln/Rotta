@@ -32,12 +32,12 @@ class DriverPageViewController: UIViewController {
         let button = UIButton(type: .system)
         
         let config = UIImage.SymbolConfiguration(pointSize: 20, weight: .regular)
-        let image = UIImage(systemName: "chevron.backward", withConfiguration: config)
+        let image = UIImage(systemName: "chevron.left.circle.fill", withConfiguration: config)
         button.setImage(image, for: .normal)
-        
         button.tintColor = .rottaYellow
         button.layer.cornerRadius = 16
         button.clipsToBounds = true
+//        button.backgroundColor = .rottaYellow
         button.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
         
         return button
@@ -99,7 +99,6 @@ class DriverPageViewController: UIViewController {
         cv.translatesAutoresizingMaskIntoConstraints = false
         return cv
     }()
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
