@@ -117,30 +117,3 @@ extension EventDayComponent: ViewCodeProtocol {
         ])
     }
 }
-
-extension EventDayComponent {
-    func configure(with event: EventModel) {
-        eventTitle = event.name
-        
-        
-        if let date = event.date {
-            let formatter = DateFormatter()
-            formatter.locale = Locale(identifier: "pt_BR")
-            formatter.dateFormat = "EEE"
-            dayName = formatter.string(from: date).uppercased()
-            
-            let calendar = Calendar.current
-            let day = calendar.component(.day, from: date)
-            dayNumber = "\(day)"
-        } else {
-            dayName = "-"
-            dayNumber = "-"
-        }
-        
-        eventTime = "\(event.startTime) - \(event.endTime)"
-
-    }
-}
-
-
-

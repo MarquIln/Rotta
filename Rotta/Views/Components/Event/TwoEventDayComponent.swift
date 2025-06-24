@@ -15,6 +15,7 @@ class TwoEventDayComponent: UIView {
         let label = UILabel()
         label.font = Fonts.Subtitle2
         label.textColor = .white
+        label.text = ""
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -24,6 +25,7 @@ class TwoEventDayComponent: UIView {
         let label = UILabel()
         label.font = Fonts.Title2
         label.textColor = .white
+        label.text = ""
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -153,46 +155,5 @@ extension TwoEventDayComponent: ViewCodeProtocol {
             dayNumberStack.topAnchor.constraint(equalTo: contentStack.topAnchor, constant: 16)
             
         ])
-    }
-}
-
-extension TwoEventDayComponent {
-    func configure(with events: [EventModel]) {
-        guard events.count >= 2 else { return }
-        
-        let formatter = DateFormatter()
-        
-        formatter.dateFormat = "EEEE"
-        if let date = events[0].date {
-            self.dayName = formatter.string(from: date)
-        } else {
-            self.dayName = "-"
-        }
-        
-        formatter.dateFormat = "d"
-        if let date = events[0].date {
-            self.dayNumber = formatter.string(from: date)
-        } else {
-            self.dayNumber = "-"
-        }
-        
-        self.firstEventTitle = events[0].name
-//        if let startTime = events[0].startTime,
-//           let endTime = events[0].endTime {
-//            self.firstEventTime = "\(startTime) - \(endTime)"
-//        } else {
-//            self.firstEventTime = "-"
-//        }
-        firstEventTime = "\(events[0].startTime) - \(events[0].endTime)"
-
-        
-        self.secondEventTitle = events[1].name
-//        if let startTime = events[1].startTime, let endTime = events[1].endTime {
-//            self.secondEventTime = "\(startTime) - \(endTime)"
-//        } else {
-//            self.secondEventTime = "-"
-//        }
-        secondEventTime = "\(events[1].startTime) - \(events[1].endTime)"
-
     }
 }
