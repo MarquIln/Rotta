@@ -141,22 +141,33 @@ class CloudKitSeed {
         //            await database.addScuderia(name: team.0, logo: team.1, points: team.2, idFormula: f1AcademyId)
         //        }
         
+        
+        
         let f2Teams = [
-            ("Campos Racing", "campos_logo", 128.0),
-            ("Hitech TGR", "hitech_logo", 102.0),
-            ("MP Motorsport", "mp_logo", 96.0),
-            ("DAMS Lucas Oil", "dams_logo", 94.0),
-            ("Rodin Motorsport", "rodin_logo", 89.0),
-            ("Invicta Racing", "invicta_logo", 78.0),
-            ("PREMA Racing", "prema_logo", 57.0),
-            ("ART Grand Prix", "art_logo", 46.0),
-            ("AIX Racing", "aix_logo", 11.0),
-            ("Van Amersfoort Racing", "var_logo", 10.0),
-            ("TRIDENT", "trident_logo", 1.0)
+            ("Campos Racing", "campos_logo", 3500.0, "Espanha", 3, 19, "Fundada em 1997, a equipe espanhola de automobilismo gerenciada pelo ex-piloto de Fórmula 1 Adrián Campos. Atualmente compete nos Campeonatos de Fórmula 2, Fórmula 3 e Fórmula 1 Academy. Em 1999 estreiou o atual piloto de Fórmula 1 Fernando Alonso."),
+            ("Hitech TGR", "hitech_logo", 600.0,"UK",10, 28,"Fundada em 2002, anteriormente conhecida como Hitech Racing e atualmente competindo como Hitech TGR é uma equipe britânica que atualmente compete na Fórmula 2 e Fórmula 3."),
+            ("MP Motorsport", "mp_logo", 800.0, "Holanda", 11, 23, "Fundada em 1995, o time holandês competiu em diversas outras categorias além da Fórmula 2. Atualmente compete além da Fórmula 2, na Fórmula 3, Eurocup-3, Fórmula Espanhola 4 e F1 Academy."),
+            ("DAMS Lucas Oil", "dams_logo", 1000.0, "França", 18, 60, "Fundada em 1988, a equipe francesa atualmente participa dos Campeonatos de Fórmula 2 e Fórmula 3. Esteve próxima de correr a temporada de 1996 da Fórmula 1 mas isso acabou por não se verificar."),
+            ("Rodin Motorsport", "rodin_logo", 100.0, "Reino Unido", 2, 7, "Fundada em 1999 como Carlin Motorsport, a equipe britânica foi renomeada para Rodin Motorsport em 2024. Atualmente, compete nos Campeonatos de Fórmula 2 e Fórmula 3 além de outras categorias de base."),
+            ("Invicta Racing", "invicta_logo", 3500.0, "Reino Unido", 42, 124, "Fundada como Virtuosi UK em 2012, tornou-se Russian Time e UNI-Virtuosi em 2019, Invicta Virtuosi Racing em 2023 e, por último, Invicta Racing em 2024. Na sua história, correu em diversas categorias de assento único."),
+            ("PREMA Racing", "prema_logo", 1000.0, "Itália", 29, 23, "Fundada em 1983, é uma equipe italiana de automobilismo que atualmente compete nos Campeonatos de Fórmula 2 e Fórmula 3, bem como na IndyCar Series."),
+            ("ART Grand Prix", "art_logo", 1000.0, "França", 22, 31, "Fundada em 1996 como ASM Formule 3 e renomeada para ART Grand Prix em 2005, a equipe francesa atualmente participa dos Campeonatos de Fórmula 2 e Fórmula 3."),
+            ("AIX Racing", "aix_logo", 100.0, "Emirados Árabes Unidos / Alemanha", 3, 5, "Fundada em 2024, a equipe Emirado-Alemã AIX Racing participa atualmente dos Campeonatos de Fórmula 2 e Fórmula 3 da FIA. A equipe surgiu a partir da aquisição das operações de Fórmula 2 e Fórmula 3 da PHM Racing pela AIX Investment Group."),
+            ("Van Amersfoort Racing", "var_logo", 200.0, "Holanda", 2, 5, "Fundada em 1975, a equipe holandesa Van Amersfoort Racing (VAR) ingressou na Fórmula 2 da FIA em 2022. Atualmente, compete nos Campeonatos de Fórmula 2 e Fórmula 3, além de outras categorias de base."),
+            ("TRIDENT", "trident_logo", 200.0, "Itália", 1, 5, "Fundada em 2006, a equipe italiana Trident Motorsport atualmente participa dos Campeonatos de Fórmula 2 e Fórmula 3.")
         ]
         
         for team in f2Teams {
-            await database.addScuderia(name: team.0, logo: team.1, points: team.2, idFormula: f2Id)
+            await database.addScuderia(
+                name: team.0,
+                logo: team.1,
+                points: team.2,
+                idFormula: f2Id,
+                country: team.3,
+                victory: Int16(team.4),
+                podium: Int16(team.5),
+                details: team.6
+            )
         }
         
         //        let f3Teams = [
@@ -677,7 +688,12 @@ class CloudKitSeed {
             ("Tires", "Pirelli racing slicks", "tire_image")
         ]
         for comp in components {
-            await database.addComponent(name: comp.0, details: comp.1, image: comp.2)
+            await database.addComponent(
+                name: comp.0,
+                details: comp.1,
+//                property: comp.2,
+                image: comp.2,
+            )
         }
     }
     

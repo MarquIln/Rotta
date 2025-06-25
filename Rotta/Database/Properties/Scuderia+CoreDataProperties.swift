@@ -21,7 +21,11 @@ extension Scuderia {
     @NSManaged public var logo: String?
     @NSManaged public var name: String?
     @NSManaged public var points: Double
-
+    @NSManaged public var country: String
+    @NSManaged public var victory: Int16
+    @NSManaged public var podium: Int16
+    @NSManaged public var details: String
+    
 }
 
 extension Scuderia : Identifiable {
