@@ -3,24 +3,28 @@ import UIKit
 
 class ScuderiaTableViewController: UIViewController {
     
-    struct Scuderia {
-        let name: String
-        let imageName: String
-    }
-
-    private let scuderias: [Scuderia] = [
-        Scuderia(name: "AIX Racing", imageName: "aix_logo"),
-        Scuderia(name: "ART Grand Prix", imageName: "art_logo"),
-        Scuderia(name: "Campos Racing", imageName: "campos_logo"),
-        Scuderia(name: "DAMS Lucas Oil", imageName: "dams_logo"),
-        Scuderia(name: "Hitech TGR", imageName: "hitech_logo"),
-        Scuderia(name: "Invicta Racing", imageName: "invicta_logo"),
-        Scuderia(name: "MP Motorsport", imageName: "mp_logo"),
-        Scuderia(name: "Prema Racing", imageName: "prema_logo"),
-        Scuderia(name: "Rodin Motorsport", imageName: "rodin_logo"),
-        Scuderia(name: "TRIDENT", imageName: "trident_logo"),
-        Scuderia(name: "Van Amersfoort Racing", imageName: "var_logo")
-    ]
+//    struct Scuderia {
+//        let name: String
+//        let imageName: String
+//    }
+    
+    private let service = ScuderiaService()
+    let database = Database.shared
+    
+    private var scuderias: [ScuderiaModel] = [ ]
+//    [
+//        Scuderia(name: "AIX Racing", imageName: "aix_logo"),
+//        Scuderia(name: "ART Grand Prix", imageName: "art_logo"),
+//        Scuderia(name: "Campos Racing", imageName: "campos_logo"),
+//        Scuderia(name: "DAMS Lucas Oil", imageName: "dams_logo"),
+//        Scuderia(name: "Hitech TGR", imageName: "hitech_logo"),
+//        Scuderia(name: "Invicta Racing", imageName: "invicta_logo"),
+//        Scuderia(name: "MP Motorsport", imageName: "mp_logo"),
+//        Scuderia(name: "Prema Racing", imageName: "prema_logo"),
+//        Scuderia(name: "Rodin Motorsport", imageName: "rodin_logo"),
+//        Scuderia(name: "TRIDENT", imageName: "trident_logo"),
+//        Scuderia(name: "Van Amersfoort Racing", imageName: "var_logo")
+//    ]
 
     private lazy var headerView: ScuderiaHeaderView = {
         let headerView = ScuderiaHeaderView()
@@ -56,6 +60,17 @@ class ScuderiaTableViewController: UIViewController {
         scuderiaTableView.tableView.dataSource = self
         
         addGradientGlossary()
+        loadScuderia()
+    }
+    
+    private func loadScuderia() {
+        Task {
+            scuderias = await database.getAllScuderias()
+            
+            await MainActor.run {
+                self.scuderiaTableView.reloadData()
+            }
+        }
     }
 
     lazy var backButton: UIButton = {
@@ -111,14 +126,14 @@ class ScuderiaTableViewController: UIViewController {
 extension ScuderiaTableViewController: UITableViewDelegate, UITableViewDataSource, ScuderiaCellDelegate {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return scuderias.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let identifier = "ScuderiaCell"
         let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! ScuderiaCell
         let scuderia = scuderias[indexPath.row]
-        _ = UIImage(named: scuderia.imageName)
+        _ = UIImage(named: scuderia.logo)
         cell.configure(with: scuderia)
         cell.delegate = self
 

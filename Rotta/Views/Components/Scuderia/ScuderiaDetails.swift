@@ -8,7 +8,7 @@ class ScuderiaDetails: UIView {
     var poles: Int = 11
     var podiums: Int = 11
     var points: Int = 11
-    var infos: String = "Resumo geralkljhgbvn m,k.jhgfdxvcfbnkl;oiuytredsfcvbhjkliuytrfdfgvbnjkuygtrfedswadfghjkn,mbv cxfdretyuioklbmnhgvfdsxcvbnm,kliouytrdtfyuiolkjhgvbnmklkijuhygtrfdesxdcfvghjl;kjfcld;skfjcldsjfcldjcfl"
+    var infos: String = "Resumo geralkljhgbvn m,k.jhgfdxvcfbnkl;oiuytredsfcvbhjkliuytrfdfgvbnjkuygtrfedswadfghjkn,mbv cxfdretyuioklbmnhgvfdsxcvbnm,kliouytrdtfyuiolkjhgvbnmklkijuhygtrfdesxdcfvghjl;kjfcld;skfjcldsjfcldjcflm,k.jhgfdxvcfbnkl;oiuytredsfcvbhjkliuytrfdfgvbnjkuygtrfedswadfghjkn,mbv cxfdretyuioklbmnhgvfdsxcvbnm,k.jhgfdxvcfbnkl;oiuytredsfcvbhjkliuytrfdfgvbnjkuygtrfedswadfghjkn,mbv cxfdretyuioklbmnhgvfdsxcvbn"
     
  
     lazy var scuderiaNameLabel: UILabel = {
@@ -21,7 +21,14 @@ class ScuderiaDetails: UIView {
         return label
     }()
     
-    lazy var 
+    lazy var scuderiaLogo: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        imageView.image = UIImage(named: "aix_logo")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
     
     
     lazy var countryTitle: UILabel = {
@@ -269,6 +276,7 @@ extension ScuderiaDetails: ViewCodeProtocol {
     }
     
     func addSubviews() {
+        addSubview(scuderiaLogo)
         addSubview(scuderiaNameLabel)
         addSubview(countryWinsContainer)
         countryWinsContainer.addSubview(countryWinsStack)
@@ -281,7 +289,12 @@ extension ScuderiaDetails: ViewCodeProtocol {
     func setupConstraints() {
         NSLayoutConstraint.activate([
             
-            scuderiaNameLabel.topAnchor.constraint(equalTo: topAnchor),
+            scuderiaLogo.topAnchor.constraint(equalTo: topAnchor),
+            scuderiaLogo.leadingAnchor.constraint(equalTo: leadingAnchor),
+            scuderiaLogo.trailingAnchor.constraint(equalTo: trailingAnchor),
+            scuderiaLogo.heightAnchor.constraint(equalToConstant: 24),
+            
+            scuderiaNameLabel.topAnchor.constraint(equalTo: scuderiaLogo.bottomAnchor, constant: 12),
             scuderiaNameLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
             scuderiaNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
             scuderiaNameLabel.heightAnchor.constraint(equalToConstant: 24),

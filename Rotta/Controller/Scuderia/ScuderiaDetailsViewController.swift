@@ -136,7 +136,7 @@ class ScuderiaDetailsViewController: UIViewController {
                 imageBackground.trailingAnchor.constraint(equalTo: view.trailingAnchor),
                 imageBackground.heightAnchor.constraint(equalToConstant: 362),
             
-                scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+                scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 212),
                 scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
                 scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                 scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -152,7 +152,7 @@ class ScuderiaDetailsViewController: UIViewController {
                 gradientView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                 gradientView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
                 
-                component.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 353),
+                component.topAnchor.constraint(equalTo: contentView.topAnchor),
                 component.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
                 component.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
                 component.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)

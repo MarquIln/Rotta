@@ -87,9 +87,9 @@ class ScuderiaCell: UITableViewCell {
         delegate?.didTapChevron(in: self)
     }
     
-    func configure(with scuderia: ScuderiaTableViewController.Scuderia) {
+    func configure(with scuderia: ScuderiaModel) {
         nameLabel.text = scuderia.name
-        logoImageView.image = UIImage(named: scuderia.imageName)
+        logoImageView.image = UIImage(named: scuderia.logo)
     }
 }
 
