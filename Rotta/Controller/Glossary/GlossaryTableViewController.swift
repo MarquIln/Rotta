@@ -52,6 +52,11 @@ class GlossaryTableViewController: UIViewController {
         impactFeedback.prepare()
         addGradientGlossary()
         loadGlossary()
+        navigationController?.isNavigationBarHidden = false
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationController?.isNavigationBarHidden = true
     }
     
     private func loadGlossary() {

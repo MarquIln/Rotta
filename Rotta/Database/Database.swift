@@ -71,8 +71,8 @@ class Database {
         return await scuderiaService.getByFormula(idFormula: idFormula)
     }
     
-    func addScuderia(name: String, logo: String, points: Double, idFormula: UUID) async {
-        await scuderiaService.add(name: name, logo: logo, points: points, idFormula: idFormula)
+    func addScuderia(name: String, logo: String, points: Double, idFormula: UUID, country: String, victory: Int16, podium: Int16, details: String) async {
+        await scuderiaService.add(name: name, logo: logo, points: points, idFormula: idFormula, country: country, victory: victory, podium: podium, details: details)
     }
     
     // MARK: - Event Functions
@@ -143,8 +143,8 @@ class Database {
         return await componentService.get(by: id)
     }
     
-    func addComponent(name: String? = nil, details: String? = nil, image: String? = nil) async {
-        await componentService.add(name: name, details: details, image: image)
+    func addComponent(name: String? = nil, details: String? = nil, property: String? = nil, image: String? = nil) async {
+        await componentService.add(name: name, details: details, property: property, image: image)
     }
     
     // MARK: - Rule Functions

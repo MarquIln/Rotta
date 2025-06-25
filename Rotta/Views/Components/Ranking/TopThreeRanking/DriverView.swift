@@ -47,11 +47,6 @@ class DriverView: UIView {
         return stack
     }()
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        driverImageView.layer.cornerRadius = 14
-    }
-
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()

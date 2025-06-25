@@ -18,7 +18,7 @@ class ScuderiaView: UIView {
 
     private lazy var imageView: UIImageView = {
         let image = UIImageView(image: UIImage(systemName: "person.circle.fill"))
-        image.contentMode = .scaleAspectFill
+        image.contentMode = .scaleAspectFit
         image.tintColor = .systemGray3
         return image
     }()
@@ -52,13 +52,13 @@ class ScuderiaView: UIView {
         positionLabel.text = "\(rank)"
         nameLabel.text = model.name
         pointsLabel.text = "\(Int(model.points)) pontos"
-        imageView.image = UIImage(named: model.name)
+        imageView.image = UIImage(named: model.logo)
         if rank == 1 {
             imageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
-            imageView.widthAnchor.constraint(equalToConstant: 65).isActive = true
-        } else {
             imageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
-            imageView.heightAnchor.constraint(equalToConstant: 16).isActive = true
+        } else {
+            imageView.widthAnchor.constraint(equalToConstant: 60).isActive = true
+            imageView.heightAnchor.constraint(equalToConstant: 60).isActive = true
         }
     }
     

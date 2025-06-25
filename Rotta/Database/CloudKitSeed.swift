@@ -141,22 +141,33 @@ class CloudKitSeed {
         //            await database.addScuderia(name: team.0, logo: team.1, points: team.2, idFormula: f1AcademyId)
         //        }
         
+        
+        
         let f2Teams = [
-            ("Campos Racing", "campos_logo", 128.0),
-            ("Hitech TGR", "hitech_logo", 102.0),
-            ("MP Motorsport", "mp_logo", 96.0),
-            ("DAMS Lucas Oil", "dams_logo", 94.0),
-            ("Rodin Motorsport", "rodin_logo", 89.0),
-            ("Invicta Racing", "invicta_logo", 78.0),
-            ("PREMA Racing", "prema_logo", 57.0),
-            ("ART Grand Prix", "art_logo", 46.0),
-            ("AIX Racing", "aix_logo", 11.0),
-            ("Van Amersfoort Racing", "var_logo", 10.0),
-            ("TRIDENT", "trident_logo", 1.0)
+            ("Campos Racing", "campos_logo", 3500.0, "Espanha", 3, 19, "Fundada em 1997, a equipe espanhola de automobilismo gerenciada pelo ex-piloto de Fórmula 1 Adrián Campos. Atualmente compete nos Campeonatos de Fórmula 2, Fórmula 3 e Fórmula 1 Academy. Em 1999 estreiou o atual piloto de Fórmula 1 Fernando Alonso."),
+            ("Hitech TGR", "hitech_logo", 600.0,"UK",10, 28,"Fundada em 2002, anteriormente conhecida como Hitech Racing e atualmente competindo como Hitech TGR é uma equipe britânica que atualmente compete na Fórmula 2 e Fórmula 3."),
+            ("MP Motorsport", "mp_logo", 800.0, "Holanda", 11, 23, "Fundada em 1995, o time holandês competiu em diversas outras categorias além da Fórmula 2. Atualmente compete além da Fórmula 2, na Fórmula 3, Eurocup-3, Fórmula Espanhola 4 e F1 Academy."),
+            ("DAMS Lucas Oil", "dams_logo", 1000.0, "França", 18, 60, "Fundada em 1988, a equipe francesa atualmente participa dos Campeonatos de Fórmula 2 e Fórmula 3. Esteve próxima de correr a temporada de 1996 da Fórmula 1 mas isso acabou por não se verificar."),
+            ("Rodin Motorsport", "rodin_logo", 100.0, "Reino Unido", 2, 7, "Fundada em 1999 como Carlin Motorsport, a equipe britânica foi renomeada para Rodin Motorsport em 2024. Atualmente, compete nos Campeonatos de Fórmula 2 e Fórmula 3 além de outras categorias de base."),
+            ("Invicta Racing", "invicta_logo", 3500.0, "Reino Unido", 42, 124, "Fundada como Virtuosi UK em 2012, tornou-se Russian Time e UNI-Virtuosi em 2019, Invicta Virtuosi Racing em 2023 e, por último, Invicta Racing em 2024. Na sua história, correu em diversas categorias de assento único."),
+            ("PREMA Racing", "prema_logo", 1000.0, "Itália", 29, 23, "Fundada em 1983, é uma equipe italiana de automobilismo que atualmente compete nos Campeonatos de Fórmula 2 e Fórmula 3, bem como na IndyCar Series."),
+            ("ART Grand Prix", "art_logo", 1000.0, "França", 22, 31, "Fundada em 1996 como ASM Formule 3 e renomeada para ART Grand Prix em 2005, a equipe francesa atualmente participa dos Campeonatos de Fórmula 2 e Fórmula 3."),
+            ("AIX Racing", "aix_logo", 100.0, "Emirados Árabes Unidos / Alemanha", 3, 5, "Fundada em 2024, a equipe Emirado-Alemã AIX Racing participa atualmente dos Campeonatos de Fórmula 2 e Fórmula 3 da FIA. A equipe surgiu a partir da aquisição das operações de Fórmula 2 e Fórmula 3 da PHM Racing pela AIX Investment Group."),
+            ("Van Amersfoort Racing", "var_logo", 200.0, "Holanda", 2, 5, "Fundada em 1975, a equipe holandesa Van Amersfoort Racing (VAR) ingressou na Fórmula 2 da FIA em 2022. Atualmente, compete nos Campeonatos de Fórmula 2 e Fórmula 3, além de outras categorias de base."),
+            ("TRIDENT", "trident_logo", 200.0, "Itália", 1, 5, "Fundada em 2006, a equipe italiana Trident Motorsport atualmente participa dos Campeonatos de Fórmula 2 e Fórmula 3.")
         ]
         
         for team in f2Teams {
-            await database.addScuderia(name: team.0, logo: team.1, points: team.2, idFormula: f2Id)
+            await database.addScuderia(
+                name: team.0,
+                logo: team.1,
+                points: team.2,
+                idFormula: f2Id,
+                country: team.3,
+                victory: Int16(team.4),
+                podium: Int16(team.5),
+                details: team.6
+            )
         }
         
         //        let f3Teams = [
@@ -377,27 +388,27 @@ class CloudKitSeed {
         }
         
         let glossaryTerms: [(title: String, subtitle: String, details: String)] = [
-                    ("DRS", "Drag Reduction System", "A movable flap on the rear wing that reduces drag and increases straight-line speed."),
-                    ("ERS", "Energy Recovery System", "A system that recovers energy from braking and exhaust heat to provide additional power."),
-                    ("Pole Position", "Posição de Pista", "The first position on the starting grid, awarded to the fastest qualifier."),
-                    ("Fastest Lap", "Volta Mais Rápida", "The quickest lap time recorded during a race, often rewarded with an extra championship point."),
-                    ("DNF", "Did Not Finish", "When a driver fails to complete the race due to mechanical failure, accident, or other issues."),
-                    ("DNS", "Did Not Start", "When a driver is unable to start the race."),
-                    ("DSQ", "Disqualified", "When a driver is excluded from race results due to rule violations."),
-                    ("Safety Car", "Carro de Segurança", "A car deployed to slow down the field during dangerous conditions on track."),
-                    ("Virtual Safety Car", "Carro Virtual de Segurança", "An electronic system that limits drivers' speeds during caution periods."),
-                    ("Pit Stop", "Parada nos Boxes", "A planned stop in the pit lane for tire changes, fuel, or repairs."),
-                    ("Undercut", "Undercut", "Gaining track position by pitting earlier than a rival and using fresh tires."),
-                    ("Overcut", "Overcut", "Staying out longer than rivals to gain track position through tire strategy."),
-                    ("Slipstream", "Efeito esteira", "Following closely behind another car to reduce air resistance and increase speed."),
-                    ("Dirty Air", "Ar Turvo", "Disturbed airflow behind a car that reduces downforce for following vehicles."),
-                    ("Apex", "Vértice", "The innermost point of a corner where drivers aim to position their car."),
-                    ("Chicane", "Chicane", "A sequence of tight turns designed to slow cars down."),
-                    ("Kerb", "Meio-Fio", "Raised or painted strips marking the edge of the racing surface."),
-                    ("Marshals", "Comissários", "Volunteers who ensure safety and enforce rules during racing events."),
-                    ("Parc Fermé", "Parc Fermé", "Rules that limit car modifications between qualifying and race."),
-                    ("Formation Lap", "Volta de Formação", "A lap completed before the race start to warm up tires and check conditions.")
-                ]
+            ("DRS", "Sistema de Redução de Arrasto", "Uma aba móvel na asa traseira que reduz o arrasto e aumenta a velocidade em linha reta."),
+            ("ERS", "Sistema de Recuperação de Energia", "Um sistema que recupera energia da frenagem e do calor do escapamento para fornecer potência extra."),
+            ("Pole Position", "Posição de Largada", "A primeira posição no grid de largada, concedida ao piloto mais rápido na classificação."),
+            ("Fastest Lap", "Volta Mais Rápida", "O tempo de volta mais rápido registrado durante uma corrida, muitas vezes recompensado com um ponto extra no campeonato."),
+            ("DNF", "Não Completou", "Quando um piloto não consegue completar a corrida devido a falha mecânica, acidente ou outros problemas."),
+            ("DNS", "Não Largou", "Quando um piloto não consegue iniciar a corrida."),
+            ("DSQ", "Desclassificado", "Quando um piloto é excluído dos resultados da corrida por violar regras."),
+            ("Safety Car", "Carro de Segurança", "Um carro enviado à pista para reduzir a velocidade do pelotão em condições perigosas."),
+            ("Virtual Safety Car", "Carro Virtual de Segurança", "Um sistema eletrônico que limita a velocidade dos pilotos durante períodos de advertência."),
+            ("Pit Stop", "Parada nos Boxes", "Uma parada planejada no pit lane para troca de pneus, reabastecimento ou reparos."),
+            ("Undercut", "Undercut", "Ganhar posição na pista parando antes de um rival e usando pneus novos."),
+            ("Overcut", "Overcut", "Ficar mais tempo na pista do que os rivais para ganhar posição através da estratégia de pneus."),
+            ("Slipstream", "Efeito Esteira", "Andar muito próximo de outro carro para reduzir a resistência do ar e aumentar a velocidade."),
+            ("Dirty Air", "Ar Sujo", "Fluxo de ar turbulento atrás de um carro que reduz a pressão aerodinâmica dos veículos que vêm atrás."),
+            ("Apex", "Vértice", "O ponto mais interno de uma curva onde os pilotos procuram posicionar o carro."),
+            ("Chicane", "Chicane", "Uma sequência de curvas fechadas projetadas para reduzir a velocidade dos carros."),
+            ("Kerb", "Zebra", "Faixas elevadas ou pintadas que marcam o limite da pista."),
+            ("Marshals", "Comissários", "Voluntários que garantem a segurança e fazem cumprir as regras durante os eventos de corrida."),
+            ("Parc Fermé", "Parc Fermé", "Regras que limitam as modificações no carro entre a classificação e a corrida."),
+            ("Formation Lap", "Volta de Formação", "Uma volta realizada antes da largada para aquecer os pneus e verificar as condições.")
+        ]
 
         for term in glossaryTerms {
             await database.addGlossaryTerm(
@@ -677,7 +688,12 @@ class CloudKitSeed {
             ("Tires", "Pirelli racing slicks", "tire_image")
         ]
         for comp in components {
-            await database.addComponent(name: comp.0, details: comp.1, image: comp.2)
+            await database.addComponent(
+                name: comp.0,
+                details: comp.1,
+//                property: comp.2,
+                image: comp.2,
+            )
         }
     }
     

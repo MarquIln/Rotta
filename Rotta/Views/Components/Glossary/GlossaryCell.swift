@@ -19,16 +19,6 @@ class GlossaryCell: UITableViewCell {
         return view
     }()
     
-    lazy var iconImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 20
-        imageView.backgroundColor = .blue
-        return imageView
-    }()
-    
     lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -70,7 +60,6 @@ class GlossaryCell: UITableViewCell {
         selectionStyle = .none
         
         contentView.addSubview(containerView)
-        containerView.addSubview(iconImageView)
         containerView.addSubview(titleLabel)
         containerView.addSubview(chevronImageView)
         
@@ -83,12 +72,7 @@ class GlossaryCell: UITableViewCell {
             containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
             
-            iconImageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 12),
-            iconImageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            iconImageView.widthAnchor.constraint(equalToConstant: 40),
-            iconImageView.heightAnchor.constraint(equalToConstant: 40),
-            
-            titleLabel.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 16),
+            titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
             titleLabel.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
             
             chevronImageView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -12),
@@ -98,9 +82,8 @@ class GlossaryCell: UITableViewCell {
         ])
     }
     
-    func configure(with title: String, image: UIImage?) {
+    func configure(with title: String) {
         titleLabel.text = title
-        iconImageView.image = image
     }
 }
 

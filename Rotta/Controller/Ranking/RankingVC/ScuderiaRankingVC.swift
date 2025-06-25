@@ -71,6 +71,10 @@ class ScuderiaRankingVC: UIViewController {
     @objc private func handleBack() {
         navigationController?.popViewController(animated: true)
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationController?.isNavigationBarHidden = true
+    }
 
     private func loadScuderias() {
         Task {

@@ -11,7 +11,7 @@ import Lottie
 class SplashScreenVC: UIViewController {
     
     private var animationView: LottieAnimationView?
-    private let animationNames = ["Carrovermelho", "Carrorosa", "Carroazul", "Rdiminuindo"]
+    private let animationNames = ["Rotta"]
     private var currentIndex = 0
 
     private var isSeedComplete: Bool?
@@ -51,22 +51,16 @@ class SplashScreenVC: UIViewController {
 
         view.addSubview(animationView)
 
-        animationView.play(fromProgress: 0.0, toProgress: 0.1, loopMode: .playOnce) { [weak self] _ in
+        animationView.play(fromProgress: 0.0, toProgress: 0.9, loopMode: .playOnce) { [weak self] _ in
             self?.currentIndex += 1
             self?.playNextAnimation()
         }
     }
 
     private func finishSequence() {
-        let nextVC: UIViewController
-
-        if isSeedComplete == true {
-            nextVC = MainTabController()
-        } else {
-            nextVC = OnBoardingVC()
-        }
-
-        navigationController?.setViewControllers([nextVC], animated: true)
+        let nextVC: UIViewController = MainTabController()
+        
+        navigationController?.pushViewController(nextVC, animated: true)
         navigationController?.isNavigationBarHidden = true
     }
 }
