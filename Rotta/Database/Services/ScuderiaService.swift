@@ -29,8 +29,10 @@ class ScuderiaService {
                         name: record["name"] as? String ?? "",
                         logo: record["logo"] as? String ?? "",
                         points: record["points"] as? Double ?? 0.0,
+                        historicPoints: record["historicPoints"] as? Int16 ?? 0,
                         idFormula: UUID(uuidString: record["idFormula"] as? String ?? "") ?? UUID(),
                         country: record["country"] as? String ?? "",
+                        pole: record["pole"] as? Int16 ?? 0,
                         victory: record["victory"] as? Int16 ?? 0,
                         podium: record["podium"] as? Int16 ?? 0,
                         details: record["details"] as? String ?? ""
@@ -55,8 +57,10 @@ class ScuderiaService {
                 name: record["name"] as? String ?? "",
                 logo: record["logo"] as? String ?? "",
                 points: record["points"] as? Double ?? 0.0,
+                historicPoints: record["historicPoints"] as? Int16 ?? 0,
                 idFormula: UUID(uuidString: record["idFormula"] as? String ?? "") ?? UUID(),
                 country: record["country"] as? String ?? "",
+                pole: record["pole"] as? Int16 ?? 0,
                 victory: record["victory"] as? Int16 ?? 0,
                 podium: record["podium"] as? Int16 ?? 0,
                 details: record["details"] as? String ?? ""
@@ -81,8 +85,10 @@ class ScuderiaService {
                         name: record["name"] as? String ?? "",
                         logo: record["logo"] as? String ?? "",
                         points: record["points"] as? Double ?? 0.0,
+                        historicPoints: record["historicPoints"] as? Int16 ?? 0,
                         idFormula: UUID(uuidString: record["idFormula"] as? String ?? "") ?? UUID(),
                         country: record["country"] as? String ?? "",
+                        pole: record["pole"] as? Int16 ?? 0,
                         victory: record["victory"] as? Int16 ?? 0,
                         podium: record["podium"] as? Int16 ?? 0,
                         details: record["details"] as? String ?? ""
@@ -98,15 +104,17 @@ class ScuderiaService {
         return scuderias
     }
 
-    func add(name: String, logo: String, points: Double, idFormula: UUID, country: String, victory: Int16, podium: Int16, details: String) async {
+    func add(name: String, logo: String, points: Double, historicPoints: Int16, idFormula: UUID, country: String, pole: Int16, victory: Int16, podium: Int16, details: String) async {
         let uuid = UUID().uuidString
         let record = CKRecord(recordType: "Scuderia")
         record["id"] = uuid
         record["name"] = name
         record["logo"] = logo
         record["points"] = points
+        record["historicPoints"] = historicPoints
         record["idFormula"] = idFormula.uuidString
         record["country"] = country
+        record["pole"] = pole
         record["victory"] = victory
         record["podium"] = podium
         record["details"] = details
