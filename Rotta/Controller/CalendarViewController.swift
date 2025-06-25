@@ -119,7 +119,7 @@ extension CalendarViewController: ViewCodeProtocol {
 
             customCalendarView.topAnchor.constraint(
                 equalTo: contentView.topAnchor,
-                constant: 50
+                constant: 16
             ),
             customCalendarView.leadingAnchor.constraint(
                 equalTo: contentView.leadingAnchor,
