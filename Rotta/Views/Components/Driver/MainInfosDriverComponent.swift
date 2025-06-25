@@ -24,6 +24,7 @@ class MainInfosDriverComponent: UIView {
         let label = UILabel()
         label.text = country.getCountryFlag()
         label.textColor = .labelsPrimary
+        label.font = Fonts.Subtitle1
         return label
     }()
     

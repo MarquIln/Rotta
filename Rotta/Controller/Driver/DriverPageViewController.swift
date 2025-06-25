@@ -20,6 +20,7 @@ class DriverPageViewController: UIViewController {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: driver.photo!) ?? UIImage(systemName: "person.fill")
         return imageView
     }()
     
