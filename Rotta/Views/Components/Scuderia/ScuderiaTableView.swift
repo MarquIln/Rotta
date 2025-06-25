@@ -1,10 +1,16 @@
 
 import UIKit
 
+protocol ScuderiaTableViewDelegate: AnyObject {
+    func numberOfItems() -> Int
+    func item(at index: Int) -> (title: String, imageName: String)
+    func didSelectItem(at index: Int)
+}
+
 class ScuderiaTableView: UIView {
     
-    private let fixedCellCount = 11
-
+    weak var delegate: ScuderiaTableViewDelegate?
+    
     lazy var tableView: UITableView = {
         let table = UITableView()
         table.translatesAutoresizingMaskIntoConstraints = false
@@ -45,13 +51,16 @@ class ScuderiaTableView: UIView {
 // MARK: - UITableViewDataSource
 extension ScuderiaTableView: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return fixedCellCount
+        return delegate?.numberOfItems() ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ScuderiaCell", for: indexPath) as? ScuderiaCell else {
-            return UITableViewCell()
-        }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ScuderiaCell", for: indexPath) as? ScuderiaCell,
+              let item = delegate?.item(at: indexPath.row)
+        else { return UITableViewCell() }
+        
+        cell.configure(with: item.title, imageName: item.imageName)
+        cell.delegate = delegate as? ScuderiaCellDelegate
         return cell
     }
 }
@@ -64,7 +73,7 @@ extension ScuderiaTableView: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        print("Scuderia cell at index \(indexPath.row) selected")
+        delegate?.didSelectItem(at: indexPath.row)
     }
 }
 

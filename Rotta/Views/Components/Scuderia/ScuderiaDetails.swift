@@ -2,14 +2,19 @@ import UIKit
 
 class ScuderiaDetails: UIView {
    
-    var logo: String = ""
-    var country: String = "BR"
-    var wins: String = "11"
-    var poles: Int = 11
-    var podiums: Int = 11
-    var points: Int = 11
-    var infos: String = "Resumo geralkljhgbvn m,k.jhgfdxvcfbnkl;oiuytredsfcvbhjkliuytrfdfgvbnjkuygtrfedswadfghjkn,mbv cxfdretyuioklbmnhgvfdsxcvbnm,kliouytrdtfyuiolkjhgvbnmklkijuhygtrfdesxdcfvghjl;kjfcld;skfjcldsjfcldjcflm,k.jhgfdxvcfbnkl;oiuytredsfcvbhjkliuytrfdfgvbnjkuygtrfedswadfghjkn,mbv cxfdretyuioklbmnhgvfdsxcvbnm,k.jhgfdxvcfbnkl;oiuytredsfcvbhjkliuytrfdfgvbnjkuygtrfedswadfghjkn,mbv cxfdretyuioklbmnhgvfdsxcvbn"
+//    var logo: String = ""
+//    var country: String = "BR"
+//    var wins: String = "11"
+//    var poles: Int = 11
+//    var podiums: Int = 11
+//    var points: Int = 11
+//    var infos: String = "Resumo geralkljhgbvn m,k.jhgfdxvcfbnkl;oiuytredsfcvbhjkliuytrfdfgvbnjkuygtrfedswadfghjkn,mbv cxfdretyuioklbmnhgvfdsxcvbnm,kliouytrdtfyuiolkjhgvbnmklkijuhygtrfdesxdcfvghjl;kjfcld;skfjcldsjfcldjcflm,k.jhgfdxvcfbnkl;oiuytredsfcvbhjkliuytrfdfgvbnjkuygtrfedswadfghjkn,mbv cxfdretyuioklbmnhgvfdsxcvbnm,k.jhgfdxvcfbnkl;oiuytredsfcvbhjkliuytrfdfgvbnjkuygtrfedswadfghjkn,mbv cxfdretyuioklbmnhgvfdsxcvbn"
     
+    var scuderia: ScuderiaModel? = nil {
+        didSet {
+            configure(with: scuderia!)
+        }
+    }
  
     lazy var scuderiaNameLabel: UILabel = {
         let label = UILabel()
@@ -22,12 +27,12 @@ class ScuderiaDetails: UIView {
     }()
     
     lazy var scuderiaLogo: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.clipsToBounds = true
-        imageView.image = UIImage(named: "aix_logo")
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
+        let logo = UIImageView()
+        logo.contentMode = .scaleAspectFit
+        logo.clipsToBounds = true
+      //  imageView.image = UIImage(named: "aix_logo")
+        logo.translatesAutoresizingMaskIntoConstraints = false
+        return logo
     }()
     
     
@@ -41,7 +46,7 @@ class ScuderiaDetails: UIView {
     
     lazy var countryLabel: UILabel = {
         let label = UILabel()
-        label.text = country.getCountryFlag()
+        label.text = scuderia?.country
         label.textColor = .labelsPrimary
         return label
     }()
@@ -67,7 +72,6 @@ class ScuderiaDetails: UIView {
     
     lazy var winLabel: UILabel = {
         let label = UILabel()
-        label.text = wins
         label.textColor = .labelsPrimary
         label.font = Fonts.Title1
         return label
@@ -120,7 +124,7 @@ class ScuderiaDetails: UIView {
     
     lazy var poleLabel: UILabel = {
         let label = UILabel()
-        label.text = "\(poles)"
+     //   label.text = scuderia?.pole
         label.textColor = .labelsPrimary
         label.font = Fonts.Title1
         return label
@@ -147,7 +151,6 @@ class ScuderiaDetails: UIView {
     
     lazy var podiumLabel: UILabel = {
         let label = UILabel()
-        label.text = "\(podiums)"
         label.textColor = .labelsPrimary
         label.font = Fonts.Title1
         return label
@@ -174,7 +177,6 @@ class ScuderiaDetails: UIView {
     
     lazy var pointsLabel: UILabel = {
         let label = UILabel()
-        label.text = "\(points)"
         label.textColor = .labelsPrimary
         label.font = Fonts.Title1
         return label
@@ -243,7 +245,7 @@ class ScuderiaDetails: UIView {
     
     lazy var summaryTextLabel: UILabel = {
         let label = UILabel()
-        label.text = infos
+     //   label.text = infos
         label.textColor = .labelsPrimary
         label.font = Fonts.Subtitle1
         label.numberOfLines = 0
@@ -292,13 +294,12 @@ extension ScuderiaDetails: ViewCodeProtocol {
             scuderiaLogo.topAnchor.constraint(equalTo: topAnchor),
             scuderiaLogo.leadingAnchor.constraint(equalTo: leadingAnchor),
             scuderiaLogo.trailingAnchor.constraint(equalTo: trailingAnchor),
-            scuderiaLogo.heightAnchor.constraint(equalToConstant: 24),
+            scuderiaLogo.heightAnchor.constraint(equalToConstant: 50),
             
             scuderiaNameLabel.topAnchor.constraint(equalTo: scuderiaLogo.bottomAnchor, constant: 12),
             scuderiaNameLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
             scuderiaNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-            scuderiaNameLabel.heightAnchor.constraint(equalToConstant: 24),
-            
+    
            
             countryWinsContainer.topAnchor.constraint(equalTo: scuderiaNameLabel.bottomAnchor, constant: 16),
             countryWinsContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -359,3 +360,19 @@ extension ScuderiaDetails: ViewCodeProtocol {
         ])
     }
 }
+
+extension ScuderiaDetails {
+    func configure(with model: ScuderiaModel) {
+        scuderiaNameLabel.text = model.name
+        scuderiaLogo.image = UIImage(named: model.logo)
+        countryLabel.text = model.country.getCountryFlag()
+        winLabel.text = "\(model.victory)"
+       // poleLabel.text = "\(model.pole)"
+        podiumLabel.text = "\(model.podium)"
+       // pointsLabel.text = "\(model.historyPoints)"
+        summaryTextLabel.text = model.details
+    }
+    
+}
+        
+ 

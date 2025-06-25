@@ -8,12 +8,23 @@
 import UIKit
 
 class ScuderiaDetailsViewController: UIViewController {
+    
+    var scuderia: ScuderiaModel?
+    
+    lazy var component: ScuderiaDetails = {
+        guard let scuderiaUnwrapped = scuderia else {
+            fatalError("ScuderiaModel não pode ser nil ao criar o componente.")
+        }
+        var component = ScuderiaDetails()
+        component.translatesAutoresizingMaskIntoConstraints = false
+        return component
+    }()
         
-        lazy var component: ScuderiaDetails = {
-            let component = ScuderiaDetails()
-            component.translatesAutoresizingMaskIntoConstraints = false
-            return component
-        }()
+//        lazy var component: ScuderiaDetails = {
+//            let component = ScuderiaDetails()
+//            component.translatesAutoresizingMaskIntoConstraints = false
+//            return component
+//        }()
         
         lazy var scrollView: UIScrollView = {
             let scroll = UIScrollView()
@@ -165,26 +176,4 @@ class ScuderiaDetailsViewController: UIViewController {
             return true
         }
     }
-    
-    
-    
-    
-    
-    
-    
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        view.backgroundColor = .systemBackground
-//
-//        let label = UILabel()
-//        label.text = "Página de detalhes da Scuderia"
-//        label.textColor = .white
-//        label.font = .systemFont(ofSize: 20, weight: .semibold)
-//        label.translatesAutoresizingMaskIntoConstraints = false
-//
-//        view.addSubview(label)
-//        NSLayoutConstraint.activate([
-//            label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            label.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-//        ])
-//    }
+

@@ -63,6 +63,7 @@ class ScuderiaCell: UITableViewCell {
     }
     
     private func setupConstraints() {
+        
         NSLayoutConstraint.activate([
             containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
             containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
@@ -84,12 +85,13 @@ class ScuderiaCell: UITableViewCell {
     }
     
     @objc private func chevronTapped() {
+        print("chevron tapped")
         delegate?.didTapChevron(in: self)
     }
     
-    func configure(with scuderia: ScuderiaModel) {
-        nameLabel.text = scuderia.name
-        logoImageView.image = UIImage(named: scuderia.logo)
+    func configure(with title: String, imageName: String) {
+        nameLabel.text = title
+        logoImageView.image = UIImage(named: imageName)
     }
 }
 

@@ -3,28 +3,11 @@ import UIKit
 
 class ScuderiaTableViewController: UIViewController {
     
-//    struct Scuderia {
-//        let name: String
-//        let imageName: String
-//    }
     
     private let service = ScuderiaService()
     let database = Database.shared
     
     private var scuderias: [ScuderiaModel] = [ ]
-//    [
-//        Scuderia(name: "AIX Racing", imageName: "aix_logo"),
-//        Scuderia(name: "ART Grand Prix", imageName: "art_logo"),
-//        Scuderia(name: "Campos Racing", imageName: "campos_logo"),
-//        Scuderia(name: "DAMS Lucas Oil", imageName: "dams_logo"),
-//        Scuderia(name: "Hitech TGR", imageName: "hitech_logo"),
-//        Scuderia(name: "Invicta Racing", imageName: "invicta_logo"),
-//        Scuderia(name: "MP Motorsport", imageName: "mp_logo"),
-//        Scuderia(name: "Prema Racing", imageName: "prema_logo"),
-//        Scuderia(name: "Rodin Motorsport", imageName: "rodin_logo"),
-//        Scuderia(name: "TRIDENT", imageName: "trident_logo"),
-//        Scuderia(name: "Van Amersfoort Racing", imageName: "var_logo")
-//    ]
 
     private lazy var headerView: ScuderiaHeaderView = {
         let headerView = ScuderiaHeaderView()
@@ -35,6 +18,7 @@ class ScuderiaTableViewController: UIViewController {
     private lazy var scuderiaTableView: ScuderiaTableView = {
         let tableView = ScuderiaTableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.delegate = self
         return tableView
     }()
 
@@ -56,8 +40,8 @@ class ScuderiaTableViewController: UIViewController {
         
         setupView()
         
-        scuderiaTableView.tableView.delegate = self
-        scuderiaTableView.tableView.dataSource = self
+//        scuderiaTableView.tableView.delegate = self
+//        scuderiaTableView.tableView.dataSource = self
         
         addGradientGlossary()
         loadScuderia()
@@ -121,32 +105,26 @@ class ScuderiaTableViewController: UIViewController {
             scuderiaTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scuderiaTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+        
+        scuderiaTableView.reloadData()
     }
 }
-extension ScuderiaTableViewController: UITableViewDelegate, UITableViewDataSource, ScuderiaCellDelegate {
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return scuderias.count
+extension ScuderiaTableViewController: ScuderiaTableViewDelegate {
+    func numberOfItems() -> Int {
+        scuderias.count
     }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let identifier = "ScuderiaCell"
-        let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! ScuderiaCell
-        let scuderia = scuderias[indexPath.row]
-        _ = UIImage(named: scuderia.logo)
-        cell.configure(with: scuderia)
-        cell.delegate = self
-
-        return cell
+    
+    func item(at index: Int) -> (title: String, imageName: String) {
+        return (scuderias[index].name, scuderias[index].logo)
     }
-
-    func didTapChevron(in cell: ScuderiaCell) {
-        print("Chevron da célula tocado")
-        let vc = ScuderiaDetailsViewController()
-        navigationController?.pushViewController(vc, animated: true)
+    
+    func didSelectItem(at index: Int) {
+        let detailsVC = ScuderiaDetailsViewController()
+            detailsVC.scuderia = scuderias[index]
+        detailsVC.component.configure(with: scuderias[index])
+            navigationController?.pushViewController(detailsVC, animated: true)
     }
+    
+    
 }
-
-
-
 
