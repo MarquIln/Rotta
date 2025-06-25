@@ -147,8 +147,6 @@ extension DriverRankingCell: ViewCodeProtocol {
             driverImageView.heightAnchor.constraint(equalToConstant: 28),
             scuderiaLabel.widthAnchor.constraint(equalToConstant: 56),
             scuderiaLabel.heightAnchor.constraint(equalToConstant: 12)
-            
-            
         ])
     }
 }

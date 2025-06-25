@@ -12,7 +12,7 @@ class InfosViewController: UIViewController {
         (
             title: "Glossário",
             subtitle: "Entenda os principais termos utilizados na Fórmula 2",
-            image: .glossaryCategoryInfos
+            image: .glossaryCategoryInfos,
         ),
         (
             title: "Peças",
@@ -55,8 +55,7 @@ class InfosViewController: UIViewController {
     @objc private func cardInfoTapped(_ sender: UIButton) {
         let index = sender.tag
         _ = cardsData[index]
-        print("clicou")
-        let vc = GlossaryTableViewController()
+        let vc = CarComponentsListVC()
         navigationController?.pushViewController(vc, animated: true)
         
 //        let modal = GlossaryTableViewController()
