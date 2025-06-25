@@ -29,7 +29,11 @@ class ScuderiaService {
                         name: record["name"] as? String ?? "",
                         logo: record["logo"] as? String ?? "",
                         points: record["points"] as? Double ?? 0.0,
-                        idFormula: UUID(uuidString: record["idFormula"] as? String ?? "") ?? UUID()
+                        idFormula: UUID(uuidString: record["idFormula"] as? String ?? "") ?? UUID(),
+                        country: record["country"] as? String ?? "",
+                        victory: record["victory"] as? Int16 ?? 0,
+                        podium: record["podium"] as? Int16 ?? 0,
+                        details: record["details"] as? String ?? ""
                     )
                     scuderias.append(scuderia)
                 } catch {
@@ -51,7 +55,11 @@ class ScuderiaService {
                 name: record["name"] as? String ?? "",
                 logo: record["logo"] as? String ?? "",
                 points: record["points"] as? Double ?? 0.0,
-                idFormula: UUID(uuidString: record["idFormula"] as? String ?? "") ?? UUID()
+                idFormula: UUID(uuidString: record["idFormula"] as? String ?? "") ?? UUID(),
+                country: record["country"] as? String ?? "",
+                victory: record["victory"] as? Int16 ?? 0,
+                podium: record["podium"] as? Int16 ?? 0,
+                details: record["details"] as? String ?? ""
             )
         } catch {
             print("Erro ao buscar Scuderia por ID: \(error.localizedDescription)")
@@ -73,7 +81,11 @@ class ScuderiaService {
                         name: record["name"] as? String ?? "",
                         logo: record["logo"] as? String ?? "",
                         points: record["points"] as? Double ?? 0.0,
-                        idFormula: UUID(uuidString: record["idFormula"] as? String ?? "") ?? UUID()
+                        idFormula: UUID(uuidString: record["idFormula"] as? String ?? "") ?? UUID(),
+                        country: record["country"] as? String ?? "",
+                        victory: record["victory"] as? Int16 ?? 0,
+                        podium: record["podium"] as? Int16 ?? 0,
+                        details: record["details"] as? String ?? ""
                     )
                     scuderias.append(scuderia)
                 } catch {
@@ -86,7 +98,7 @@ class ScuderiaService {
         return scuderias
     }
 
-    func add(name: String, logo: String, points: Double, idFormula: UUID) async {
+    func add(name: String, logo: String, points: Double, idFormula: UUID, country: String, victory: Int16, podium: Int16, details: String) async {
         let uuid = UUID().uuidString
         let record = CKRecord(recordType: "Scuderia")
         record["id"] = uuid
@@ -94,6 +106,10 @@ class ScuderiaService {
         record["logo"] = logo
         record["points"] = points
         record["idFormula"] = idFormula.uuidString
+        record["country"] = country
+        record["victory"] = victory
+        record["podium"] = podium
+        record["details"] = details
         do {
             let saved = try await privateDatabase.save(record)
             print("Scuderia salva com sucesso: \(saved.recordID.recordName)")
