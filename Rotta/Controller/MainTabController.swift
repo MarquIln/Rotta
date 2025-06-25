@@ -101,7 +101,9 @@ class MainTabController: UIViewController {
     let viewControllers: [UIViewController] = [
         CalendarViewController(),
         TopThreeVC(),
-        InfosViewController()
+        InfosViewController(),
+       
+      
     ]
 
     var currentVC: UIViewController?
@@ -238,6 +240,3 @@ extension MainTabController: ViewCodeProtocol {
     }
 }
 
-//#Preview {
-//    MainTabController()
-//}
