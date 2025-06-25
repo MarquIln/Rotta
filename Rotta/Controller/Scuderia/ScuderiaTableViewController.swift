@@ -121,7 +121,7 @@ extension ScuderiaTableViewController: ScuderiaTableViewDelegate {
     func didSelectItem(at index: Int) {
         let detailsVC = ScuderiaDetailsViewController()
             detailsVC.scuderia = scuderias[index]
-        detailsVC.component.configure(with: scuderias[index])
+          detailsVC.component.configure(with: scuderias[index])
             navigationController?.pushViewController(detailsVC, animated: true)
     }
     

@@ -48,6 +48,7 @@ class ScuderiaDetails: UIView {
         let label = UILabel()
         label.text = scuderia?.country
         label.textColor = .labelsPrimary
+        label.font = Fonts.Title1
         return label
     }()
     
@@ -82,7 +83,7 @@ class ScuderiaDetails: UIView {
         stack.axis = .vertical
         stack.alignment = .center
         stack.distribution = .equalSpacing
-        stack.backgroundColor = .fillsTextbox
+        stack.backgroundColor = .clear
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.isLayoutMarginsRelativeArrangement = true
         stack.layoutMargins = .init(top: 12, left: 0, bottom: 12, right: 0)
@@ -92,7 +93,7 @@ class ScuderiaDetails: UIView {
     lazy var divider1: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .fillsTextbox
+        view.backgroundColor = .rottaGray
         return view
     }()
     
@@ -196,14 +197,14 @@ class ScuderiaDetails: UIView {
     lazy var divider2: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .fillsTextbox
+        view.backgroundColor = .rottaGray
         return view
     }()
     
     lazy var divider3: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .fillsTextbox
+        view.backgroundColor = .rottaGray
         return view
     }()
     
@@ -294,7 +295,7 @@ extension ScuderiaDetails: ViewCodeProtocol {
             scuderiaLogo.topAnchor.constraint(equalTo: topAnchor),
             scuderiaLogo.leadingAnchor.constraint(equalTo: leadingAnchor),
             scuderiaLogo.trailingAnchor.constraint(equalTo: trailingAnchor),
-            scuderiaLogo.heightAnchor.constraint(equalToConstant: 50),
+            scuderiaLogo.heightAnchor.constraint(equalToConstant: 30),
             
             scuderiaNameLabel.topAnchor.constraint(equalTo: scuderiaLogo.bottomAnchor, constant: 12),
             scuderiaNameLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -367,9 +368,9 @@ extension ScuderiaDetails {
         scuderiaLogo.image = UIImage(named: model.logo)
         countryLabel.text = model.country.getCountryFlag()
         winLabel.text = "\(model.victory)"
-       // poleLabel.text = "\(model.pole)"
+        poleLabel.text = "\(model.pole)"
         podiumLabel.text = "\(model.podium)"
-       // pointsLabel.text = "\(model.historyPoints)"
+        pointsLabel.text = "\(model.historicPoints)"
         summaryTextLabel.text = model.details
     }
     

@@ -145,7 +145,7 @@ class CloudKitSeed {
         
         let f2Teams = [
             ("Campos Racing", "campos_logo", 128.0, 3500, "Espanha", 0, 3, 19, "Fundada em 1997, a equipe espanhola de automobilismo gerenciada pelo ex-piloto de Fórmula 1 Adrián Campos. Atualmente compete nos Campeonatos de Fórmula 2, Fórmula 3 e Fórmula 1 Academy. Em 1999 estreiou o atual piloto de Fórmula 1 Fernando Alonso."),
-            ("Hitech TGR", "hitech_logo", 102.0, 600.0,"UK", 3, 10, 28,"Fundada em 2002, anteriormente conhecida como Hitech Racing e atualmente competindo como Hitech TGR é uma equipe britânica que atualmente compete na Fórmula 2 e Fórmula 3."),
+            ("Hitech TGR", "hitech_logo", 102.0, 600.0,"Reino Unido", 3, 10, 28,"Fundada em 2002, anteriormente conhecida como Hitech Racing e atualmente competindo como Hitech TGR é uma equipe britânica que atualmente compete na Fórmula 2 e Fórmula 3."),
             ("MP Motorsport", "mp_logo", 96.0, 800.0, "Holanda", 5, 11, 23, "Fundada em 1995, o time holandês competiu em diversas outras categorias além da Fórmula 2. Atualmente compete além da Fórmula 2, na Fórmula 3, Eurocup-3, Fórmula Espanhola 4 e F1 Academy."),
             ("DAMS Lucas Oil", "dams_logo", 94.0, 1000.0, "França", 8, 18, 60, "Fundada em 1988, a equipe francesa atualmente participa dos Campeonatos de Fórmula 2 e Fórmula 3. Esteve próxima de correr a temporada de 1996 da Fórmula 1 mas isso acabou por não se verificar."),
             ("Rodin Motorsport", "rodin_logo", 89.0, 100.0, "Reino Unido", 1, 2, 7, "Fundada em 1999 como Carlin Motorsport, a equipe britânica foi renomeada para Rodin Motorsport em 2024. Atualmente, compete nos Campeonatos de Fórmula 2 e Fórmula 3 além de outras categorias de base."),
