@@ -1,9 +1,29 @@
+
 import UIKit
 
 class ScuderiaTableViewController: UIViewController {
+    
+    struct Scuderia {
+        let name: String
+        let imageName: String
+    }
 
-    private lazy var headerView: GlossaryHeaderView = {
-        let headerView = GlossaryHeaderView()
+    private let scuderias: [Scuderia] = [
+        Scuderia(name: "AIX Racing", imageName: "aix_logo"),
+        Scuderia(name: "ART Grand Prix", imageName: "art_logo"),
+        Scuderia(name: "Campos Racing", imageName: "campos_logo"),
+        Scuderia(name: "DAMS Lucas Oil", imageName: "dams_logo"),
+        Scuderia(name: "Hitech TGR", imageName: "hitech_logo"),
+        Scuderia(name: "Invicta Racing", imageName: "invicta_logo"),
+        Scuderia(name: "MP Motorsport", imageName: "mp_logo"),
+        Scuderia(name: "Prema Racing", imageName: "prema_logo"),
+        Scuderia(name: "Rodin Motorsport", imageName: "rodin_logo"),
+        Scuderia(name: "TRIDENT", imageName: "trident_logo"),
+        Scuderia(name: "Van Amersfoort Racing", imageName: "var_logo")
+    ]
+
+    private lazy var headerView: ScuderiaHeaderView = {
+        let headerView = ScuderiaHeaderView()
         headerView.translatesAutoresizingMaskIntoConstraints = false
         return headerView
     }()
@@ -29,7 +49,12 @@ class ScuderiaTableViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupView()
+        
+        scuderiaTableView.tableView.delegate = self
+        scuderiaTableView.tableView.dataSource = self
+        
         addGradientGlossary()
     }
 
@@ -91,15 +116,18 @@ extension ScuderiaTableViewController: UITableViewDelegate, UITableViewDataSourc
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let identifier = "ScuderiaCell"
-        let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? ScuderiaCell ?? ScuderiaCell(style: .default, reuseIdentifier: identifier)
-        cell.configure(title: "Equipe \(indexPath.row + 1)")
+        let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! ScuderiaCell
+        let scuderia = scuderias[indexPath.row]
+        _ = UIImage(named: scuderia.imageName)
+        cell.configure(with: scuderia)
         cell.delegate = self
+
         return cell
     }
 
     func didTapChevron(in cell: ScuderiaCell) {
         print("Chevron da célula tocado")
-        let vc = ScuderiaDetailsViewController() 
+        let vc = ScuderiaDetailsViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
 }

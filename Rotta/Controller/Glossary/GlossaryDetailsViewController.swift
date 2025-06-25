@@ -10,11 +10,6 @@ import UIKit
 class GlossaryDetailsViewController: UIViewController {
     
     var term: GlossaryModel?
-//    = nil {
-//        didSet {
-//            print(term)
-//        }
-//    }
     
     lazy var component: GlossaryDetails = {
         guard let termUnwrapped = term else {
