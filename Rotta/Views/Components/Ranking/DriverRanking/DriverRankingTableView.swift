@@ -15,6 +15,8 @@ class DriverRankingTableView: UIView {
     var lastFeedbackTime: CFTimeInterval = 0
 
     var drivers: [DriverModel] = []
+    weak var delegate: DriverRankingTableViewDelegate?
+
 
     lazy var driverLabel: UILabel = {
         let label = UILabel()
@@ -103,4 +105,8 @@ class DriverRankingTableView: UIView {
         self.drivers = drivers
         tableView.reloadData()
     }
+}
+
+protocol DriverRankingTableViewDelegate: AnyObject {
+  func rankingTableView(_ view: DriverRankingTableView, didSelect driver: DriverModel)
 }

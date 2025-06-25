@@ -7,7 +7,12 @@
 
 import UIKit
 
-class DriverRankingVC: UIViewController {
+class DriverRankingVC: UIViewController, DriverRankingTableViewDelegate {
+    func rankingTableView(_ view: DriverRankingTableView, didSelect driver: DriverModel) {
+        let detailVC = DriverPageViewController(driver: driver)
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
+    
     var drivers: [DriverModel] = []
     let database = Database.shared
     private let impactFeedback = UIImpactFeedbackGenerator(style: .light)
@@ -18,6 +23,7 @@ class DriverRankingVC: UIViewController {
         let view = DriverRankingTableView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.isUserInteractionEnabled = true
+        view.delegate = self
 //        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
 //        tap.cancelsTouchesInView = false
 //        tap.delegate = self
@@ -27,7 +33,7 @@ class DriverRankingVC: UIViewController {
     }()
     
 //    @objc func handleTap() {
-//        let vc = OnBoardingVC()
+//        let vc = DriverPageViewController()
 //        navigationController?.pushViewController(vc, animated: true)
 //    }
     

@@ -6,6 +6,8 @@
 //
 import UIKit
 class DriverPageViewController: UIViewController {
+    private let driver: DriverModel
+    
     lazy var imagebackground: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "leonardo_fornaroli"))
         imageView.contentMode = .scaleAspectFill
@@ -116,6 +118,16 @@ class DriverPageViewController: UIViewController {
         
         setup()
         
+    }
+    
+    init(driver: DriverModel) {
+        self.driver = driver
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) não implementado")
     }
     
     @objc func addGradientGlossary() {

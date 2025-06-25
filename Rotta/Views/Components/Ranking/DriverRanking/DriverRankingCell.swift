@@ -22,7 +22,6 @@ class DriverRankingCell: UITableViewCell {
         let label = UILabel()
         label.font = Fonts.Subtitle2
         label.textColor = .white
-//        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         return label
     }()
     

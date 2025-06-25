@@ -8,6 +8,7 @@
 import UIKit
 
 extension DriverRankingTableView: UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return drivers.count
     }
@@ -19,6 +20,7 @@ extension DriverRankingTableView: UITableViewDataSource {
         let driver = drivers[indexPath.row]
         let position = indexPath.row + 1
         cell.config(with: driver, position: position, cellIndex: indexPath.row)
+        
         
         if indexPath.row % 2 == 0 {
             cell.backgroundColor = UIColor.white.withAlphaComponent(0.08)
@@ -33,6 +35,12 @@ extension DriverRankingTableView: UITableViewDataSource {
 }
 
 extension DriverRankingTableView: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let driver = drivers[indexPath.row]
+        delegate?.rankingTableView(self, didSelect: driver)
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 44
     }
