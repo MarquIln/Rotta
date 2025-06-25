@@ -11,7 +11,7 @@ import Lottie
 class SplashScreenVC: UIViewController {
     
     private var animationView: LottieAnimationView?
-    private let animationNames = ["Carrovermelho", "Carrorosa", "Carroazul", "Rdiminuindo"]
+    private let animationNames = ["Rotta"]
     private var currentIndex = 0
 
     private var isSeedComplete: Bool?
