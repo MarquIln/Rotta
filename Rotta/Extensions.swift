@@ -166,6 +166,7 @@ extension String {
             "Azerbaijão": "🇦🇿",
             "Hungria": "🇭🇺",
             "UK": "🇬🇧",
+            "Emirados Árabes Unidos / Alemanha": "🇦🇪🇩🇪"
 
             
         ]

@@ -141,22 +141,35 @@ class CloudKitSeed {
         //            await database.addScuderia(name: team.0, logo: team.1, points: team.2, idFormula: f1AcademyId)
         //        }
         
+        
+        
         let f2Teams = [
-            ("Campos Racing", "campos_logo", 128.0),
-            ("Hitech TGR", "hitech_logo", 102.0),
-            ("MP Motorsport", "mp_logo", 96.0),
-            ("DAMS Lucas Oil", "dams_logo", 94.0),
-            ("Rodin Motorsport", "rodin_logo", 89.0),
-            ("Invicta Racing", "invicta_logo", 78.0),
-            ("PREMA Racing", "prema_logo", 57.0),
-            ("ART Grand Prix", "art_logo", 46.0),
-            ("AIX Racing", "aix_logo", 11.0),
-            ("Van Amersfoort Racing", "var_logo", 10.0),
-            ("TRIDENT", "trident_logo", 1.0)
+            ("Campos Racing", "campos_logo", 128.0, 3500, "Espanha", 0, 3, 19, "Fundada em 1997, a equipe espanhola de automobilismo gerenciada pelo ex-piloto de Fórmula 1 Adrián Campos. Atualmente compete nos Campeonatos de Fórmula 2, Fórmula 3 e Fórmula 1 Academy. Em 1999 estreiou o atual piloto de Fórmula 1 Fernando Alonso."),
+            ("Hitech TGR", "hitech_logo", 102.0, 600.0,"Reino Unido", 3, 10, 28,"Fundada em 2002, anteriormente conhecida como Hitech Racing e atualmente competindo como Hitech TGR é uma equipe britânica que atualmente compete na Fórmula 2 e Fórmula 3."),
+            ("MP Motorsport", "mp_logo", 96.0, 800.0, "Holanda", 5, 11, 23, "Fundada em 1995, o time holandês competiu em diversas outras categorias além da Fórmula 2. Atualmente compete além da Fórmula 2, na Fórmula 3, Eurocup-3, Fórmula Espanhola 4 e F1 Academy."),
+            ("DAMS Lucas Oil", "dams_logo", 94.0, 1000.0, "França", 8, 18, 60, "Fundada em 1988, a equipe francesa atualmente participa dos Campeonatos de Fórmula 2 e Fórmula 3. Esteve próxima de correr a temporada de 1996 da Fórmula 1 mas isso acabou por não se verificar."),
+            ("Rodin Motorsport", "rodin_logo", 89.0, 100.0, "Reino Unido", 1, 2, 7, "Fundada em 1999 como Carlin Motorsport, a equipe britânica foi renomeada para Rodin Motorsport em 2024. Atualmente, compete nos Campeonatos de Fórmula 2 e Fórmula 3 além de outras categorias de base."),
+            ("Invicta Racing", "invicta_logo", 78.0, 3500.0, "Reino Unido", 21, 42, 124, "Fundada como Virtuosi UK em 2012, tornou-se Russian Time e UNI-Virtuosi em 2019, Invicta Virtuosi Racing em 2023 e, por último, Invicta Racing em 2024. Na sua história, correu em diversas categorias de assento único."),
+            ("PREMA Racing", "prema_logo", 57.0, 1000.0, "Itália", 15, 29, 23, "Fundada em 1983, é uma equipe italiana de automobilismo que atualmente compete nos Campeonatos de Fórmula 2 e Fórmula 3, bem como na IndyCar Series."),
+            ("ART Grand Prix", "art_logo", 46.0, 1000.0, "França", 14, 22, 31, "Fundada em 1996 como ASM Formule 3 e renomeada para ART Grand Prix em 2005, a equipe francesa atualmente participa dos Campeonatos de Fórmula 2 e Fórmula 3."),
+            ("AIX Racing", "aix_logo", 11.0, 100.0, "Emirados Árabes Unidos / Alemanha", 0, 3, 5, "Fundada em 2024, a equipe Emirado-Alemã AIX Racing participa atualmente dos Campeonatos de Fórmula 2 e Fórmula 3 da FIA. A equipe surgiu a partir da aquisição das operações de Fórmula 2 e Fórmula 3 da PHM Racing pela AIX Investment Group."),
+            ("Van Amersfoort Racing", "var_logo", 10.0, 200.0, "Holanda", 0, 2, 5, "Fundada em 1975, a equipe holandesa Van Amersfoort Racing (VAR) ingressou na Fórmula 2 da FIA em 2022. Atualmente, compete nos Campeonatos de Fórmula 2 e Fórmula 3, além de outras categorias de base."),
+            ("TRIDENT", "trident_logo", 1.0, 200.0, "Itália", 0, 1, 5, "Fundada em 2006, a equipe italiana Trident Motorsport atualmente participa dos Campeonatos de Fórmula 2 e Fórmula 3.")
         ]
         
         for team in f2Teams {
-            await database.addScuderia(name: team.0, logo: team.1, points: team.2, idFormula: f2Id)
+            await database.addScuderia(
+                name: team.0,
+                logo: team.1,
+                points: team.2,
+                historicPoints: Int16(team.3),
+                idFormula: f2Id,
+                country: team.4,
+                pole: Int16(team.5),
+                victory: Int16(team.6),
+                podium: Int16(team.7),
+                details: team.8
+            )
         }
         
         //        let f3Teams = [
@@ -376,34 +389,35 @@ class CloudKitSeed {
             return
         }
         
-        let glossaryTerms: [(title: String, subtitle: String, details: String)] = [
-            ("DRS", "Sistema de Redução de Arrasto", "Uma aba móvel na asa traseira que reduz o arrasto e aumenta a velocidade em linha reta."),
-            ("ERS", "Sistema de Recuperação de Energia", "Um sistema que recupera energia da frenagem e do calor do escapamento para fornecer potência extra."),
-            ("Pole Position", "Posição de Largada", "A primeira posição no grid de largada, concedida ao piloto mais rápido na classificação."),
-            ("Fastest Lap", "Volta Mais Rápida", "O tempo de volta mais rápido registrado durante uma corrida, muitas vezes recompensado com um ponto extra no campeonato."),
-            ("DNF", "Não Completou", "Quando um piloto não consegue completar a corrida devido a falha mecânica, acidente ou outros problemas."),
-            ("DNS", "Não Largou", "Quando um piloto não consegue iniciar a corrida."),
-            ("DSQ", "Desclassificado", "Quando um piloto é excluído dos resultados da corrida por violar regras."),
-            ("Safety Car", "Carro de Segurança", "Um carro enviado à pista para reduzir a velocidade do pelotão em condições perigosas."),
-            ("Virtual Safety Car", "Carro Virtual de Segurança", "Um sistema eletrônico que limita a velocidade dos pilotos durante períodos de advertência."),
-            ("Pit Stop", "Parada nos Boxes", "Uma parada planejada no pit lane para troca de pneus, reabastecimento ou reparos."),
-            ("Undercut", "Undercut", "Ganhar posição na pista parando antes de um rival e usando pneus novos."),
-            ("Overcut", "Overcut", "Ficar mais tempo na pista do que os rivais para ganhar posição através da estratégia de pneus."),
-            ("Slipstream", "Efeito Esteira", "Andar muito próximo de outro carro para reduzir a resistência do ar e aumentar a velocidade."),
-            ("Dirty Air", "Ar Sujo", "Fluxo de ar turbulento atrás de um carro que reduz a pressão aerodinâmica dos veículos que vêm atrás."),
-            ("Apex", "Vértice", "O ponto mais interno de uma curva onde os pilotos procuram posicionar o carro."),
-            ("Chicane", "Chicane", "Uma sequência de curvas fechadas projetadas para reduzir a velocidade dos carros."),
-            ("Kerb", "Zebra", "Faixas elevadas ou pintadas que marcam o limite da pista."),
-            ("Marshals", "Comissários", "Voluntários que garantem a segurança e fazem cumprir as regras durante os eventos de corrida."),
-            ("Parc Fermé", "Parc Fermé", "Regras que limitam as modificações no carro entre a classificação e a corrida."),
-            ("Formation Lap", "Volta de Formação", "Uma volta realizada antes da largada para aquecer os pneus e verificar as condições.")
+        let glossaryTerms = [
+            ("Drag Reduction System (DRS)", "Sistema de Redução de Arrasto", "Uma aba móvel na asa traseira que reduz o arrasto e aumenta a velocidade em linha reta.", "drs_image"),
+            ("Energy Recovery System (ERS)", "Sistema de Recuperação de Energia", "Um sistema que recupera energia da frenagem e do calor do escapamento para fornecer potência extra.", "ers_image"),
+            ("Pole Position", "Posição de Largada", "A primeira posição no grid de largada, concedida ao piloto mais rápido na classificação.", "polePosition_image"),
+            ("Fastest Lap", "Volta Mais Rápida", "O tempo de volta mais rápido registrado durante uma corrida, muitas vezes recompensado com um ponto extra no campeonato.", "fastestLap_image"),
+            ("Did Not Finish (DNF)", "Não Completou", "Quando um piloto não consegue completar a corrida devido a falha mecânica, acidente ou outros problemas.", "dnf_image"),
+            ("Did Not Starte (DNS)", "Não Largou", "Quando um piloto não consegue iniciar a corrida.", "dns_image"),
+            ("Disqualified (DSQ)", "Desclassificado", "Quando um piloto é excluído dos resultados da corrida por violar regras.", "dsq_image"),
+            ("Safety Car (SC)", "Carro de Segurança", "Um carro enviado à pista para reduzir a velocidade do pelotão em condições perigosas.", "safetyCar_image"),
+            ("Virtual Safety Car (VSC)", "Carro Virtual de Segurança", "Um sistema eletrônico que limita a velocidade dos pilotos durante períodos de advertência.", "virtualSafetyCar_image"),
+            ("Pit Stop", "Parada nos Boxes", "Uma parada planejada no pit lane para troca de pneus, reabastecimento ou reparos.", "pitStop_image"),
+            ("Undercut", "Undercut", "Ganhar posição na pista parando antes de um rival e usando pneus novos.", "undercut_image"),
+            ("Overcut", "Overcut", "Ficar mais tempo na pista do que os rivais para ganhar posição através da estratégia de pneus.", "overcut_image"),
+            ("Slipstream", "Efeito Esteira", "Andar muito próximo de outro carro para reduzir a resistência do ar e aumentar a velocidade.", "slipstream_image"),
+            ("Dirty Air", "Ar Sujo", "Fluxo de ar turbulento atrás de um carro que reduz a pressão aerodinâmica dos veículos que vêm atrás.", "dirtyAir_image"),
+            ("Apex", "Vértice", "O ponto mais interno de uma curva onde os pilotos procuram posicionar o carro.", "apex_image"),
+            ("Chicane", "Chicane", "Uma sequência de curvas fechadas projetadas para reduzir a velocidade dos carros.", "chicane_image"),
+            ("Kerb", "Zebra", "Faixas elevadas ou pintadas que marcam o limite da pista.", "kerb_image"),
+            ("Marshals", "Comissários", "Voluntários que garantem a segurança e fazem cumprir as regras durante os eventos de corrida.", "marshals_image"),
+            ("Parc Fermé", "Parc Fermé", "Regras que limitam as modificações no carro entre a classificação e a corrida.", "parcFerme_image"),
+            ("Formation Lap", "Volta de Formação", "Uma volta realizada antes da largada para aquecer os pneus e verificar as condições.", "formationLap_image")
         ]
 
         for term in glossaryTerms {
             await database.addGlossaryTerm(
-                title:    term.title,
-                details:  term.details,
-                subtitle: term.subtitle,
+                title: term.0,
+                details: term.2,
+                subtitle: term.1,
+                image: term.3
             )
         }
     }
@@ -668,16 +682,21 @@ class CloudKitSeed {
         }
         
         let components = [
-            ("Engine", "High-performance combustion engine", "engine_image"),
-            ("Gearbox", "Seamless-shift transmission", "gearbox_image"),
-            ("Chassis", "Carbon fiber monocoque chassis", "chassis_image"),
-            ("Suspension", "Pushrod suspension system", "suspension_image"),
-            ("Brakes", "Carbon ceramic brake discs", "brakes_image"),
-            ("Aerodynamics", "Front and rear wing package", "aero_image"),
-            ("Tires", "Pirelli racing slicks", "tire_image")
+            ("Motor", "O motor é a base do carro de Fórmula 2, e por se tratar de uma categoria de especificação, deve ser o mesmo em todos os carros do grid.", "Os motores atuais são motores V6 turboalimentados de 3,4 L são fornecidos pela Mecachrome. Funcionam com combustível sustentável avançado da Aramco e incorporam um sistema de acelerador fly-by-wire, produzindo 620 cavalos de potência a 8.750 rpm.", "engine_image"),
+            ("Câmbio", "O câmbio é responsável pelas trocas de marcha durante a pilotagem e influencia diretamente no desempenho do carro em aceleração e retomada.", "Todos os carros utilizam um câmbio de seis marchas com trocas sequenciais sem interrupção (seamless shift), operado por paddle shifters localizados atrás do volante.", "gearbox_image"),
+            ("Chassi", "O chassi é a estrutura central do carro, projetado para ser leve, resistente e garantir a segurança do piloto.", "Os carros da Fórmula 2 utilizam um chassi monocoque em fibra de carbono, desenvolvido pela Dallara, que atende aos mais altos padrões de segurança da FIA.", "chassis_image"),
+            ("Suspensão", "A suspensão é responsável por manter o contato dos pneus com o solo, absorver impactos e garantir estabilidade nas curvas.", "A Fórmula 2 utiliza um sistema de suspensão do tipo pushrod, tanto na dianteira quanto na traseira, ajustável para diferentes condições de pista.", "suspension_image"),
+            ("Freios", "O sistema de freios é essencial para o controle do carro, especialmente em frenagens fortes durante as corridas.", "Os carros são equipados com discos de freio de carbono-carbono (carbon ceramic) e pinças de alumínio da Brembo, oferecendo alta resistência térmica e desempenho constante.", "brakes_image"),
+            ("Aerodinâmica", "A aerodinâmica ajuda a manter o carro estável em alta velocidade, gerando pressão contra o solo (downforce).", "O pacote aerodinâmico da Fórmula 2 inclui asas dianteiras e traseiras ajustáveis, projetadas para maximizar o equilíbrio entre velocidade em reta e aderência em curvas.", "aero_image"),
+            ("Pneus", "Os pneus são o único ponto de contato entre o carro e o asfalto, sendo fundamentais para desempenho e estratégia de corrida.", "A Fórmula 2 utiliza pneus slick e de chuva fornecidos exclusivamente pela Pirelli, com compostos que variam de acordo com a etapa da temporada.", "tire_image")
         ]
         for comp in components {
-            await database.addComponent(name: comp.0, details: comp.1, image: comp.2)
+            await database.addComponent(
+                name: comp.0,
+                details: comp.1,
+                property: comp.2,
+                image: comp.3,
+            )
         }
     }
     
