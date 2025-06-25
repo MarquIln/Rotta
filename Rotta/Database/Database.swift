@@ -71,8 +71,8 @@ class Database {
         return await scuderiaService.getByFormula(idFormula: idFormula)
     }
     
-    func addScuderia(name: String, logo: String, points: Double, idFormula: UUID, country: String, victory: Int16, podium: Int16, details: String) async {
-        await scuderiaService.add(name: name, logo: logo, points: points, idFormula: idFormula, country: country, victory: victory, podium: podium, details: details)
+    func addScuderia(name: String, logo: String, points: Double, historicPoints: Int16, idFormula: UUID, country: String, pole: Int16, victory: Int16, podium: Int16, details: String) async {
+        await scuderiaService.add(name: name, logo: logo, points: points, historicPoints: historicPoints, idFormula: idFormula, country: country, pole: pole, victory: victory, podium: podium, details: details)
     }
     
     // MARK: - Event Functions
@@ -173,8 +173,8 @@ class Database {
         return await glossaryService.get(by: id)
     }
     
-    func addGlossaryTerm(title: String? = nil, details: String? = nil, subtitle: String? = nil) async {
-        await glossaryService.add(title: title, details: details, subtitle: subtitle)
+    func addGlossaryTerm(title: String? = nil, details: String? = nil, subtitle: String? = nil, image: String? = nil) async {
+        await glossaryService.add(title: title, details: details, subtitle: subtitle, image: image)
     }
     
     func deleteAllRecords(of recordTypes: [String]) async {
