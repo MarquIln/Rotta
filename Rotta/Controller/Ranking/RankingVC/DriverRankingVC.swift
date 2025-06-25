@@ -61,8 +61,12 @@ class DriverRankingVC: UIViewController, DriverRankingTableViewDelegate {
         impactFeedback.prepare()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+      navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
+
     override func viewWillDisappear(_ animated: Bool) {
-        navigationController?.isNavigationBarHidden = true
+      navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
     override func viewDidLayoutSubviews() {

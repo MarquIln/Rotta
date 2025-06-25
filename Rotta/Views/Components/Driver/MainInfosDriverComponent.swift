@@ -81,7 +81,7 @@ class MainInfosDriverComponent: UIView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
-        imageView.image = UIImage(named: "rodin")
+        imageView.image = UIImage(named: scuderia)
         imageView.backgroundColor = .clear
         imageView.isOpaque = false
         
@@ -120,7 +120,7 @@ class MainInfosDriverComponent: UIView {
         stack.axis = .horizontal
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.alignment = .fill
-        stack.distribution = .fill
+        stack.distribution = .fillProportionally
         return stack
     }()
     

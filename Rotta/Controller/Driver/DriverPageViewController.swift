@@ -7,9 +7,16 @@
 import UIKit
 class DriverPageViewController: UIViewController {
     private let driver: DriverModel
+    private var country: String
+    private var number: Int16
+    private var scuderiaLogo: String
+    private var height: String
+    private var birthDate: String
+    private var championship: String
+    private var details: String
     
     lazy var imagebackground: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "leonardo_fornaroli"))
+        let imageView = UIImageView(image: UIImage(named: driver.name))
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -39,7 +46,7 @@ class DriverPageViewController: UIViewController {
         button.tintColor = .rottaYellow
         button.layer.cornerRadius = 16
         button.clipsToBounds = true
-//        button.backgroundColor = .rottaYellow
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
         
         return button
@@ -51,7 +58,8 @@ class DriverPageViewController: UIViewController {
     
     lazy var NameLabel: UILabel = {
         let label = UILabel()
-        label.text = "Leonardo Fornaroli"
+//        label.text = "Leonardo Fornaroli"
+        label.text = driver.name
         label.textColor = .labelsPrimary
         label.font = Fonts.Title1
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -59,31 +67,25 @@ class DriverPageViewController: UIViewController {
     }()
     
     lazy var mainInfos: MainInfosDriverComponent = {
-        let driver = MainInfosDriverComponent(country: "itália", driverNumber: 1, scuderia: "Invicta")
+        let driver = MainInfosDriverComponent(country: self.country, driverNumber: self.number, scuderia: self.scuderiaLogo)
         driver.translatesAutoresizingMaskIntoConstraints = false
         return driver
     }()
     
     lazy var heightAndBirth: HeightAndBornComponent = {
-        let driver = HeightAndBornComponent(height: "1,80", birthDate: "03.12.2004")
+        let driver = HeightAndBornComponent(height: height, birthDate: birthDate)
         driver.translatesAutoresizingMaskIntoConstraints = false
         return driver
     }()
     
     lazy var champion: ChampionComponent = {
-        let driver = ChampionComponent(champion: "Campeonato de fórmula 3 da FIA de 2024")
+        let driver = ChampionComponent(champion: championship)
         driver.translatesAutoresizingMaskIntoConstraints = false
         return driver
     }()
     
     lazy var descriptionComponent: DescriptionComponent = {
-        let description = DescriptionComponent(description: "Campeão da Fórmula 3 da FIA em 2024, com duas pole positions e sete pódios. Em 2023, terminou em 11º na F3 e foi o novato mais bem colocado no Europeu de Fórmula Regional, ficando em 8º com 83 pontos. Em 2025, passou a correr pela Champions Invicta Racing, após participar do teste pós-temporada e da etapa final em Yas Marina com a Rodin Motorsport.Campeão da Fórmula 3 da FIA em 2024, com duas pole positions e sete pódios. Em 2023, terminou em 11º na F3 e foi o novato mais bem colocado no Europeu de Fórmula Regional, ficando em 8º com 83 pontos. Em 2025, passou a correr pela Champions Invicta Racing, após participar do teste pós-temporada e da etapa final em Yas Marina com a Rodin Motorsport.Campeão da Fórmula 3 da FIA em 2024, com duas pole positions e sete pódios. Em 2023, terminou em 11º na F3 e foi o novato mais bem colocado no Europeu de Fórmula Regional, ficando em 8º com 83 pontos. Em 2025, passou a correr pela Champions Invicta Racing, após participar do teste pós-temporada e da etapa final em Yas Marina com a Rodin Motorsport.")
-        description.translatesAutoresizingMaskIntoConstraints = false
-        return description
-    }()
-    
-    lazy var descriptionComponent2: DescriptionComponent = {
-        let description = DescriptionComponent(description: "Campeão da Fórmula 3 da FIA em 2024, com duas pole positions e sete pódios. Em 2023, terminou em 11º na F3 e foi o novato mais bem colocado no Europeu de Fórmula Regional, ficando em 8º com 83 pontos. Em 2025, passou a correr pela Champions Invicta Racing, após participar do teste pós-temporada e da etapa final em Yas Marina com a Rodin Motorsport.Campeão da Fórmula 3 da FIA em 2024, com duas pole positions e sete pódios. Em 2023, terminou em 11º na F3 e foi o novato mais bem colocado no Europeu de Fórmula Regional, ficando em 8º com 83 pontos. Em 2025, passou a correr pela Champions Invicta Racing, após participar do teste pós-temporada e da etapa final em Yas Marina com a Rodin Motorsport.Campeão da Fórmula 3 da FIA em 2024, com duas pole positions e sete pódios. Em 2023, terminou em 11º na F3 e foi o novato mais bem colocado no Europeu de Fórmula Regional, ficando em 8º com 83 pontos. Em 2025, passou a correr pela Champions Invicta Racing, após participar do teste pós-temporada e da etapa final em Yas Marina com a Rodin Motorsport.")
+        let description = DescriptionComponent(description: details)
         description.translatesAutoresizingMaskIntoConstraints = false
         return description
     }()
@@ -102,6 +104,14 @@ class DriverPageViewController: UIViewController {
         return cv
     }()
     
+    private let dateFormatter: DateFormatter = {
+        let fmt = DateFormatter()
+        fmt.locale = Locale(identifier: "pt_BR")
+        fmt.timeZone = TimeZone(secondsFromGMT: 0)
+        fmt.dateFormat = "dd/MM/yyyy"
+        return fmt
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .raceFormula2
@@ -110,6 +120,7 @@ class DriverPageViewController: UIViewController {
         
         addGradientGlossary()
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+        navigationController?.setNavigationBarHidden(false, animated: false)
         
         title = "Pilotos"
         
@@ -122,6 +133,43 @@ class DriverPageViewController: UIViewController {
     
     init(driver: DriverModel) {
         self.driver = driver
+        print(driver)
+        self.country = driver.country ?? "Unknown"
+        if let country = driver.country {
+            self.country = country
+        }
+        
+        self.number = driver.number ?? 0
+        if let number = driver.number {
+            self.number = number
+        }
+        
+        self.scuderiaLogo = driver.scuderiaLogo ?? "Unknown"
+        if let scuderiaLogo = driver.scuderiaLogo {
+            self.scuderiaLogo = scuderiaLogo
+        }
+        
+        self.height = driver.height ?? "Unknown"
+        if let height = driver.height {
+            self.height = height
+        }
+        
+        if let date = driver.birthDate {
+          birthDate = dateFormatter.string(from: date)
+        } else {
+            birthDate = "--/--/----"
+        }
+        
+        self.championship = driver.championship ?? "Unknown"
+        if let championship = driver.championship {
+            self.championship = championship
+        }
+        
+        self.details = driver.details ?? "Unknown"
+        if let details = driver.details {
+            self.championship = details
+        }
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -156,7 +204,6 @@ extension DriverPageViewController: ViewCodeProtocol {
         contentView.addSubview(heightAndBirth)
         contentView.addSubview(champion)
         contentView.addSubview(descriptionComponent)
-        contentView.addSubview(descriptionComponent2)
     }
     
     func setupConstraints() {
@@ -188,8 +235,9 @@ extension DriverPageViewController: ViewCodeProtocol {
             contentView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
             
             NameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 265),
-            NameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            NameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            NameLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+//            NameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+//            NameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
 //            NameLabel.bottomAnchor.constraint(equalTo: contentView.topAnchor, constant: 265),
             
             mainInfos.topAnchor.constraint(equalTo: NameLabel.bottomAnchor, constant: 20),
@@ -210,11 +258,7 @@ extension DriverPageViewController: ViewCodeProtocol {
             descriptionComponent.topAnchor.constraint(equalTo: champion.bottomAnchor, constant: 20),
             descriptionComponent.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             descriptionComponent.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            
-            descriptionComponent2.topAnchor.constraint(equalTo: descriptionComponent.bottomAnchor, constant: 20),
-            descriptionComponent2.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            descriptionComponent2.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            descriptionComponent2.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
+            descriptionComponent.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
         ])
     }
 }
