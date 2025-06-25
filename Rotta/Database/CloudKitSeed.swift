@@ -180,20 +180,20 @@ class CloudKitSeed {
     private func seedAllDrivers() async {
         print("Seeding drivers...")
         
-        // Verificar se já existem drivers
         let existingDrivers = await database.getAllDrivers()
         if !existingDrivers.isEmpty {
             print("Drivers already exist, skipping...")
             return
         }
         
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
         let formulas = await database.getAllFormulas()
         guard let f2Id = formulas.first(where: { $0.name == "Formula 2" })?.id else {
             print("Formulas not found")
             return
         }
-        
-        let allScuderias = await database.getAllScuderias()
         //
         //        let f1AcademyDrivers = [
         //            ("Maya Weug", "Spain", 47, "Campos Racing", 64.0),
@@ -227,28 +227,28 @@ class CloudKitSeed {
         //        }
         
         let f2Drivers = [
-            ("Alex Dunne", "Ireland", 1, "MP Motorsport", 87.0),
-            ("Richard Verschoor", "Netherlands", 2, "MP Motorsport", 84.0),
-            ("Arvid Lindblad", "United Kingdom", 3, "DAMS Lucas Oil", 79.0),
-            ("Jak Crawford", "United States", 4, "DAMS Lucas Oil", 73.0),
-            ("Luke Browning", "United Kingdom", 5, "Hitech TGR", 73.0),
-            ("Leonardo Fornaroli", "Argentina", 6, "Invicta Racing", 66.0),
-            ("Josep Maria Marti", "Spain", 7, "Campos Racing", 49.0),
-            ("Victor Martins", "France", 8, "ART Grand Prix", 41.0),
-            ("Sebastian Montoya", "Colombia", 9, "Campos Racing", 36.0),
-            ("Dino Beganovic", "Sweden", 10, "Rodin Motorsport", 29.0),
-            ("Kush Maini", "India", 11, "Invicta Racing", 21.0),
-            ("Gabriele Mini", "Italy", 12, "PREMA Racing", 21.0),
-            ("Enzo Gomes", "Brazil", 13, "Hitech TGR", 12.0),
-            ("Roman Stanek", "Czech Republic", 14, "Invicta Racing", 12.0),
-            ("Joshua Durksen", "Paraguay", 15, "AIX Racing", 11.0),
-            ("Rafael Villagomez", "Mexico", 16, "Van Amersfoort Racing", 10.0),
-            ("Miyata Shingo", "Japan", 17, "ART Grand Prix", 5.0),
-            ("Amaury Cordeel", "Belgium", 18, "TRIDENT", 2.0),
-            ("Sami Meguetounif", "France", 19, "TRIDENT", 1.0),
-            ("Taylor Barnard", "United Kingdom", 20, "Rodin Motorsport", 0.0),
-            ("Paul Aron", "Estonia", 21, "PREMA Racing", 0.0),
-            ("Isack Hadjar", "France", 22, "Van Amersfoort Racing", 0.0)
+            ("Leonardo Fornaroli", "Argentina", 1, 66, "Invicta Racing", "1.80", "2004-12-03", "Campeonato de Fórmula 3 da FIA de 2024", "Campeão da Fórmula 3 da FIA em 2024, com duas pole positions e sete pódios. Em 2023, terminou em 11º na F3 e foi o novato mais bem colocado no Europeu de Fórmula Regional, ficando em 8º com 83 pontos. Em 2025, passou a correr pela Champions Invicta Racing, após participar do teste pós-temporada e da etapa final em Yas Marina com a Rodin Motorsport."),
+            ("Roman Stanek", "Czech Republic", 2, 12, "Invicta Racing", "1.78", "2004-02-25", "ADAC Formula 4 Rookie Championship de 2019", "Campeão da categoria de novatos na ADAC Formula 4 em 2019, com três vitórias e nove pódios. Em 2022 terminou em 5º lugar na FIA Fórmula 3 com a Trident, vencendo uma corrida e conquistando uma pole. Subiu para a Fórmula 2 em 2023 com a Trident, registrou sua primeira vitória na Corrida Sprint de Melbourne em 2024, e em 2025 está na Invicta Racing ao lado de Leonardo Fornaroli."),
+            ("Josep Maria Martí", "Spain", 3, 49, "Campos Racing", "1.85", "2005-06-13", "Campeão Rookie na Fórmula Regional Asiática em 2022", "Campeão da categoria de novatos na F4 Española em 2021, com duas vitórias, nove pódios e três poles; em 2022 vice-campeão da Fórmula Regional Asiática; em 2023 obteve três vitórias e quatro pódios na FIA F3, terminando em 5º; em 2024 estreou na Fórmula 2 com a Campos Racing, somando uma vitória em Abu Dhabi e quatro pódios, e continuará na F2 em 2025."),
+            ("Arvid Lindblad", "United Kingdom", 4, 79, "Campos Racing", "1.85", "2007-08-08", "Formula Regional Oceania Championship de 2025", "Campeão da Fórmula Regional Oceania em 2025 com a M2 Competition; foi campeão do WSK Super Master Series OK‑J e das WSK Euro Series no kart; em 2023 conquistou a Macau F4 World Cup; em 2024 foi estreante de destaque na FIA F3, vencendo quatro corridas e ficando em 4º no geral, além de levar o prêmio Aramco Best Rookie; em 2025 subiu à Fórmula 2 com a Campos Racing."),
+            ("Oliver Goethe", "Germany", 5, 12, "MP Motorsport", "1.73", "2004-10-14", "Euroformula Open Championship de 2022", "Campeão da Euroformula Open em 2022 com a equipe Motopark, vencendo 11 das 26 corridas da temporada e garantindo o título com vitória em Barcelona. Em 2023, conquistou sua primeira vitória na FIA Fórmula 3 no circuito de Silverstone e também marcou pódios importantes, incluindo em Macau, em 2024."),
+            ("Richard Verschoor", "Netherlands", 6, 84, "MP Motorsport", "1.87", "2000-12-16", "Campeonato Espanhol de F4 de 2016", "Campeão da F4 Spanish Championship em 2016, Richard Verschoor iniciou sua carreira com grandes resultados, conquistando várias vitórias e pódios. Desde então, progrediu pelas categorias de base até chegar à Fórmula 2, onde compete desde 2022, acumulando pódios e vitórias em corridas."),
+            ("Luke Browning", "United Kingdom", 7, 73, "Hitech TGR", "1.79", "2002-01-31", "GB3 Championship de 2021", "Campeão do GB3 Championship em 2021, Luke Browning se destacou com múltiplas vitórias e pódios durante a temporada. Desde então, tem progredido nas categorias de base do automobilismo, competindo em campeonatos como a Fórmula 3 e Fórmula 2, demonstrando grande potencial."),
+            ("Dino Beganovic", "Sweden", 8, 29, "Hitech TGR", "1.83", "2004-01-19", "Fórmula Regional European Championship de 2021", "Campeão do Fórmula Regional European Championship em 2021, Dino Beganovic conquistou várias vitórias e pódios ao longo da temporada. Desde então, tem evoluído nas categorias de base, competindo na FIA Fórmula 3 e seguindo para níveis mais altos do automobilismo."),
+            ("Sebastián Montoya", "Colombia", 9, 36, "PREMA Racing", "1.80", "2005-04-11", "Fórmula Regional European Championship de 2022", "Campeão do Fórmula Regional European Championship em 2022, Sebastián Montoya se destacou com diversas vitórias e pódios na temporada. Desde então, tem avançado para categorias superiores, competindo na FIA Fórmula 3 e mostrando grande potencial para o futuro."),
+            ("Gabriele Minì", "Italy", 10, 21, "PREMA Racing", "1.70", "2005-03-20", "Campeonato Italiano de F4 de 2019", "Campeão do F4 Italian Championship em 2019, Gabriele Minì teve uma temporada dominante com várias vitórias e pódios. Após esse sucesso, avançou para categorias superiores como a FIA Fórmula 3, continuando a desenvolver seu talento no automobilismo."),
+            ("Jak Crawford", "United States", 11, 73, "DAMS Lucas Oil", "1.82", "2005-05-02", "ADAC Formula 4 Championship de 2021", "Campeão do ADAC Formula 4 Championship em 2021, Jak Crawford se destacou por sua velocidade e consistência, conquistando várias vitórias e pódios durante a temporada. Desde então, tem avançado nas categorias de base do automobilismo, competindo na FIA Fórmula 3 e buscando novos desafios."),
+            ("Kush Maini", "India", 12, 21, "Dams Lucas Oil", "1.71", "2000-09-22", "Fórmula Regional Asian Championship de 2020", "Campeão da Fórmula Regional Asian Championship em 2020, Kush Maini teve uma temporada sólida com várias vitórias e pódios. Desde então, ele tem competido em categorias como a FIA Fórmula 3, mostrando grande potencial e consistência em sua carreira no automobilismo."),
+            ("Victor Martins", "France", 14, 41, "ART Grand Prix", "1.73", "2001-06-16", "FIA Fórmula 3 de 2022", "Campeão da FIA Fórmula 3 em 2022 com a ART Grand Prix, Victor Martins conquistou o título após uma disputa acirrada na última rodada em Monza. Com uma performance sólida durante toda a temporada, ele garantiu o campeonato mesmo após uma penalização de 5 segundos na corrida final. Desde então, Martins avançou para a Fórmula 2, onde compete com a ART Grand Prix, buscando consolidar sua carreira no automobilismo."),
+            ("Ritomo Miyata", "Japan", 15, 5, "ART Grand Prix", "1.71", "1999-08-10", "Super Formula Championship de 2023", "Campeão da Super Formula em 2023 com a TOM'S, Ritomo Miyata teve uma temporada dominante no Japão, conquistando várias vitórias e pódios. Também foi campeão da Super GT (classe GT500) em 2022, mostrando grande versatilidade. Em 2024, estreou na Europa, participando de eventos do World Endurance Championship e testes na Fórmula 2, buscando ampliar sua carreira internacional."),
+            ("Amaury Cordeel", "Belgium", 16, 2, "Rodin Motorsport", "1.74", "2002-07-09", "Campeonato Espanhol de F4 de 2018", "Amaury Cordeel construiu sua carreira competindo em categorias como a Fórmula 4 Espanhola, onde obteve vitórias e pódios, além de disputar a Fórmula 3 e a Fórmula 2. Conhecido por sua consistência e velocidade, continua em evolução na Fórmula 2, buscando conquistar seu primeiro título em nível internacional."),
+            ("Alexander Dunne", "Ireland", 17, 87, "Rodin Motorsport", "1.81", "2005-11-11", "Campeonato Britânico de F4 de 2022.", "Campeão dominante do Campeonato Britânico de F4 em 2022, Alexander Dunne venceu a temporada com grande vantagem, acumulando várias vitórias e pódios. No mesmo ano, também foi vice-campeão na F4 Italiana. Desde então, continua sua trajetória nas categorias de base do automobilismo europeu, consolidando-se como um dos jovens talentos mais promissores."),
+            ("Joshua Dürksen", "Paraguay", 20, 11, "AIX Racing", "1.75", "2003-10-27", "Não possui vitórias em campeonatos de monopostos", "Joshua Dürksen acumulou vitórias e pódios em categorias como a Fórmula 4 Italiana e Alemã, mostrando velocidade e consistência. Segue competindo em categorias de base, como a Fórmula 3 e Fórmula 2, buscando seu primeiro grande título internacional."),
+            ("Cian Shields", "United Kingdom", 21, 0, "AIX Racing", "1.85", "2005-03-07", "IAME Series Benelux – X30 Junior de 2019", "Campeão da IAME Series Benelux na categoria X30 Junior em 2019, Cian Shields iniciou sua trajetória nos monopostos em 2022, competindo no GB3 Championship pela Hitech Grand Prix, onde conquistou uma vitória e dois pódios. Em 2023, foi vice-campeão da Euroformula Open pela Motopark, com quatro vitórias e dez pódios. Em 2024, estreou na FIA Fórmula 3 com a Hitech Pulse-Eight e participou das duas últimas rodadas da Fórmula 2 pela AIX Racing. Em 2025, disputa sua primeira temporada completa na Fórmula 2 com a AIX Racing."),
+            ("Sami Meguetounif", "France", 22, 1, "TRIDENT", "1.83", "2004-05-24", "Campeonato Francês de Kart na categoria Nacional (2017)", "Campeão francês de kart na categoria Nacional em 2017, Sami Meguetounif iniciou sua carreira nos monopostos em 2019. Em 2024, destacou-se na FIA Fórmula 3 com a Trident, conquistando vitórias nas corridas principais de Imola e Monza, encerrando a temporada em oitavo lugar no campeonato. Em 2025, avançou para a Fórmula 2, mantendo-se na equipe Trident, onde busca consolidar sua trajetória no automobilismo internacional."),
+            ("Max Esterson", "United States", 23, 0, "TRIDENT", "1.82", "2002-10-09", "Fórmula Ford Festival de 2022", "Campeão do Fórmula Ford Festival em 2022, primeiro americano a conquistar esse título. Desde então, avançou para a FIA Fórmula 3 e estreou na Fórmula 2 com a Trident."),
+            ("John Bennett", "United Kingdom", 24, 0, "Van Amersfoort Racing", "1.82", "2003-09-15", "Não possui vitórias em campeonatos de monopostos", "Vice-campeão do GB3 Championship em 2024. Estreou na Fórmula 2 no fim de 2024 e foi confirmado para temporada completa em 2025."),
+            ("Rafael Villagómez", "Mexico", 25, 10, "Van Amersfoort Racing", "1.68", "2001-11-10", "Não possui vitórias em campeonatos de monopostos", "Piloto mexicano que estreou na Fórmula 2 em 2024 com a Van Amersfoort Racing. Competiu em F4, Euroformula e FIA Fórmula 3 antes de subir para a F2."),
         ]
         
         func imageName(for fullName: String) -> String {
@@ -263,21 +263,27 @@ class CloudKitSeed {
         }
         
         for driver in f2Drivers {
-            if let scuderia = allScuderias.first(where: { $0.name == driver.3 && $0.idFormula == f2Id }) {
+            let date = dateFormatter.date(from: driver.6) ?? Date()
                 let driverImage = imageName(for: driver.0)
-                let scuderiaImage = imageName(for: driver.3)
+                let scuderiaImage = imageName(for: driver.4)
                 await database.addDriver(
                     name: driver.0,
                     country: driver.1,
                     number: Int16(driver.2),
-                    points: driver.4,
-                    scuderia: scuderia.id,
+                    points: Int16(driver.3),
+                    scuderia: driver.4,
                     idFormula: f2Id,
                     photo: driverImage,
-                    scuderiaLogo: scuderiaImage
+                    scuderiaLogo: scuderiaImage,
+                    height: driver.5,
+                    birthDate: date,
+                    championship: driver.7,
+                    details: driver.8
                 )
-            }
+            
         }
+        
+
         
         //        let f3Drivers = [
         //            ("Rafael Camara", "Brazil", 1, "Campos Racing", 105.0),
@@ -371,27 +377,27 @@ class CloudKitSeed {
         }
         
         let glossaryTerms: [(title: String, subtitle: String, details: String)] = [
-                    ("DRS", "Drag Reduction System", "A movable flap on the rear wing that reduces drag and increases straight-line speed."),
-                    ("ERS", "Energy Recovery System", "A system that recovers energy from braking and exhaust heat to provide additional power."),
-                    ("Pole Position", "Posição de Pista", "The first position on the starting grid, awarded to the fastest qualifier."),
-                    ("Fastest Lap", "Volta Mais Rápida", "The quickest lap time recorded during a race, often rewarded with an extra championship point."),
-                    ("DNF", "Did Not Finish", "When a driver fails to complete the race due to mechanical failure, accident, or other issues."),
-                    ("DNS", "Did Not Start", "When a driver is unable to start the race."),
-                    ("DSQ", "Disqualified", "When a driver is excluded from race results due to rule violations."),
-                    ("Safety Car", "Carro de Segurança", "A car deployed to slow down the field during dangerous conditions on track."),
-                    ("Virtual Safety Car", "Carro Virtual de Segurança", "An electronic system that limits drivers' speeds during caution periods."),
-                    ("Pit Stop", "Parada nos Boxes", "A planned stop in the pit lane for tire changes, fuel, or repairs."),
-                    ("Undercut", "Undercut", "Gaining track position by pitting earlier than a rival and using fresh tires."),
-                    ("Overcut", "Overcut", "Staying out longer than rivals to gain track position through tire strategy."),
-                    ("Slipstream", "Efeito esteira", "Following closely behind another car to reduce air resistance and increase speed."),
-                    ("Dirty Air", "Ar Turvo", "Disturbed airflow behind a car that reduces downforce for following vehicles."),
-                    ("Apex", "Vértice", "The innermost point of a corner where drivers aim to position their car."),
-                    ("Chicane", "Chicane", "A sequence of tight turns designed to slow cars down."),
-                    ("Kerb", "Meio-Fio", "Raised or painted strips marking the edge of the racing surface."),
-                    ("Marshals", "Comissários", "Volunteers who ensure safety and enforce rules during racing events."),
-                    ("Parc Fermé", "Parc Fermé", "Rules that limit car modifications between qualifying and race."),
-                    ("Formation Lap", "Volta de Formação", "A lap completed before the race start to warm up tires and check conditions.")
-                ]
+            ("DRS", "Sistema de Redução de Arrasto", "Uma aba móvel na asa traseira que reduz o arrasto e aumenta a velocidade em linha reta."),
+            ("ERS", "Sistema de Recuperação de Energia", "Um sistema que recupera energia da frenagem e do calor do escapamento para fornecer potência extra."),
+            ("Pole Position", "Posição de Largada", "A primeira posição no grid de largada, concedida ao piloto mais rápido na classificação."),
+            ("Fastest Lap", "Volta Mais Rápida", "O tempo de volta mais rápido registrado durante uma corrida, muitas vezes recompensado com um ponto extra no campeonato."),
+            ("DNF", "Não Completou", "Quando um piloto não consegue completar a corrida devido a falha mecânica, acidente ou outros problemas."),
+            ("DNS", "Não Largou", "Quando um piloto não consegue iniciar a corrida."),
+            ("DSQ", "Desclassificado", "Quando um piloto é excluído dos resultados da corrida por violar regras."),
+            ("Safety Car", "Carro de Segurança", "Um carro enviado à pista para reduzir a velocidade do pelotão em condições perigosas."),
+            ("Virtual Safety Car", "Carro Virtual de Segurança", "Um sistema eletrônico que limita a velocidade dos pilotos durante períodos de advertência."),
+            ("Pit Stop", "Parada nos Boxes", "Uma parada planejada no pit lane para troca de pneus, reabastecimento ou reparos."),
+            ("Undercut", "Undercut", "Ganhar posição na pista parando antes de um rival e usando pneus novos."),
+            ("Overcut", "Overcut", "Ficar mais tempo na pista do que os rivais para ganhar posição através da estratégia de pneus."),
+            ("Slipstream", "Efeito Esteira", "Andar muito próximo de outro carro para reduzir a resistência do ar e aumentar a velocidade."),
+            ("Dirty Air", "Ar Sujo", "Fluxo de ar turbulento atrás de um carro que reduz a pressão aerodinâmica dos veículos que vêm atrás."),
+            ("Apex", "Vértice", "O ponto mais interno de uma curva onde os pilotos procuram posicionar o carro."),
+            ("Chicane", "Chicane", "Uma sequência de curvas fechadas projetadas para reduzir a velocidade dos carros."),
+            ("Kerb", "Zebra", "Faixas elevadas ou pintadas que marcam o limite da pista."),
+            ("Marshals", "Comissários", "Voluntários que garantem a segurança e fazem cumprir as regras durante os eventos de corrida."),
+            ("Parc Fermé", "Parc Fermé", "Regras que limitam as modificações no carro entre a classificação e a corrida."),
+            ("Formation Lap", "Volta de Formação", "Uma volta realizada antes da largada para aquecer os pneus e verificar as condições.")
+        ]
 
         for term in glossaryTerms {
             await database.addGlossaryTerm(
@@ -437,15 +443,15 @@ class CloudKitSeed {
         //        }
         
         let f2Rules = [
-            ("Race Weekend Format", "Each weekend includes practice, qualifying, one sprint race, and one feature race."),
-            ("Points System", "Different points systems for feature races (25 for winner) and sprint races (15 for winner)."),
+            ("Race Weekend Format", "Each weekend includes practice, qualifying, one Corrida Sprint, and one feature race."),
+            ("Points System", "Different points systems for feature races (25 for winner) and Corrida Sprints (15 for winner)."),
             ("Car Specifications", "All teams use identical Dallara F2 2018 chassis with Mecachrome V6 engines."),
             ("DRS Usage", "Drivers can use DRS in designated zones when within 1 second of the car ahead."),
             ("Tire Regulations", "Pirelli provides soft, medium, and hard compounds. Drivers must use two diferentes compounds in feature races."),
             ("Fuel Regulations", "No refueling allowed durante races. Cars start with enough fuel for the entire race."),
-            ("Reverse Grid", "Sprint race grid is determined by reverse order of top 8 from qualifying."),
+            ("Reverse Grid", "Corrida Sprint grid is determined by reverse order of top 8 from qualifying."),
             ("Feature Race Duration", "Feature races run for approximately 45 minutes plus one additional lap."),
-            ("Sprint Race Duration", "Sprint races run for aproximadamente 25 minutes plus one additional lap."),
+            ("Corrida Sprint Duration", "Corrida Sprints run for aproximadamente 25 minutes plus one additional lap."),
             ("Mandatory Pit Stop", "Drivers must make at least one pit stop during feature races.")
         ]
         
@@ -501,7 +507,7 @@ class CloudKitSeed {
         
         //         let f1AcademyEvents = [
         //             ("Bahrain Grand Prix", "2025-03-02", "2025-03-03"),
-        //             ("Saudi Arabian Grand Prix", "2025-03-09", "2025-03-10"),
+        //             ("Arábia Sauditan Grand Prix", "2025-03-09", "2025-03-10"),
         //             ("Miami Grand Prix", "2025-05-04", "2025-05-05"),
         //             ("Monaco Grand Prix", "2025-05-25", "2025-05-26"),
         //             ("Spanish Grand Prix", "2025-06-22", "2025-06-23"),
@@ -514,88 +520,88 @@ class CloudKitSeed {
         
         let f2Events = [
             // Bahrain GP (round 1)
-            (1, "Bahrain", "Treino Livre 1", "2025-03-01", "08:00", "08:45"),
+            (1, "Bahrain", "Treino Livre", "2025-03-01", "08:00", "08:45"),
             (1, "Bahrain", "Classificação", "2025-03-01", "12:00", "12:30"),
-            (1, "Bahrain", "Sprint Race", "2025-03-02", "10:00", "10:45"),
-            (1, "Bahrain", "Feature Race", "2025-03-03", "07:00", "08:10"),
+            (1, "Bahrain", "Corrida Sprint", "2025-03-02", "10:00", "10:45"),
+            (1, "Bahrain", "Corrida Principal", "2025-03-03", "07:00", "08:10"),
             
-            // Saudi Arabian GP (round 2)
-            (2, "Saudi Arabia", "Treino Livre 1", "2025-03-08", "08:00", "08:45"),
-            (2, "Saudi Arabia", "Classificação", "2025-03-08", "12:00", "12:30"),
-            (2, "Saudi Arabia", "Sprint Race", "2025-03-09", "10:00", "10:45"),
-            (2, "Saudi Arabia", "Feature Race", "2025-03-10", "07:00", "08:10"),
+            // Arábia Saudita GP (round 2)
+            (2, "Arábia Saudita", "Treino Livre", "2025-03-08", "08:00", "08:45"),
+            (2, "Arábia Saudita", "Classificação", "2025-03-08", "12:00", "12:30"),
+            (2, "Arábia Saudita", "Corrida Sprint", "2025-03-09", "10:00", "10:45"),
+            (2, "Arábia Saudita", "Corrida Principal", "2025-03-10", "07:00", "08:10"),
             
             // Australian GP (round 3)
-            (3, "Australia", "Treino Livre 1", "2025-03-22", "22:00", "22:45"),
-            (3, "Australia", "Classificação", "2025-03-22", "06:30", "07:00"),
-            (3, "Australia", "Sprint Race", "2025-03-23", "23:15", "24:00"),
-            (3, "Australia", "Feature Race", "2025-03-24", "20:30", "21:40"),
+            (3, "Austrália", "Treino Livre", "2025-03-22", "22:00", "22:45"),
+            (3, "Austrália", "Classificação", "2025-03-22", "06:30", "07:00"),
+            (3, "Austrália", "Corrida Sprint", "2025-03-23", "23:15", "24:00"),
+            (3, "Austrália", "Corrida Principal", "2025-03-24", "20:30", "21:40"),
             
             // Imola GP (round 4)
-            (4, "Italy", "Treino Livre 1", "2025-05-16", "06:05", "06:50"),
-            (4, "Italy", "Classificação", "2025-05-16", "11:00", "11:30"),
-            (4, "Italy", "Sprint Race", "2025-05-17", "09:15", "10:00"),
-            (4, "Italy", "Feature Race", "2025-05-18", "05:00", "06:10"),
+            (4, "Itália", "Treino Livre", "2025-05-16", "06:05", "06:50"),
+            (4, "Itália", "Classificação", "2025-05-16", "11:00", "11:30"),
+            (4, "Itália", "Corrida Sprint", "2025-05-17", "09:15", "10:00"),
+            (4, "Itália", "Corrida Principal", "2025-05-18", "05:00", "06:10"),
             
             // Monaco GP (round 5)
-            (5, "Monaco", "Treino Livre 1", "2025-05-23", "01:00", "01:45"),
-            (5, "Monaco", "Classificação", "2025-05-23", "10:00", "10:30"),
-            (5, "Monaco", "Sprint Race", "2025-05-24", "10:10", "10:55"),
-            (5, "Monaco", "Feature Race", "2025-05-25", "04:40", "05:50"),
+            (5, "Mônaco", "Treino Livre", "2025-05-23", "01:00", "01:45"),
+            (5, "Mônaco", "Classificação", "2025-05-23", "10:00", "10:30"),
+            (5, "Mônaco", "Corrida Sprint", "2025-05-24", "10:10", "10:55"),
+            (5, "Mônaco", "Corrida Principal", "2025-05-25", "04:40", "05:50"),
             
             // Spanish GP (round 6)
-            (6, "Spain", "Treino Livre 1", "2025-05-30", "06:05", "06:50"),
-            (6, "Spain", "Classificação", "2025-05-30", "11:00", "11:30"),
-            (6, "Spain", "Sprint Race", "2025-05-31", "09:15", "10:00"),
-            (6, "Spain", "Feature Race", "2025-06-01", "05:00", "06:10"),
+            (6, "Espanha", "Treino Livre", "2025-05-30", "06:05", "06:50"),
+            (6, "Espanha", "Classificação", "2025-05-30", "11:00", "11:30"),
+            (6, "Espanha", "Corrida Sprint", "2025-05-31", "09:15", "10:00"),
+            (6, "Espanha", "Corrida Principal", "2025-06-01", "05:00", "06:10"),
             
             // Austrian GP (round 7)
-            (7, "Austria", "Treino Livre 1", "2025-06-27", "08:05", "08:50"),
+            (7, "Austria", "Treino Livre", "2025-06-27", "08:05", "08:50"),
             (7, "Austria", "Classificação", "2025-06-27", "12:55", "13:25"),
-            (7, "Austria", "Sprint Race", "2025-06-28", "11:15", "12:00"),
-            (7, "Austria", "Feature Race", "2025-06-29", "07:00", "08:00"),
+            (7, "Austria", "Corrida Sprint", "2025-06-28", "11:15", "12:00"),
+            (7, "Austria", "Corrida Principal", "2025-06-29", "07:00", "08:00"),
             
             // British GP (round 8)
-            (8, "UK", "Treino Livre 1", "2025-07-04", "07:30", "08:15"),
+            (8, "UK", "Treino Livre", "2025-07-04", "07:30", "08:15"),
             (8, "UK", "Classificação", "2025-07-04", "12:00", "12:30"),
-            (8, "UK", "Sprint Race", "2025-07-05", "10:30", "11:15"),
-            (8, "UK", "Feature Race", "2025-07-06", "07:00", "08:10"),
+            (8, "UK", "Corrida Sprint", "2025-07-05", "10:30", "11:15"),
+            (8, "UK", "Corrida Principal", "2025-07-06", "07:00", "08:10"),
             
             // Hungarian GP (round 9)
-            (9, "Hungary", "Treino Livre 1", "2025-07-18", "06:00", "06:45"),
-            (9, "Hungary", "Classificação", "2025-07-18", "11:00", "11:30"),
-            (9, "Hungary", "Sprint Race", "2025-07-19", "09:15", "10:00"),
-            (9, "Hungary", "Feature Race", "2025-07-20", "05:00", "06:10"),
+            (9, "Hungria", "Treino Livre", "2025-07-18", "06:00", "06:45"),
+            (9, "Hungria", "Classificação", "2025-07-18", "11:00", "11:30"),
+            (9, "Hungria", "Corrida Sprint", "2025-07-19", "09:15", "10:00"),
+            (9, "Hungria", "Corrida Principal", "2025-07-20", "05:00", "06:10"),
             
             // Belgian GP (round 10)
-            (10, "Belgium", "Treino Livre 1", "2025-07-25", "07:00", "07:45"),
-            (10, "Belgium", "Classificação", "2025-07-25", "12:00", "12:30"),
-            (10, "Belgium", "Sprint Race", "2025-07-26", "10:00", "10:45"),
-            (10, "Belgium", "Feature Race", "2025-07-27", "07:00", "08:10"),
+            (10, "Bélgica", "Treino Livre", "2025-07-25", "07:00", "07:45"),
+            (10, "Bélgica", "Classificação", "2025-07-25", "12:00", "12:30"),
+            (10, "Bélgica", "Corrida Sprint", "2025-07-26", "10:00", "10:45"),
+            (10, "Bélgica", "Corrida Principal", "2025-07-27", "07:00", "08:10"),
             
             // Netherlands GP (round 11)
-            (11, "Netherlands", "Treino Livre 1", "2025-08-22", "07:00", "07:45"),
-            (11, "Netherlands", "Classificação", "2025-08-22", "12:00", "12:30"),
-            (11, "Netherlands", "Sprint Race", "2025-08-23", "10:00", "10:45"),
-            (11, "Netherlands", "Feature Race", "2025-08-24", "07:00", "08:10"),
+            (11, "Holanda", "Treino Livre", "2025-08-22", "07:00", "07:45"),
+            (11, "Holanda", "Classificação", "2025-08-22", "12:00", "12:30"),
+            (11, "Holanda", "Corrida Sprint", "2025-08-23", "10:00", "10:45"),
+            (11, "Holanda", "Corrida Principal", "2025-08-24", "07:00", "08:10"),
             
             // Italian GP (round 12)
-            (12, "Italy", "Treino Livre 1", "2025-08-29", "06:05", "06:50"),
-            (12, "Italy", "Classificação", "2025-08-29", "11:00", "11:30"),
-            (12, "Italy", "Sprint Race", "2025-08-30", "09:15", "10:00"),
-            (12, "Italy", "Feature Race", "2025-08-31", "05:00", "06:10"),
+            (12, "Itália", "Treino Livre", "2025-08-29", "06:05", "06:50"),
+            (12, "Itália", "Classificação", "2025-08-29", "11:00", "11:30"),
+            (12, "Itália", "Corrida Sprint", "2025-08-30", "09:15", "10:00"),
+            (12, "Itália", "Corrida Principal", "2025-08-31", "05:00", "06:10"),
             
             // Azerbaijan GP (round 13)
-            (13, "Azerbaijan", "Treino Livre 1", "2025-09-13", "04:00", "04:45"),
-            (13, "Azerbaijan", "Classificação", "2025-09-13", "09:00", "09:30"),
-            (13, "Azerbaijan", "Sprint Race", "2025-09-14", "07:15", "08:00"),
-            (13, "Azerbaijan", "Feature Race", "2025-09-15", "04:00", "05:10"),
+            (13, "Azerbaijão", "Treino Livre", "2025-09-13", "04:00", "04:45"),
+            (13, "Azerbaijão", "Classificação", "2025-09-13", "09:00", "09:30"),
+            (13, "Azerbaijão", "Corrida Sprint", "2025-09-14", "07:15", "08:00"),
+            (13, "Azerbaijão", "Corrida Principal", "2025-09-15", "04:00", "05:10"),
             
             // Abu Dhabi GP (round 14)
-            (14, "UAE", "Treino Livre 1", "2025-12-06", "05:00", "05:45"),
+            (14, "UAE", "Treino Livre", "2025-12-06", "05:00", "05:45"),
             (14, "UAE", "Classificação", "2025-12-06", "10:00", "10:30"),
-            (14, "UAE", "Sprint Race", "2025-12-07", "08:15", "09:00"),
-            (14, "UAE", "Feature Race", "2025-12-08", "05:00", "06:10"),
+            (14, "UAE", "Corrida Sprint", "2025-12-07", "08:15", "09:00"),
+            (14, "UAE", "Corrida Principal", "2025-12-08", "05:00", "06:10"),
             
         ]
         

@@ -52,10 +52,10 @@ class ScuderiaView: UIView {
         positionLabel.text = "\(rank)"
         nameLabel.text = model.name
         pointsLabel.text = "\(Int(model.points)) pontos"
-        imageView.image = UIImage(systemName: "person.circle.fill")
+        imageView.image = UIImage(named: model.logo)
         if rank == 1 {
-            imageView.heightAnchor.constraint(equalToConstant: 80).isActive = true
-            imageView.widthAnchor.constraint(equalToConstant: 80).isActive = true
+            imageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
+            imageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
         } else {
             imageView.widthAnchor.constraint(equalToConstant: 60).isActive = true
             imageView.heightAnchor.constraint(equalToConstant: 60).isActive = true

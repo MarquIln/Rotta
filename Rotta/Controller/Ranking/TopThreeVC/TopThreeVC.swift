@@ -46,7 +46,7 @@ class TopThreeVC: UIViewController {
     @objc func seeAllScuderias() {
         let vc = ScuderiaRankingVC()
         vc.scuderias = scuderias
-        navigationController?.pushViewController(vc, animated: true)
+        navigationController?.pushViewController(vc, animated: false)
     }
 
     lazy var stackView: UIStackView = {

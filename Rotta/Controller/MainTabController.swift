@@ -19,6 +19,7 @@ class MainTabController: UIViewController {
         button.tintColor = .labelsPrimary
         button.semanticContentAttribute = .forceRightToLeft
         button.addTarget(self, action: #selector(didTapTitleSelector), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
         
         return button
     }()
@@ -215,11 +216,10 @@ extension MainTabController: ViewCodeProtocol {
     }
 
     func setupConstraints() {
-        titleSelectorButton.translatesAutoresizingMaskIntoConstraints = false
         segmented.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            titleSelectorButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 3),
+            titleSelectorButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 44),
             titleSelectorButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             
             dropdownView.topAnchor.constraint(equalTo: titleSelectorButton.bottomAnchor, constant: 4),

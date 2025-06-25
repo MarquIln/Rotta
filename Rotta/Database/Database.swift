@@ -54,8 +54,8 @@ class Database {
         return await driverService.getByScuderia(scuderiaId: scuderiaId)
     }
     
-    func addDriver(name: String, country: String, number: Int16, points: Double, scuderia: UUID, idFormula: UUID, photo: String, scuderiaLogo: String) async {
-        await driverService.add(name: name, country: country, number: number, points: points, scuderia: scuderia, idFormula: idFormula, photo: photo, scuderiaLogo: scuderiaLogo)
+    func addDriver(name: String, country: String, number: Int16, points: Int16, scuderia: String, idFormula: UUID, photo: String, scuderiaLogo: String, height: String, birthDate: Date, championship: String, details: String) async {
+        await driverService.add(name: name, country: country, number: number, points: Int16(points), scuderia: scuderia, idFormula: idFormula, photo: photo, scuderiaLogo: scuderiaLogo, height: height, birthDate: birthDate, championship: championship, details: details)
     }
     
     // MARK: - Scuderia Functions

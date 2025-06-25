@@ -21,6 +21,7 @@ class OpenCalendarComponent: UIView {
     
     private lazy var firstDay: TwoEventDayComponent = {
         var info = TwoEventDayComponent()
+        info.dayName = "A"
         info.translatesAutoresizingMaskIntoConstraints = false
         return info
     }()
@@ -110,7 +111,6 @@ class OpenCalendarComponent: UIView {
         guard !sortedEvents.isEmpty else { return }
 
         let defaultEvent = sortedEvents.first(where: { ($0.date ?? Date()) >= now }) ?? sortedEvents.first!
-
         let grouped = Dictionary(grouping: sortedEvents) { event in
             calendar.startOfDay(for: event.date ?? Date())
         }.sorted { $0.key < $1.key }
@@ -132,31 +132,15 @@ class OpenCalendarComponent: UIView {
             firstDay.firstEventTime = "\(first.startTime) - \(first.endTime)"
             firstDay.secondEventTitle = second.name
             firstDay.secondEventTime = "\(second.startTime) - \(second.endTime)"
-        } else if defaultDayEvents.count == 1 {
-            let only = defaultDayEvents[0]
-            firstDay.dayName = defaultDay.formatted(.dateTime.weekday(.abbreviated)).uppercased()
-            firstDay.dayNumber = "\(calendar.component(.day, from: defaultDay))"
-            firstDay.firstEventTitle = only.name
-            firstDay.firstEventTime = "\(only.startTime) - \(only.endTime)"
-            firstDay.secondEventTitle = ""
-            firstDay.secondEventTime = ""
-        } else {
-            firstDay.dayName = ""
-            firstDay.dayNumber = ""
-            firstDay.firstEventTitle = ""
-            firstDay.firstEventTime = ""
-            firstDay.secondEventTitle = ""
-            firstDay.secondEventTime = ""
         }
 
-        let otherDays = grouped.filter { $0.key != defaultDay }
+        let nextDay = calendar.date(byAdding: .day, value: 1, to: defaultDay)!
+        let dayAfterNext = calendar.date(byAdding: .day, value: 2, to: defaultDay)!
 
-        if otherDays.indices.contains(0) {
-            let day1 = otherDays[0]
-            let eventsDay1 = day1.value.sorted { $0.startTime < $1.startTime }
-            let event = eventsDay1[0]
-            thirdEventInfo.dayName = day1.key.formatted(.dateTime.weekday(.abbreviated)).uppercased()
-            thirdEventInfo.dayNumber = "\(calendar.component(.day, from: day1.key))"
+        if let nextDayGroup = grouped.first(where: { $0.key == nextDay }),
+           let event = nextDayGroup.value.sorted(by: { $0.startTime < $1.startTime }).first {
+            thirdEventInfo.dayName = nextDay.formatted(.dateTime.weekday(.abbreviated)).uppercased()
+            thirdEventInfo.dayNumber = "\(calendar.component(.day, from: nextDay))"
             thirdEventInfo.eventTitle = event.name
             thirdEventInfo.eventTime = "\(event.startTime) - \(event.endTime)"
         } else {
@@ -166,12 +150,10 @@ class OpenCalendarComponent: UIView {
             thirdEventInfo.eventTime = ""
         }
 
-        if otherDays.indices.contains(1) {
-            let day2 = otherDays[1]
-            let eventsDay2 = day2.value.sorted { $0.startTime < $1.startTime }
-            let event = eventsDay2[0]
-            fourthEventInfo.dayName = day2.key.formatted(.dateTime.weekday(.abbreviated)).uppercased()
-            fourthEventInfo.dayNumber = "\(calendar.component(.day, from: day2.key))"
+        if let dayAfterNextGroup = grouped.first(where: { $0.key == dayAfterNext }),
+           let event = dayAfterNextGroup.value.sorted(by: { $0.startTime < $1.startTime }).first {
+            fourthEventInfo.dayName = dayAfterNext.formatted(.dateTime.weekday(.abbreviated)).uppercased()
+            fourthEventInfo.dayNumber = "\(calendar.component(.day, from: dayAfterNext))"
             fourthEventInfo.eventTitle = event.name
             fourthEventInfo.eventTime = "\(event.startTime) - \(event.endTime)"
         } else {
@@ -181,6 +163,7 @@ class OpenCalendarComponent: UIView {
             fourthEventInfo.eventTime = ""
         }
     }
+
     
     // MARK: - External Update
     
@@ -194,8 +177,8 @@ class OpenCalendarComponent: UIView {
 extension OpenCalendarComponent: ViewCodeProtocol {
     func addSubviews() {
         addSubview(backgroundContainer)
-        backgroundImageView.addSubview(gradientView)
         backgroundContainer.addSubview(backgroundImageView)
+        backgroundImageView.addSubview(gradientView)
         backgroundContainer.addSubview(eventCalendarStack)
     }
     
@@ -206,15 +189,16 @@ extension OpenCalendarComponent: ViewCodeProtocol {
             backgroundContainer.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             backgroundContainer.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             
-            gradientView.topAnchor.constraint(equalTo: self.topAnchor),
-            gradientView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            gradientView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            gradientView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            gradientView.topAnchor.constraint(equalTo: backgroundImageView.topAnchor),
+            gradientView.leadingAnchor.constraint(equalTo: backgroundImageView.leadingAnchor),
+            gradientView.trailingAnchor.constraint(equalTo: backgroundImageView.trailingAnchor),
+            gradientView.bottomAnchor.constraint(equalTo: backgroundImageView.bottomAnchor),
+            gradientView.heightAnchor.constraint(equalToConstant: 500),
             
-            backgroundImageView.topAnchor.constraint(equalTo: gradientView.topAnchor),
-            backgroundImageView.leadingAnchor.constraint(equalTo: gradientView.leadingAnchor),
-            backgroundImageView.trailingAnchor.constraint(equalTo: gradientView.trailingAnchor),
-            backgroundImageView.bottomAnchor.constraint(equalTo: gradientView.bottomAnchor),
+            backgroundImageView.topAnchor.constraint(equalTo: self.topAnchor),
+            backgroundImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            backgroundImageView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            backgroundImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             
             eventCalendarStack.topAnchor.constraint(equalTo: gradientView.topAnchor, constant: 16),
             eventCalendarStack.leadingAnchor.constraint(equalTo: gradientView.leadingAnchor, constant: 16),

@@ -13,7 +13,7 @@ class EventInfoComponent: UIView {
     private lazy var eventIcon: UIImageView = {
         var icon = UIImageView()
         icon.image = UIImage(systemName: "circle.fill")
-        icon.tintColor = .white
+        icon.tintColor = .f2Quali
         icon.contentMode = .scaleAspectFit
         icon.setContentHuggingPriority(.required, for: .horizontal)
         icon.setContentCompressionResistancePriority(.required, for: .horizontal)

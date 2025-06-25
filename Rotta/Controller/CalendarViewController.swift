@@ -8,13 +8,13 @@
 import UIKit
 
 class CalendarViewController: UIViewController {
-
+    
     private lazy var scrollView: UIScrollView = {
         let scroll = UIScrollView()
         scroll.translatesAutoresizingMaskIntoConstraints = false
         return scroll
     }()
-
+    
     private lazy var contentView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -29,11 +29,11 @@ class CalendarViewController: UIViewController {
         calendar.translatesAutoresizingMaskIntoConstraints = false
         return calendar
     }()
-
+    
     private lazy var event: OpenCalendarComponent = {
         var event = OpenCalendarComponent()
         event.translatesAutoresizingMaskIntoConstraints = false
-
+        
         return event
     }()
     
@@ -44,7 +44,7 @@ class CalendarViewController: UIViewController {
         view.backgroundColor = .black
         setup()
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         customCalendarView.preloadAllEvents()
@@ -119,7 +119,7 @@ extension CalendarViewController: ViewCodeProtocol {
 
             customCalendarView.topAnchor.constraint(
                 equalTo: contentView.topAnchor,
-                constant: 50
+                constant: 16
             ),
             customCalendarView.leadingAnchor.constraint(
                 equalTo: contentView.leadingAnchor,
