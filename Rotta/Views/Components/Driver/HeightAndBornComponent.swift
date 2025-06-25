@@ -48,8 +48,7 @@ class HeightAndBornComponent: UIView {
         stack.layoutMargins = UIEdgeInsets(top: 0, left: 27.5, bottom: 0, right: 0)
         stack.isLayoutMarginsRelativeArrangement = true
         stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.spacing = 27.5
-        stack.distribution = .fillProportionally
+        stack.spacing = 10
         return stack
     }()
     
@@ -70,9 +69,9 @@ class HeightAndBornComponent: UIView {
     lazy var birthDayStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [birthDayLabel, birthDayVariable])
         stack.axis = .horizontal
-        stack.distribution = .fillProportionally
         stack.spacing = 4
         stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.layoutMargins = UIEdgeInsets(top: 0, left: 27.5, bottom: 0, right: 0)
         return stack
     }()
     
@@ -80,8 +79,7 @@ class HeightAndBornComponent: UIView {
         let stack = UIStackView(arrangedSubviews: [coloredStack, birthDayStack])
         stack.axis = .horizontal
         stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.spacing = 27.5
-        stack.distribution = .fillProportionally
+        stack.spacing = 10
         return stack
     }()
     
@@ -119,7 +117,6 @@ extension HeightAndBornComponent: ViewCodeProtocol {
         NSLayoutConstraint.activate([
             componentStack.topAnchor.constraint(equalTo: topAnchor),
             componentStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
-            componentStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -27.5),
             componentStack.bottomAnchor.constraint(equalTo: bottomAnchor),
             
             divider.widthAnchor.constraint(equalToConstant: 1),
