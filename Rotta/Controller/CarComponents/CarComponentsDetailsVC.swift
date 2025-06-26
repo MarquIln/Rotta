@@ -9,13 +9,7 @@ import UIKit
 
 class CarComponentsDetailsVC: UIViewController {
     var components: ComponentModel?
-//    = nil {
-//        didSet {
-//            print(term)
-//        }
-//    }
     
-    // MARK: - Configure Method
     func configure(with component: ComponentModel) {
         self.components = component
     }
@@ -76,39 +70,10 @@ class CarComponentsDetailsVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        setupNavigationBar()
-        setupGestures()
+        title = "Detalhes"
         setup()
         addGradientGlossary()
-    }
-    
-    private func setupGestures() {
-        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
-        navigationController?.interactivePopGestureRecognizer?.delegate = self
-        
-        let swipeRightGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture(_:)))
-        swipeRightGesture.direction = .right
-        view.addGestureRecognizer(swipeRightGesture)
-    }
-    
-    @objc private func handleSwipeGesture(_ gesture: UISwipeGestureRecognizer) {
-        if gesture.direction == .right {
-            navigationController?.popViewController(animated: true)
-        }
-    }
-    
-    @objc private func handleEdgePanGesture(_ gesture: UIScreenEdgePanGestureRecognizer) {
-        let translation = gesture.translation(in: view)
-        let velocity = gesture.velocity(in: view)
-        
-        switch gesture.state {
-        case .ended:
-            if translation.x > 100 || velocity.x > 500 {
-                navigationController?.popViewController(animated: true)
-            }
-        default:
-            break
-        }
+        setupCustomBackButton()
     }
     
     @objc private func customBackTapped() {
@@ -132,10 +97,7 @@ class CarComponentsDetailsVC: UIViewController {
         navigationItem.leftBarButtonItem = barButton
     }
     
-    private func setupNavigationBar() {
-        title = "Detalhes"
-        setupCustomBackButton()
-    }
+    
 }
 
 extension CarComponentsDetailsVC: ViewCodeProtocol {
@@ -179,13 +141,6 @@ extension CarComponentsDetailsVC: ViewCodeProtocol {
             component.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
         ])
 
-    }
-}
-
-// MARK: - UIGestureRecognizerDelegate
-extension CarComponentsDetailsVC: UIGestureRecognizerDelegate {
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
     }
 }
 

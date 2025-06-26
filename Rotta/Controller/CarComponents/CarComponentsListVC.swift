@@ -8,20 +8,15 @@
 import UIKit
 
 class CarComponentsListVC: UIViewController {
-
-    private let service = ComponentService()
     let database = Database.shared
     
     private var components: [ComponentModel] = []
-    
-    private let impactFeedback = UIImpactFeedbackGenerator(style: .light)
-    private var lastScrollPosition: CGFloat = 0
-    private let scrollThreshold: CGFloat = 30.0
 
     private lazy var carComponentTableView: CarComponentTableView = {
         let tableView = CarComponentTableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        
+        tableView.tableView.delegate = self
+        tableView.tableView.dataSource = self
         return tableView
     }()
 
@@ -32,8 +27,6 @@ class CarComponentsListVC: UIViewController {
         return gradient
     }()
 
-    private let totalCells = 10
-
     @objc func addGradientGlossary() {
         DispatchQueue.main.async {
             self.gradientView.addGradientGlossary()
@@ -42,13 +35,13 @@ class CarComponentsListVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupView()
-        impactFeedback.prepare()
+        setup()
         addGradientGlossary()
         setupCustomBackButton()
+        
         loadComponents()
-        setupNotifications()
         navigationController?.isNavigationBarHidden = false
+        title = "Componentes"
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -92,38 +85,16 @@ class CarComponentsListVC: UIViewController {
     @objc private func customBackTapped() {
         navigationController?.popViewController(animated: true)
     }
-    
-    private func setupNotifications() {
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(componentSelected(_:)),
-            name: NSNotification.Name("CarComponentSelected"),
-            object: nil
-        )
-    }
-    
-    @objc private func componentSelected(_ notification: Notification) {
-        guard let component = notification.object as? ComponentModel else { return }
-        
-        // Navegar para a tela de detalhes
-        let detailsVC = CarComponentsDetailsVC()
-        detailsVC.configure(with: component)
-        navigationController?.pushViewController(detailsVC, animated: true)
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
+}
 
-    private func setupView() {
-        view.backgroundColor = .systemBackground
-        title = "Componentes"
-
+extension CarComponentsListVC: ViewCodeProtocol {
+    func addSubviews() {
         view.addSubview(gradientView)
         view.addSubview(carComponentTableView)
-
+    }
+    
+    func setupConstraints() {
         NSLayoutConstraint.activate([
-
             gradientView.topAnchor.constraint(equalTo: view.topAnchor),
             gradientView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             gradientView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -146,20 +117,32 @@ class CarComponentsListVC: UIViewController {
             ),
         ])
     }
+    
+    
 }
 
-extension CarComponentsListVC: GlossaryTableViewDelegate {
-    func numberOfItems() -> Int {
+extension CarComponentsListVC: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return components.count
     }
-
-    func item(at index: Int) -> (title: String, imageName: String) {
-        return (components[index].name ?? "no title", "carro")
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: CarComponentCell.reuseIdentifier, for: indexPath) as? CarComponentCell else {
+            return UITableViewCell()
+        }
+        
+        let component = components[indexPath.row]
+        cell.config(with: component, cellIndex: indexPath.row)
+        cell.selectionStyle = .none
+        
+        return cell
     }
-
-    func didSelectItem(at index: Int) {
-        let carVC = CarComponentsDetailsVC()
-        carVC.components = components[index]
-        navigationController?.pushViewController(carVC, animated: true)
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let component = components[indexPath.row]
+        let detailsVC = CarComponentsDetailsVC()
+        detailsVC.components = component
+        navigationController?.pushViewController(detailsVC, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }

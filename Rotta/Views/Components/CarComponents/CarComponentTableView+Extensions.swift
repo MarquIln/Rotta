@@ -27,40 +27,11 @@ extension CarComponentTableView: UITableViewDataSource {
 
 extension CarComponentTableView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 90
+        return 80
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
-        let selectedComponent = carComponents[indexPath.row]
-        
-        // Notificar o controller sobre a seleção
-        NotificationCenter.default.post(
-            name: NSNotification.Name("CarComponentSelected"),
-            object: selectedComponent
-        )
-    }
-    
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        impactFeedback.prepare()
-        lastScrollPosition = scrollView.contentOffset.y
-    }
-
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let current = scrollView.contentOffset.y
-        let diff = abs(current - lastScrollPosition)
-        let now = CACurrentMediaTime()
-        if diff >= scrollThreshold && now - lastFeedbackTime > 0.03 {
-            impactFeedback.impactOccurred(intensity: 1)
-            lastScrollPosition = current
-            impactFeedback.prepare()
-            lastFeedbackTime = now
-        }
-    }
-
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        lastScrollPosition = scrollView.contentOffset.y
     }
 }
 
@@ -71,7 +42,6 @@ extension CarComponentTableView: ViewCodeProtocol {
     
     func setupConstraints() {
         NSLayoutConstraint.activate([
-
             tableView.topAnchor.constraint(equalTo: topAnchor),
             tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: trailingAnchor),

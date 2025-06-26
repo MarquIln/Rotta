@@ -100,6 +100,7 @@ class DriverRankingCell: UITableViewCell {
         setup()
     }
     
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         driverImageView.layer.cornerRadius = 14

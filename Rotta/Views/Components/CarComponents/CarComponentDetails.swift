@@ -8,18 +8,10 @@
 import UIKit
 
 class CarComponentDetails: UIView {
-    
-    var component: ComponentModel? = nil {
-        didSet {
-            if let component {
-                configure(with: component)
-            }
-        }
-    }
+    var component: ComponentModel?
     
     lazy var label: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.text = component?.name
         label.textColor = .white
         label.textAlignment = .center
@@ -29,7 +21,6 @@ class CarComponentDetails: UIView {
     
     lazy var descripText: UILabel = {
         var label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.text = component?.details
         label.textColor = .white
         label.font = Fonts.BodyRegular
@@ -41,7 +32,6 @@ class CarComponentDetails: UIView {
     
     lazy var descripContainer: UIView = {
         let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .fillsTextBox
         view.layer.cornerRadius = 32
 
@@ -60,7 +50,6 @@ class CarComponentDetails: UIView {
     
     lazy var descrip2Container: UIView = {
         let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .fillsTextBox
         view.layer.cornerRadius = 32
 
@@ -70,7 +59,6 @@ class CarComponentDetails: UIView {
 
     lazy var exploreContainer: UIView = {
         let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
@@ -91,41 +79,7 @@ class CarComponentDetails: UIView {
     required init?(coder: NSCoder) {
         fatalError("not implemented")
     }
-
-}
-
-extension CarComponentDetails: ViewCodeProtocol {
-    func addSubviews() {
-        addSubview(mainStack)
-        descripContainer.addSubview(descripText)
-    }
     
-    func setupConstraints() {
-        NSLayoutConstraint.activate([
-            
-            
-            mainStack.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 150),
-            mainStack.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            mainStack.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            mainStack.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            
-            descripText.topAnchor.constraint(equalTo: descripContainer.topAnchor, constant: 12),
-            descripText.bottomAnchor.constraint(equalTo: descripContainer.bottomAnchor, constant: -12),
-            descripText.leadingAnchor.constraint(equalTo: descripContainer.leadingAnchor, constant: 16),
-            descripText.trailingAnchor.constraint(equalTo: descripContainer.trailingAnchor, constant: -16),
-        
-            descrip2Text.topAnchor.constraint(equalTo: descripText.bottomAnchor, constant: 8),
-            descrip2Text.bottomAnchor.constraint(equalTo: descrip2Container.bottomAnchor, constant: -12),
-            descrip2Text.leadingAnchor.constraint(equalTo: descrip2Container.leadingAnchor, constant: 16),
-            descrip2Text.trailingAnchor.constraint(equalTo: descrip2Container.trailingAnchor, constant: -16),
-                       
-           exploreContainer.heightAnchor.constraint(equalToConstant: 156)
-    
-        ])
-    }
-}
-
-extension CarComponentDetails {
     func configure(with model: ComponentModel) {
         label.text = model.name
         descripText.text = model.details
@@ -133,4 +87,19 @@ extension CarComponentDetails {
         
     }
 }
+
+extension CarComponentDetails: ViewCodeProtocol {
+    func addSubviews() {
+        addSubview(mainStack)
+    }
     
+    func setupConstraints() {
+        NSLayoutConstraint.activate([
+            mainStack.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 150),
+            mainStack.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            mainStack.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            mainStack.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+        ])
+    }
+}
+
