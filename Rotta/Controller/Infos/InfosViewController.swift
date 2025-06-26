@@ -22,7 +22,7 @@ class InfosViewController: UIViewController {
         (
             title: "Pilotos",
             subtitle: "Conheça os pilotos da Fórmula 2",
-            image: .componentsCategoryInfos
+            image: .infoDrivers
         )
     ]
     
