@@ -8,7 +8,7 @@ import UIKit
 
 
 class DriverCell: UITableViewCell {
-
+    static let reuseIdentifier = "DriverCell"
     weak var delegate: DriverCellDelegate?
 
     lazy var containerView: UIView = {
@@ -25,7 +25,6 @@ class DriverCell: UITableViewCell {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 20
-        imageView.backgroundColor = .yellow
         return imageView
     }()
 
@@ -34,7 +33,6 @@ class DriverCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
         label.textColor = .white
-        label.text = "Driver"
         return label
     }()
 
@@ -92,10 +90,20 @@ class DriverCell: UITableViewCell {
             chevronImageView.heightAnchor.constraint(equalToConstant: 16)
         ])
     }
+    
+    private func formatDriverName(_ fullName: String) -> String {
+        let components = fullName.components(separatedBy: " ").filter { !$0.isEmpty }
+        guard components.count >= 2, let firstName = components.first, let lastName = components.last else {
+            return fullName
+        }
+        
+        let firstNameLetter = String(firstName.prefix(1))
+        return "\(firstNameLetter). \(lastName)"
+    }
 
-    func configure(title: String, image: UIImage? = nil) {
-        titleLabel.text = title
-        iconImageView.image = image
+    func config(with driver: DriverModel, cellIndex: Int) {
+        titleLabel.text = formatDriverName(driver.name)
+        iconImageView.image = UIImage(named: driver.photo!) ?? UIImage(systemName: "person.fill")
     }
 }
 

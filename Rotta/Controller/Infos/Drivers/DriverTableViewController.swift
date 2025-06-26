@@ -8,9 +8,11 @@
 import UIKit
 
 class DriverTableViewController: UIViewController {
+    var drivers: [DriverModel] = []
+    let database = Database.shared
 
-    private lazy var headerView: GlossaryHeaderView = {
-        let headerView = GlossaryHeaderView()
+    private lazy var headerView: DriverHeader = {
+        let headerView = DriverHeader()
         headerView.translatesAutoresizingMaskIntoConstraints = false
         return headerView
     }()
@@ -38,6 +40,21 @@ class DriverTableViewController: UIViewController {
         super.viewDidLoad()
         setupView()
         addGradientGlossary()
+        loadDrivers()
+    }
+    
+    private func loadDrivers() {
+        Task {
+            drivers = await database.getAllDrivers()
+            
+            await MainActor.run {
+                self.driverTableView.configure(with: drivers)
+            }
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationController?.isNavigationBarHidden = true
     }
 
     lazy var backButton: UIButton = {
@@ -62,10 +79,15 @@ class DriverTableViewController: UIViewController {
     @objc private func customBackTapped() {
         navigationController?.popViewController(animated: true)
     }
+    
+    func configure(with drivers: [DriverModel]) {
+        self.drivers = drivers
+        driverTableView.configure(with: drivers)
+    }
 
     private func setupView() {
         view.backgroundColor = .systemBackground
-        title = "Drivers"
+        title = "Pilotos"
         navigationController?.isNavigationBarHidden = false
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
 
@@ -100,15 +122,17 @@ extension DriverTableViewController: UITableViewDelegate, UITableViewDataSource,
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let identifier = "DriverCell"
         let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? DriverCell ?? DriverCell(style: .default, reuseIdentifier: identifier)
-        cell.configure(title: "Piloto \(indexPath.row + 1)")
+        let driver = drivers[indexPath.row]
+        
+        cell.config(with: driver, cellIndex: indexPath.row)
         cell.delegate = self
         return cell
     }
 
     func didTapChevron(in cell: DriverCell) {
         print("Chevron da célula tocado")
-        let vc = DriverDetailsViewController()
-        navigationController?.pushViewController(vc, animated: true)
+//        let vc = DriverDetailsViewController()
+//        navigationController?.pushViewController(vc, animated: true)
     }
 }
 
