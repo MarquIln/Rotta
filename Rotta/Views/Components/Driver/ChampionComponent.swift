@@ -22,8 +22,7 @@ class ChampionComponent: UIView {
         label.text = champion
         label.textColor = .labelsPrimary
         label.font = Fonts.FootnoteRegular
-//        label.numberOfLines = 1
-        label.numberOfLines = 0
+        label.numberOfLines = 1
         label.lineBreakMode = .byWordWrapping
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
