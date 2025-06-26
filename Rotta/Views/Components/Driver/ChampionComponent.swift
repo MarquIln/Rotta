@@ -22,14 +22,20 @@ class ChampionComponent: UIView {
         label.text = champion
         label.textColor = .labelsPrimary
         label.font = Fonts.FootnoteRegular
+//        label.numberOfLines = 1
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
+        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return label
     }()
     
     lazy var heightStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [championLabel, championVariable])
         stack.axis = .horizontal
-        stack.distribution = .fillProportionally
+        stack.distribution = .fill
         stack.spacing = 4
+        stack.alignment = .firstBaseline
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
@@ -65,14 +71,15 @@ extension ChampionComponent: ViewCodeProtocol {
     }
     func setupConstraints() {
         NSLayoutConstraint.activate([
-//            heightStack.topAnchor.constraint(equalTo: topAnchor),
+            heightStack.topAnchor.constraint(equalTo: topAnchor, constant: 12),
 //            heightStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
 //            heightStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
-//            heightStack.bottomAnchor.constraint(equalTo: bottomAnchor),
-            heightStack.centerXAnchor.constraint(equalTo: centerXAnchor),
-            heightStack.centerYAnchor.constraint(equalTo: centerYAnchor),
+            heightStack.bottomAnchor.constraint(equalTo: bottomAnchor),
+//            heightStack.centerXAnchor.constraint(equalTo: centerXAnchor),
+//            heightStack.centerYAnchor.constraint(equalTo: centerYAnchor),
             heightStack.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: 12),
             heightStack.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -12),
+            heightStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12),
         ])
     }
 }

@@ -168,7 +168,7 @@ class DriverPageViewController: UIViewController {
         
         self.details = driver.details ?? "Unknown"
         if let details = driver.details {
-            self.championship = details
+            self.details = details
         }
         
         super.init(nibName: nil, bundle: nil)
@@ -254,7 +254,7 @@ extension DriverPageViewController: ViewCodeProtocol {
             champion.topAnchor.constraint(equalTo: heightAndBirth.bottomAnchor, constant: 20),
             champion.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             champion.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            champion.heightAnchor.constraint(equalToConstant: 46),
+//            champion.heightAnchor.constraint(equalToConstant: 46),
             
             descriptionComponent.topAnchor.constraint(equalTo: champion.bottomAnchor, constant: 20),
             descriptionComponent.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
