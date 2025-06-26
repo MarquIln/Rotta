@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import CloudKit
 
 class ScuderiaRankingTableView: UIView {
     let impactFeedback = UIImpactFeedbackGenerator(style: .medium)

@@ -395,7 +395,7 @@ class CloudKitSeed {
             ("Pole Position", "Posição de Largada", "A primeira posição no grid de largada, concedida ao piloto mais rápido na classificação.", "polePosition_image"),
             ("Fastest Lap", "Volta Mais Rápida", "O tempo de volta mais rápido registrado durante uma corrida, muitas vezes recompensado com um ponto extra no campeonato.", "fastestLap_image"),
             ("Did Not Finish (DNF)", "Não Completou", "Quando um piloto não consegue completar a corrida devido a falha mecânica, acidente ou outros problemas.", "dnf_image"),
-            ("Did Not Starte (DNS)", "Não Largou", "Quando um piloto não consegue iniciar a corrida.", "dns_image"),
+            ("Did Not Started (DNS)", "Não Largou", "Quando um piloto não consegue iniciar a corrida.", "dns_image"),
             ("Disqualified (DSQ)", "Desclassificado", "Quando um piloto é excluído dos resultados da corrida por violar regras.", "dsq_image"),
             ("Safety Car (SC)", "Carro de Segurança", "Um carro enviado à pista para reduzir a velocidade do pelotão em condições perigosas.", "safetyCar_image"),
             ("Virtual Safety Car (VSC)", "Carro Virtual de Segurança", "Um sistema eletrônico que limita a velocidade dos pilotos durante períodos de advertência.", "virtualSafetyCar_image"),
