@@ -28,7 +28,8 @@ class ComponentService {
                         id: UUID(uuidString: record["id"] as? String ?? "") ?? UUID(),
                         name: record["name"] as? String,
                         details: record["details"] as? String,
-                        image: record["image"] as? String
+                        property: record["property"] as? String,
+                        image: record["image"] as? String,
                     )
                     components.append(component)
                 } catch {
@@ -49,7 +50,9 @@ class ComponentService {
                 id: UUID(uuidString: record["id"] as? String ?? "") ?? UUID(),
                 name: record["name"] as? String,
                 details: record["details"] as? String,
-                image: record["image"] as? String
+                property: record["property"] as? String,
+                image: record["image"] as? String,
+
             )
         } catch {
             print("Erro ao buscar Component por ID: \(error.localizedDescription)")
@@ -57,12 +60,13 @@ class ComponentService {
         }
     }
 
-    func add(name: String? = nil, details: String? = nil, image: String? = nil) async {
+    func add(name: String? = nil, details: String? = nil, property: String? = nil, image: String? = nil) async {
         let uuid = UUID().uuidString
         let record = CKRecord(recordType: "Component")
         record["id"] = uuid
         if let name = name { record["name"] = name }
         if let details = details { record["details"] = details }
+        if let property = property { record["property"] = property }
         if let image = image { record["image"] = image }
         do {
             let saved = try await privateDatabase.save(record)

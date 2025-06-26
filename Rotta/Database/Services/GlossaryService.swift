@@ -28,7 +28,8 @@ class GlossaryService {
                         id: UUID(uuidString: record["id"] as? String ?? "") ?? UUID(),
                         title: record["title"] as? String ?? "",
                         details: record["details"] as? String ?? "",
-                        subtitle: record["subtitle"] as? String ?? ""
+                        subtitle: record["subtitle"] as? String ?? "",
+                        image: record["image"] as? String ?? ""
                     )
                     terms.append(term)
                 } catch {
@@ -49,7 +50,9 @@ class GlossaryService {
                 id: UUID(uuidString: record["id"] as? String ?? "") ?? UUID(),
                 title: record["title"] as? String ?? "",
                 details: record["details"] as? String ?? "",
-                subtitle: record["subtitle"] as? String ?? ""
+                subtitle: record["subtitle"] as? String ?? "",
+                image: record["image"] as? String ?? ""
+
             )
         } catch {
             print("Erro ao buscar Glossary por ID: \(error.localizedDescription)")
@@ -57,13 +60,14 @@ class GlossaryService {
         }
     }
 
-    func add(title: String? = nil, details: String? = nil, subtitle: String? = nil) async {
+    func add(title: String? = nil, details: String? = nil, subtitle: String? = nil, image: String? = nil) async {
         let record = CKRecord(recordType: "Glossary")
         let uuid = UUID().uuidString
         record["id"] = uuid
         if let title { record["title"] = title }
         if let details { record["details"] = details }
         if let subtitle { record["subtitle"] = subtitle }
+        if let image { record["image"] = image }
         do {
             let saved = try await privateDatabase.save(record)
             print("Glossary term salvo com sucesso: \(saved.recordID.recordName)")

@@ -36,10 +36,13 @@ class CardInfosCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configure(with title: String, subtitle: String, image: UIImage, target: Any, action: Selector) {
+    func configure(with title: String, subtitle: String, image: UIImage, tag: Int, target: Any, action: Selector) {
         cardButton.cardTitleLabel.text = title
         cardButton.cardSubtitleLabel.text = subtitle
         cardButton.imageBackground.image = image
+        cardButton.tag = tag
+        cardButton.removeTarget(nil, action: nil, for: .allEvents)
         cardButton.addTarget(target, action: action, for: .touchUpInside)
     }
+
 }

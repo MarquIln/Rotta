@@ -1,12 +1,13 @@
 //
-//  Untitled.swift
+//  ScuderiaHeader.swift
 //  Rotta
 //
-//  Created by sofia leitao on 16/06/25.
+//  Created by sofia leitao on 25/06/25.
 //
+
 import UIKit
 
-class GlossaryHeaderView: UIView {
+class ScuderiaHeaderView: UIView {
     
     private let containerView: UIView = {
         let view = UIView()
@@ -16,7 +17,13 @@ class GlossaryHeaderView: UIView {
         return view
     }()
     
-    private var imageViews: [UIImageView] = []
+    private var logoImageViews: [UIImageView] = []
+    
+   
+    private let teamLogos = [
+        "aix_logo", "art_logo", "campos_logo", "dams_logo", "hitech_logo",
+        "invicta_logo", "mp_logo", "prema_logo", "rodin_logo", "trident_logo"
+    ]
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -39,10 +46,10 @@ class GlossaryHeaderView: UIView {
             containerView.heightAnchor.constraint(equalToConstant: 100)
         ])
         
-        setupImageViews()
+        setupLogoViews()
     }
     
-    private func setupImageViews() {
+    private func setupLogoViews() {
         let verticalStack = UIStackView()
         verticalStack.axis = .vertical
         verticalStack.spacing = 12
@@ -59,28 +66,42 @@ class GlossaryHeaderView: UIView {
             verticalStack.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -12),
         ])
         
-        for _ in 0..<2 {
-            let horizontalStack = UIStackView()
-            horizontalStack.axis = .horizontal
-            horizontalStack.spacing = 12
-            horizontalStack.alignment = .center
-            horizontalStack.distribution = .equalSpacing
-            horizontalStack.translatesAutoresizingMaskIntoConstraints = false
+        // Dividir os logos em duas linhas (5 em cada)
+        let firstRowLogos = Array(teamLogos.prefix(5))
+        let secondRowLogos = Array(teamLogos.suffix(5))
+        
+        // Primeira linha
+        let firstRowStack = createLogoRow(with: firstRowLogos)
+        verticalStack.addArrangedSubview(firstRowStack)
+        
+        // Segunda linha
+        let secondRowStack = createLogoRow(with: secondRowLogos)
+        verticalStack.addArrangedSubview(secondRowStack)
+    }
+    
+    private func createLogoRow(with logos: [String]) -> UIStackView {
+        let horizontalStack = UIStackView()
+        horizontalStack.axis = .horizontal
+        horizontalStack.spacing = 12
+        horizontalStack.alignment = .center
+        horizontalStack.distribution = .equalSpacing
+        horizontalStack.translatesAutoresizingMaskIntoConstraints = false
+        
+        for logoName in logos {
+            let logoView = UIImageView()
+            logoView.translatesAutoresizingMaskIntoConstraints = false
+            logoView.contentMode = .scaleAspectFit
+            logoView.image = UIImage(named: logoName)
+            logoView.clipsToBounds = true
             
-            verticalStack.addArrangedSubview(horizontalStack)
+        
+            logoView.widthAnchor.constraint(equalToConstant: 50).isActive = true
+            logoView.heightAnchor.constraint(equalToConstant: 40).isActive = true
             
-            for _ in 0..<5 {
-                let imageView = UIImageView()
-                imageView.translatesAutoresizingMaskIntoConstraints = false
-                imageView.backgroundColor = .systemTeal 
-                imageView.layer.cornerRadius = 30 / 2
-                imageView.clipsToBounds = true
-                imageView.widthAnchor.constraint(equalToConstant: 30).isActive = true
-                imageView.heightAnchor.constraint(equalToConstant: 30).isActive = true
-                
-                horizontalStack.addArrangedSubview(imageView)
-                imageViews.append(imageView)
-            }
+            horizontalStack.addArrangedSubview(logoView)
+            logoImageViews.append(logoView)
         }
+        
+        return horizontalStack
     }
 }

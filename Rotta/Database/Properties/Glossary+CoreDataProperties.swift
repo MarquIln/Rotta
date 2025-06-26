@@ -20,6 +20,8 @@ extension Glossary {
     @NSManaged public var title: String?
     @NSManaged public var subtitle: String?
     @NSManaged public var details: String?
+    @NSManaged public var image: String?
+
 
 }
 
