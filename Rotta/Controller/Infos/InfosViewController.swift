@@ -12,7 +12,7 @@ class InfosViewController: UIViewController {
         (
             title: "Glossário",
             subtitle: "Entenda os principais termos utilizados na Fórmula 2",
-            image: .glossaryCategoryInfos
+            image: .glossaryCategoryInfos,
         ),
         (
             title: "Scuderias",
@@ -22,7 +22,12 @@ class InfosViewController: UIViewController {
         (
             title: "Pilotos",
             subtitle: "Conheça os pilotos da Fórmula 2",
-            image: .infoDrivers
+            image: .componentsCategoryInfos
+        ),
+        (
+            title: "Peças",
+            subtitle: "Conheça as peças que compõem os carros da Fórmula 2",
+            image: .componentsCategoryInfos
         )
     ]
     
@@ -47,29 +52,7 @@ class InfosViewController: UIViewController {
         view.backgroundColor = .backgroundPrimary
         setup()
     }
-    
-    //    @objc private func cardInfoTapped(_ sender: CardInfosButton) {
-    //        print("CardInfosButton foi tocado!")
-    //    }
-    
-//    @objc private func cardInfoTapped(_ sender: UIButton) {
-//        let index = sender.tag
-//        let selectedCard = cardsData[index]
-//
-//        switch selectedCard.title {
-//        case "Glossário":
-//            let vc = GlossaryTableViewController()
-//            navigationController?.pushViewController(vc, animated: true)
-//
-//        case "Scuderias":
-//            let vc = ScuderiaTableViewController()
-//            navigationController?.pushViewController(vc, animated: true)
-//
-//        default:
-//            print("Card \(selectedCard.title) ainda não tem ação associada.")
-//        }
-//    }
-    
+
     @objc private func cardInfoTapped(_ sender: UIButton) {
         let index = sender.tag
         guard index < cardsData.count else { return }
@@ -87,6 +70,9 @@ class InfosViewController: UIViewController {
 
         case "Pilotos":
             let vc = DriverTableViewController()
+            navigationController?.pushViewController(vc, animated: true)
+        case "Peças":
+            let vc = CarComponentsListVC()
             navigationController?.pushViewController(vc, animated: true)
 
         default:
