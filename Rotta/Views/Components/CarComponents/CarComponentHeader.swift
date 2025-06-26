@@ -1,13 +1,14 @@
 //
-//  Untitled.swift
+//  CarComponentHeader.swift
 //  Rotta
 //
-//  Created by sofia leitao on 16/06/25.
+//  Created by Marcos on 26/06/25.
 //
+
 
 import UIKit
 
-class GlossaryHeaderView: UIView {
+class CarComponentHeader: UIView {
 
     private let containerView: UIView = {
         let view = UIView()

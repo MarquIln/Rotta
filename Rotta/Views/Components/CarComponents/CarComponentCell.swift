@@ -20,10 +20,8 @@ class CarComponentCell: UITableViewCell {
     lazy var componentImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.backgroundColor = .systemBlue
         imageView.layer.cornerRadius = 25
         imageView.clipsToBounds = true
-        imageView.tintColor = .white
         return imageView
     }()
     
@@ -42,6 +40,10 @@ class CarComponentCell: UITableViewCell {
         stack.alignment = .center
         stack.distribution = .fill
         stack.spacing = 16
+        stack.backgroundColor = .fillsRows
+        stack.layer.cornerRadius = 12
+        stack.layoutMargins = UIEdgeInsets(top: 6, left: 8, bottom: 6, right: 16)
+        stack.isLayoutMarginsRelativeArrangement = true
         return stack
     }()
     
@@ -70,13 +72,16 @@ extension CarComponentCell: ViewCodeProtocol {
     
     func setupConstraints() {
         NSLayoutConstraint.activate([
-            mainStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
-            mainStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
+            mainStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            mainStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
             mainStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             mainStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             
             componentImage.widthAnchor.constraint(equalToConstant: 50),
             componentImage.heightAnchor.constraint(equalToConstant: 50),
+            
+            chevronImageView.widthAnchor.constraint(equalToConstant: 16),
+            chevronImageView.heightAnchor.constraint(equalToConstant: 16)
         ])
     }
 }

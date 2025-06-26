@@ -19,6 +19,12 @@ class CarComponentTableView: UIView {
         table.separatorStyle = .none
         table.showsVerticalScrollIndicator = false
         
+        // Reduzir espaçamento entre células
+        table.sectionHeaderHeight = 0
+        table.sectionFooterHeight = 0
+        table.estimatedSectionHeaderHeight = 0
+        table.estimatedSectionFooterHeight = 0
+        
         table.register(CarComponentCell.self, forCellReuseIdentifier: CarComponentCell.reuseIdentifier)
 
         return table

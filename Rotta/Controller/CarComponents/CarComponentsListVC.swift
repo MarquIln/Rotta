@@ -11,6 +11,13 @@ class CarComponentsListVC: UIViewController {
     let database = Database.shared
     
     private var components: [ComponentModel] = []
+    
+    private lazy var headerView: CarComponentHeader = {
+        let headerView = CarComponentHeader()
+        headerView.translatesAutoresizingMaskIntoConstraints = false
+
+        return headerView
+    }()
 
     private lazy var carComponentTableView: CarComponentTableView = {
         let tableView = CarComponentTableView()
@@ -91,6 +98,8 @@ extension CarComponentsListVC: ViewCodeProtocol {
     func addSubviews() {
         view.addSubview(gradientView)
         view.addSubview(carComponentTableView)
+        view.addSubview(headerView)
+        view.backgroundColor = .systemBackground
     }
     
     func setupConstraints() {
@@ -101,9 +110,20 @@ extension CarComponentsListVC: ViewCodeProtocol {
             gradientView.trailingAnchor.constraint(
                 equalTo: view.trailingAnchor
             ),
+            
+            headerView.topAnchor.constraint(
+                equalTo: view.topAnchor,
+                constant: 118
+            ),
+            headerView.leadingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.leadingAnchor
+            ),
+            headerView.trailingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.trailingAnchor
+            ),
 
             carComponentTableView.topAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.topAnchor,
+                equalTo: headerView.bottomAnchor,
                 constant: 20
             ),
             carComponentTableView.leadingAnchor.constraint(
@@ -141,7 +161,7 @@ extension CarComponentsListVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let component = components[indexPath.row]
         let detailsVC = CarComponentsDetailsVC()
-        detailsVC.components = component
+        detailsVC.carComponent = component
         navigationController?.pushViewController(detailsVC, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }

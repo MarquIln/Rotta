@@ -8,18 +8,19 @@
 import UIKit
 
 class CarComponentsDetailsVC: UIViewController {
-    var components: ComponentModel?
+    var carComponent: ComponentModel?
     
     func configure(with component: ComponentModel) {
-        self.components = component
+        self.carComponent = component
     }
     
     lazy var component: CarComponentDetails = {
-        guard let componentUnwrapped = components else {
+        guard let componentUnwrapped = carComponent else {
             fatalError("Car component não pode ser nil ao criar o componente.")
         }
         
         var carComponent =  CarComponentDetails(frame: .zero, component: componentUnwrapped)
+        carComponent.configure(with: componentUnwrapped)
         carComponent.translatesAutoresizingMaskIntoConstraints = false
         return carComponent
     }()
@@ -50,11 +51,10 @@ class CarComponentsDetailsVC: UIViewController {
     lazy var imageBackground: UIImageView = {
          let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
-        imageView.image = .drs2
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
-        }()
+    }()
     
     @objc func addGradientGlossary() {
         DispatchQueue.main.async {
@@ -74,6 +74,13 @@ class CarComponentsDetailsVC: UIViewController {
         setup()
         addGradientGlossary()
         setupCustomBackButton()
+        configureImageBackground()
+    }
+    
+    private func configureImageBackground() {
+        if let imageName = carComponent?.image {
+            imageBackground.image = UIImage(named: imageName)
+        }
     }
     
     @objc private func customBackTapped() {
@@ -108,8 +115,6 @@ extension CarComponentsDetailsVC: ViewCodeProtocol {
         view.addSubview(scrollView)
 
         scrollView.addSubview(contentView)
-
-        
         contentView.addSubview(component)
     }
     func setupConstraints() {
@@ -119,7 +124,7 @@ extension CarComponentsDetailsVC: ViewCodeProtocol {
             imageBackground.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             imageBackground.heightAnchor.constraint(equalToConstant: 362),
         
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 212),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -135,7 +140,7 @@ extension CarComponentsDetailsVC: ViewCodeProtocol {
             gradientView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             gradientView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            component.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 212),
+            component.topAnchor.constraint(equalTo: contentView.topAnchor),
             component.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             component.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             component.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
