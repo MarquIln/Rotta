@@ -75,6 +75,10 @@ class ScuderiaTableViewController: UIViewController {
         backButton.frame = CGRect(x: 0, y: 0, width: 32, height: 32)
         return backButton
     }()
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationController?.isNavigationBarHidden = true
+    }
 
     @objc private func customBackTapped() {
         navigationController?.popViewController(animated: true)

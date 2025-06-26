@@ -8,6 +8,7 @@
 import UIKit
 
 class DriverTableView: UIView {
+    var drivers: [DriverModel] = []
     
     private let fixedCellCount = 20
 
@@ -43,7 +44,8 @@ class DriverTableView: UIView {
         ])
     }
     
-    func reloadData() {
+    func configure(with drivers: [DriverModel]) {
+        self.drivers = drivers
         tableView.reloadData()
     }
 }
@@ -51,13 +53,18 @@ class DriverTableView: UIView {
 // MARK: - UITableViewDataSource
 extension DriverTableView: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return fixedCellCount
+        return drivers.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "DriverCell", for: indexPath) as? DriverCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: DriverCell.reuseIdentifier, for: indexPath) as? DriverCell else {
             return UITableViewCell()
         }
+        let driver = drivers[indexPath.row]
+        cell.config(with: driver, cellIndex: indexPath.row)
+        
+        cell.selectionStyle = .none
+        
         return cell
     }
 }
