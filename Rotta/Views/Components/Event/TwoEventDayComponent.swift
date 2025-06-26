@@ -15,6 +15,7 @@ class TwoEventDayComponent: UIView {
         let label = UILabel()
         label.font = Fonts.Subtitle2
         label.textColor = .white
+        label.text = ""
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -24,6 +25,7 @@ class TwoEventDayComponent: UIView {
         let label = UILabel()
         label.font = Fonts.Title2
         label.textColor = .white
+        label.text = ""
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -90,7 +92,7 @@ class TwoEventDayComponent: UIView {
     lazy var separator: UIView = {
         var separator = UIView()
         separator.translatesAutoresizingMaskIntoConstraints = false
-        separator.backgroundColor = .sprintFormula2
+        separator.backgroundColor = .dividerSecondary
         return separator
     }()
     
@@ -143,14 +145,15 @@ extension TwoEventDayComponent: ViewCodeProtocol {
             backgroundContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
             backgroundContainer.bottomAnchor.constraint(equalTo: bottomAnchor),
 
-            contentStack.topAnchor.constraint(equalTo: backgroundContainer.topAnchor, constant: 12),
+            contentStack.topAnchor.constraint(equalTo: backgroundContainer.topAnchor),
             contentStack.leadingAnchor.constraint(equalTo: backgroundContainer.leadingAnchor, constant: 12),
             contentStack.trailingAnchor.constraint(equalTo: backgroundContainer.trailingAnchor, constant: -12),
             contentStack.bottomAnchor.constraint(equalTo: backgroundContainer.bottomAnchor, constant: -12),
 
-            separator.heightAnchor.constraint(equalToConstant: 0.50),
+            separator.heightAnchor.constraint(equalToConstant: 0.5),
             
-            dayNumberStack.topAnchor.constraint(equalTo: firstEvent.topAnchor)
+            dayNumberStack.topAnchor.constraint(equalTo: contentStack.topAnchor, constant: 16)
+            
         ])
     }
 }

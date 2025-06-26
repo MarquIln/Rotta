@@ -13,8 +13,7 @@ class EventInfoComponent: UIView {
     private lazy var eventIcon: UIImageView = {
         var icon = UIImageView()
         icon.image = UIImage(systemName: "circle.fill")
-        icon.tintColor = .white
-        icon.translatesAutoresizingMaskIntoConstraints = false
+        icon.tintColor = .f2Quali
         icon.contentMode = .scaleAspectFit
         icon.setContentHuggingPriority(.required, for: .horizontal)
         icon.setContentCompressionResistancePriority(.required, for: .horizontal)
@@ -27,15 +26,14 @@ class EventInfoComponent: UIView {
         var label = UILabel()
         label.font = Fonts.Headline
         label.textColor = .white
-        label.translatesAutoresizingMaskIntoConstraints = false
+        
         return label
     }()
     
     private lazy var iconTitleStack: UIStackView = {
         var stack = UIStackView(arrangedSubviews: [eventIcon, eventTitle])
         stack.axis = .horizontal
-        stack.spacing = 6
-        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.spacing = 8
         
         return stack
     }()
@@ -55,8 +53,8 @@ class EventInfoComponent: UIView {
         stack.axis = .vertical
         stack.distribution = .equalSpacing
         stack.translatesAutoresizingMaskIntoConstraints = false
-        
-        stack.layoutMargins = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)
+        stack.spacing = 3
+        stack.layoutMargins = UIEdgeInsets(top: 8, left: 0, bottom: 0, right: 0)
         stack.isLayoutMarginsRelativeArrangement = true
         
         return stack
@@ -106,7 +104,7 @@ extension EventInfoComponent: ViewCodeProtocol {
             eventInfoStack.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             eventInfoStack.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             eventInfoStack.topAnchor.constraint(equalTo: self.topAnchor),
-            eventInfoStack.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            eventInfoStack.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8),
 
 
             eventIcon.widthAnchor.constraint(equalToConstant: 8),

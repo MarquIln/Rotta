@@ -16,11 +16,11 @@ extension Component {
         return NSFetchRequest<Component>(entityName: "Component")
     }
 
-    @NSManaged public var details: String?
-    @NSManaged public var id: UUID?
-    @NSManaged public var image: String?
     @NSManaged public var name: String?
-
+    @NSManaged public var details: String?
+    @NSManaged public var property: String?
+    @NSManaged public var image: String?
+    @NSManaged public var id: UUID?
 }
 
 extension Component : Identifiable {

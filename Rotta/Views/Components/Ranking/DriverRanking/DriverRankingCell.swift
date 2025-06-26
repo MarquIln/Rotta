@@ -6,72 +6,81 @@
 //
 
 import UIKit
-import SkeletonView
-import CloudKit
 
 class DriverRankingCell: UITableViewCell {
     static let reuseIdentifier = "DriverRankingCell"
     
     lazy var positionLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = Fonts.Title2
         label.textColor = .white
         label.textAlignment = .center
-        label.isSkeletonable = true
         return label
     }()
     
     lazy var nameLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = Fonts.Subtitle2
         label.textColor = .white
-        label.isSkeletonable = true
         return label
     }()
     
     lazy var pointsLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = Fonts.Subtitle2
         label.textColor = .white
         label.textAlignment = .right
         return label
     }()
     
-    lazy var scuderiaLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
-        label.textColor = .lightGray
-        label.textAlignment = .center
-        label.isSkeletonable = true
-        return label
+    lazy var scuderiaLabel: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        return imageView
     }()
     
     lazy var driverImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.isSkeletonable = true
+        
         return imageView
     }()
     
+    lazy var driverFlag: UILabel = {
+        let label = UILabel()
+        label.font = Fonts.Subtitle2
+        
+        return label
+    }()
+    
+    private lazy var driverStackView: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [nameLabel, driverFlag])
+        stack.axis = .horizontal
+        stack.spacing = 4
+        stack.distribution = .fillProportionally
+
+        return stack
+    }()
+    
     private lazy var nameStackView: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [positionLabel, driverImageView, nameLabel])
+        let stack = UIStackView(arrangedSubviews: [positionLabel, driverImageView, driverStackView])
         stack.axis = .horizontal
         stack.spacing = 8
         stack.alignment = .center
+        stack.distribution = .fill
+        stack.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        
         return stack
     }()
     
     private lazy var performanceStackView: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [pointsLabel, scuderiaLabel])
         stack.axis = .horizontal
-        stack.spacing = 16
+        stack.spacing = 24
         stack.alignment = .center
+        
         return stack
     }()
     
@@ -79,7 +88,6 @@ class DriverRankingCell: UITableViewCell {
         let stack = UIStackView(arrangedSubviews: [nameStackView, performanceStackView])
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .horizontal
-        stack.spacing = 16
         stack.alignment = .center
         stack.distribution = .fill
         return stack
@@ -87,7 +95,14 @@ class DriverRankingCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        backgroundColor = .clear
+        contentView.backgroundColor = .clear
         setup()
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        driverImageView.layer.cornerRadius = 14
     }
     
     required init?(coder: NSCoder) {
@@ -97,10 +112,10 @@ class DriverRankingCell: UITableViewCell {
     func config(with driver: DriverModel, position: Int, cellIndex: Int) {
         positionLabel.text = "\(position)"
         nameLabel.text = formatDriverName(driver.name)
+        driverFlag.text = driver.country?.getCountryFlag()
         pointsLabel.text = "\(driver.points)"
-        scuderiaLabel.text = driver.scuderia
-        driverImageView.image = UIImage(systemName: "person.circle.fill")
-        driverImageView.tintColor = .systemGray3
+        driverImageView.image = UIImage(named: driver.photo!) ?? UIImage(systemName: "person.fill")
+        scuderiaLabel.image = UIImage(named: driver.scuderiaLogo!) ?? UIImage(systemName: "flag.fill")
     }
     
     private func formatDriverName(_ fullName: String) -> String {
@@ -130,8 +145,10 @@ extension DriverRankingCell: ViewCodeProtocol {
             positionLabel.widthAnchor.constraint(equalToConstant: 34),
             driverImageView.widthAnchor.constraint(equalToConstant: 28),
             driverImageView.heightAnchor.constraint(equalToConstant: 28),
-            pointsLabel.widthAnchor.constraint(equalToConstant: 40),
-            scuderiaLabel.widthAnchor.constraint(equalToConstant: 120)
+            scuderiaLabel.widthAnchor.constraint(equalToConstant: 56),
+            scuderiaLabel.heightAnchor.constraint(equalToConstant: 12)
+            
+            
         ])
     }
 }

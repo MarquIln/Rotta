@@ -5,14 +5,14 @@
 //  Created by Marcos on 13/06/25.
 //
 
-import Foundation
 import CloudKit
+import UIKit
 
 class DriverService {
     private let privateDatabase: CKDatabase
 
     init(container: CKContainer = .init(identifier: "iCloud.Rotta.CloudRotta")) {
-        privateDatabase = container.privateCloudDatabase
+        privateDatabase = container.publicCloudDatabase
     }
 
     func getAll() async -> [DriverModel] {
@@ -31,7 +31,13 @@ class DriverService {
                         number: record["number"] as? Int16 ?? 0,
                         points: record["points"] as? Int16 ?? 0,
                         scuderia: record["scuderia"] as? String ?? "",
-                        idFormula: UUID(uuidString: record["idFormula"] as? String ?? "") ?? UUID()
+                        idFormula: UUID(uuidString: record["idFormula"] as? String ?? "") ?? UUID(),
+                        photo: record["photo"] as? String ?? "",
+                        scuderiaLogo: record["scuderiaLogo"] as? String ?? "",
+                        height: record["height"] as? String ?? "",
+                        birthDate: record["birthDate"] as? Date ?? Date(),
+                        championship: record["championship"] as? String ?? "",
+                        details: record["details"] as? String ?? ""
                     )
                     drivers.append(driver)
                 } catch {
@@ -42,6 +48,43 @@ class DriverService {
             print("Erro ao buscar Drivers: \(error.localizedDescription)")
         }
         return drivers
+    }
+    
+    func getDriverWithScuderiaIcon(by id: UUID) async -> DriverModel? {
+        do {
+            let driverRecord = try await privateDatabase.record(for: CKRecord.ID(recordName: id.uuidString))
+            
+            guard let scuderiaIDString = driverRecord["idScuderia"] as? String,
+                  let scuderiaID = UUID(uuidString: scuderiaIDString) else {
+                return nil
+            }
+
+            let scuderiaRecord = try await privateDatabase.record(for: CKRecord.ID(recordName: scuderiaID.uuidString))
+            
+            let photoName = driverRecord["photo"] as? String ?? "defaultDriver"
+            
+            let scuderiaLogoName = scuderiaRecord["logo"] as? String ?? "defaultScuderia"
+
+            return DriverModel(
+                id: id,
+                name: driverRecord["name"] as? String ?? "",
+                country: driverRecord["country"] as? String ?? "",
+                number: driverRecord["number"] as? Int16 ?? 0,
+                points: driverRecord["points"] as? Int16 ?? 0,
+                scuderia: driverRecord["scuderia"] as? String ?? "",
+                photo: photoName,
+                scuderiaLogo: scuderiaLogoName,
+                height: driverRecord["height"] as? String ?? "",
+                birthDate: driverRecord["birthDate"] as? Date ?? Date(),
+                championship: driverRecord["championship"] as? String ?? "",
+                details: driverRecord["details"] as? String ?? "",
+                
+            )
+
+        } catch {
+            print("❌ Erro ao buscar registros do CloudKit: \(error.localizedDescription)")
+            return nil
+        }
     }
     
     func getByFormula(idFormula: UUID) async -> [DriverModel] {
@@ -66,7 +109,7 @@ class DriverService {
         return drivers
     }
 
-    func add(name: String, country: String, number: Int16, points: Double, scuderia: UUID, idFormula: UUID) async {
+    func add(name: String, country: String, number: Int16, points: Int16, scuderia: String, idFormula: UUID, photo: String, scuderiaLogo: String, height: String, birthDate: Date, championship: String, details: String) async {
         let uuid = UUID().uuidString
         let record = CKRecord(recordType: "Driver")
         record["id"] = uuid
@@ -74,8 +117,14 @@ class DriverService {
         record["country"] = country
         record["number"] = number
         record["points"] = points
-        record["scuderia"] = scuderia.uuidString
+        record["scuderia"] = scuderia
         record["idFormula"] = idFormula.uuidString
+        record["photo"] = photo
+        record["scuderiaLogo"] = scuderiaLogo
+        record["height"] = height
+        record["birthDate"] = birthDate
+        record["championship"] = championship
+        record["details"] = details
         do {
             let saved = try await privateDatabase.save(record)
             print("Driver salvo com sucesso: \(saved.recordID.recordName)")

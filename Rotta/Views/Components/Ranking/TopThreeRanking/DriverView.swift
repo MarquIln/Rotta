@@ -17,9 +17,9 @@ class DriverView: UIView {
     }()
     
     private lazy var driverImageView: UIImageView = {
-        let image = UIImageView(image: UIImage(systemName: "person.circle.fill"))
-        image.contentMode = .scaleAspectFit
-        image.tintColor = .systemGray3
+        let image = UIImageView()
+        image.contentMode = .scaleAspectFill
+        image.clipsToBounds = true
         return image
     }()
     
@@ -28,7 +28,6 @@ class DriverView: UIView {
         label.font = Fonts.FootnoteEmphasized
         label.textColor = .white
         label.textAlignment = .center
-        label.numberOfLines = 1
         return label
     }()
     
@@ -47,7 +46,7 @@ class DriverView: UIView {
         stack.spacing = 8
         return stack
     }()
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -62,7 +61,7 @@ class DriverView: UIView {
         let parts = driver.name.split(separator: " ")
         nameLabel.text = parts.count >= 2 ? "\(parts.first!.prefix(1)). \(parts.last!)" : driver.name
         pointsLabel.text = "\(driver.points) pontos"
-        driverImageView.image = UIImage(systemName: "person.circle.fill")
+        driverImageView.image = UIImage(named: driver.photo!) ?? UIImage(systemName: "person.fill")
         if rank == 1 {
             driverImageView.heightAnchor.constraint(equalToConstant: 80).isActive = true
             driverImageView.widthAnchor.constraint(equalToConstant: 80).isActive = true
@@ -70,6 +69,11 @@ class DriverView: UIView {
             driverImageView.widthAnchor.constraint(equalToConstant: 60).isActive = true
             driverImageView.heightAnchor.constraint(equalToConstant: 60).isActive = true
         }
+        
+        self.layoutIfNeeded()
+        
+        driverImageView.layer.cornerRadius = driverImageView.frame.height / 2
+        driverImageView.clipsToBounds = true
     }
 }
 
