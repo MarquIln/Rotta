@@ -16,6 +16,9 @@ struct Fonts {
     
     static let Title1 = UIFont(name: "Formula1-Display-Bold", size: 34)
     static let Title2 = UIFont(name: "Formula1-Display-Bold", size: 22)
+    static let Title3 = UIFont(name: "Formula1-Display-Bold", size: 20)
+
+    
     
     static let Subtitle1 = UIFont(name: "Formula1-Display-Regular", size: 17)
     static let Subtitle2 = UIFont(name: "Formula1-Display-Regular", size: 14)

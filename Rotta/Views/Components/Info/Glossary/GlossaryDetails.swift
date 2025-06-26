@@ -21,7 +21,7 @@ class GlossaryDetails: UIView {
         label.text = term?.title
         label.textColor = .white
         label.textAlignment = .center
-        label.font = Fonts.Title1
+        label.font = Fonts.Title3
         return label
     }()
     

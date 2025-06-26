@@ -103,10 +103,6 @@ class ScuderiaDetailsViewController: UIViewController {
                 break
             }
         }
-    
-        override func viewWillDisappear(_ animated: Bool) {
-            navigationController?.isNavigationBarHidden = true
-        }
         
         @objc private func customBackTapped() {
             navigationController?.popViewController(animated: true)
