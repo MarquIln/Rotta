@@ -183,6 +183,10 @@ class MainTabController: UIViewController {
         return button
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+      navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+    
     @objc private func didSelectDropdownOption(_ sender: UIButton) {
         guard let title = sender.titleLabel?.text else { return }
         titleSelectorButton.setTitle("\(title) ", for: .normal)
