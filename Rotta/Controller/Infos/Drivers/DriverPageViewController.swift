@@ -4,9 +4,11 @@
 //
 //  Created by Isadora Ferreira Guerra on 20/06/25.
 //
+
 import UIKit
+
 class DriverPageViewController: UIViewController {
-    private let driver: DriverModel
+    var driver: DriverModel
     private var country: String
     private var number: Int16
     private var scuderiaLogo: String

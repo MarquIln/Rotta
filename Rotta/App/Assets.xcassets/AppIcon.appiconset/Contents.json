@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "Mask group.jpg",
+      "filename" : "Group 1.jpg",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -13,7 +13,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "Mask group 1.jpg",
+      "filename" : "Group 2.jpg",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -25,7 +25,7 @@
           "value" : "tinted"
         }
       ],
-      "filename" : "Mask group 2.jpg",
+      "filename" : "Mask group.jpg",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
