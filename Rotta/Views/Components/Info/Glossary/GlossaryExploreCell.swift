@@ -2,6 +2,12 @@ import UIKit
 
 class GlossaryExploreCell: UIView {
     
+    var glossaryTerms: [GlossaryModel] = [] {
+        didSet {
+            updateContent()
+        }
+    }
+    
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Explore nosso glossário"
@@ -52,19 +58,20 @@ class GlossaryExploreCell: UIView {
     required init?(coder: NSCoder) {
         fatalError("not implemented")
     }
-}
-
-extension GlossaryExploreCell: ViewCodeProtocol {
-    func addSubviews() {
-        addSubview(titleLabel)
-        addSubview(scrollView)
-        scrollView.addSubview(stackView)
-        addSubview(leftChevron)
-        addSubview(rightChevron)
+    
+    func configure(with terms: [GlossaryModel]) {
+        self.glossaryTerms = terms
+        updateContent()
+    }
+    
+    private func updateContent() {
+        stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         
+        let termsToDisplay = glossaryTerms.isEmpty ? createDefaultTerms() : Array(glossaryTerms.prefix(10))
         
-        let items = (1...10).map { _ in createCircleItem(title: "Palavra") }
-        
+        let items = termsToDisplay.map { term in
+            createCircleItem(title: term.title ?? "Termo", imageName: term.image)
+        }
         
         for i in stride(from: 0, to: items.count, by: 2) {
             let pageContainer = UIView()
@@ -76,7 +83,6 @@ extension GlossaryExploreCell: ViewCodeProtocol {
             pageStack.distribution = .fillEqually
             pageStack.translatesAutoresizingMaskIntoConstraints = false
             
-            
             let endIndex = min(i+2, items.count)
             for j in i..<endIndex {
                 pageStack.addArrangedSubview(items[j])
@@ -85,7 +91,6 @@ extension GlossaryExploreCell: ViewCodeProtocol {
             pageContainer.addSubview(pageStack)
             stackView.addArrangedSubview(pageContainer)
             
-          
             NSLayoutConstraint.activate([
                 pageContainer.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
                 pageStack.centerXAnchor.constraint(equalTo: pageContainer.centerXAnchor),
@@ -94,6 +99,62 @@ extension GlossaryExploreCell: ViewCodeProtocol {
                 pageStack.trailingAnchor.constraint(lessThanOrEqualTo: pageContainer.trailingAnchor, constant: -30)
             ])
         }
+    }
+    
+    private func createDefaultTerms() -> [GlossaryModel] {
+        return (1...10).map { i in
+            GlossaryModel(title: "Termo \(i)", image: "glossary_default")
+        }
+    }
+    
+    private func createCircleItem(title: String, imageName: String? = nil) -> UIView {
+        let container = UIStackView()
+        container.axis = .vertical
+        container.alignment = .center
+        container.spacing = 8
+        
+        let circle = UIView()
+        circle.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        circle.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        circle.layer.cornerRadius = 30
+        circle.clipsToBounds = true
+        
+        if let imageName = imageName, let image = UIImage(named: imageName) {
+            let imageView = UIImageView(image: image)
+            imageView.contentMode = .scaleAspectFill
+            imageView.translatesAutoresizingMaskIntoConstraints = false
+            
+            circle.addSubview(imageView)
+            NSLayoutConstraint.activate([
+                imageView.topAnchor.constraint(equalTo: circle.topAnchor),
+                imageView.leadingAnchor.constraint(equalTo: circle.leadingAnchor),
+                imageView.trailingAnchor.constraint(equalTo: circle.trailingAnchor),
+                imageView.bottomAnchor.constraint(equalTo: circle.bottomAnchor)
+            ])
+        } else {
+            let colors: [UIColor] = [.systemBlue, .systemGreen, .systemOrange, .systemPurple, .systemRed, .systemTeal]
+            circle.backgroundColor = colors.randomElement() ?? .systemBlue
+        }
+        
+        let label = UILabel()
+        label.text = title
+        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        label.textAlignment = .center
+        label.numberOfLines = 2
+        
+        container.addArrangedSubview(circle)
+        container.addArrangedSubview(label)
+        return container
+    }
+}
+
+extension GlossaryExploreCell: ViewCodeProtocol {
+    func addSubviews() {
+        addSubview(titleLabel)
+        addSubview(scrollView)
+        scrollView.addSubview(stackView)
+        addSubview(leftChevron)
+        addSubview(rightChevron)
     }
     
     func setupConstraints() {
@@ -124,26 +185,5 @@ extension GlossaryExploreCell: ViewCodeProtocol {
             rightChevron.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor),
             rightChevron.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -4)
         ])
-    }
-    
-    private func createCircleItem(title: String) -> UIView {
-        let container = UIStackView()
-        container.axis = .vertical
-        container.alignment = .center
-        container.spacing = 8
-        
-        let circle = UIView()
-        circle.backgroundColor = .systemBlue
-        circle.widthAnchor.constraint(equalToConstant: 60).isActive = true
-        circle.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        circle.layer.cornerRadius = 30
-        
-        let label = UILabel()
-        label.text = title
-        label.font = UIFont.systemFont(ofSize: 14)
-        
-        container.addArrangedSubview(circle)
-        container.addArrangedSubview(label)
-        return container
     }
 }
