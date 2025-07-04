@@ -6,8 +6,23 @@
 //
 import UIKit
 
+enum FormulaType: String, CaseIterable {
+    case f1Academy = "F1 Academy"
+    case formula2 = "Formula 2"
+    case formula3 = "Formula 3"
+    
+    var displayName: String {
+        return self.rawValue
+    }
+}
+
+protocol FormulaFilterable {
+    func updateData(for formula: FormulaType)
+}
+
 class MainTabController: UIViewController {
-    var selected: String = "Fórmula 2"
+    var selected: String = "Formula 2"
+    var currentFormula: FormulaType = .formula2
     
     let segmented = SegmentedControll(items: ["Calendário", "Ranking", "Infos"])
     
@@ -47,7 +62,7 @@ class MainTabController: UIViewController {
         stack.spacing = 11
         stack.translatesAutoresizingMaskIntoConstraints = false
 
-        let formulas = ["Fórmula 2", "Fórmula 3", "F1 Academy"]
+        let formulas = FormulaType.allCases.map { $0.displayName }
         for (index, option) in formulas.enumerated() { //.enumerated() transforma o array em tupla com indice :)
             var buttonConfig = UIButton.Configuration.plain()
             buttonConfig.title = option
@@ -113,7 +128,9 @@ class MainTabController: UIViewController {
         view.backgroundColor = .backgroundPrimary
         setup()
         displayViewController(at: 0)
-
+        
+        // Configurar fórmula inicial
+        updateAllViewControllersForFormula()
     }
 
     private func displayViewController(at index: Int) {
@@ -192,6 +209,13 @@ class MainTabController: UIViewController {
         titleSelectorButton.setTitle("\(title) ", for: .normal)
         dropdownView.isHidden = true
         selected = title
+        
+        // Atualizar a fórmula atual
+        if let newFormula = FormulaType(rawValue: title) {
+            currentFormula = newFormula
+            updateAllViewControllersForFormula()
+        }
+        
         resetArrow()
         
         dropdownView.contentView.subviews.forEach { $0.removeFromSuperview() }
@@ -204,6 +228,14 @@ class MainTabController: UIViewController {
             newStack.leadingAnchor.constraint(equalTo: dropdownView.contentView.leadingAnchor, constant: 16),
             newStack.trailingAnchor.constraint(equalTo: dropdownView.contentView.trailingAnchor, constant: -16)
         ])
+    }
+    
+    private func updateAllViewControllersForFormula() {
+        viewControllers.forEach { viewController in
+            if let filterableVC = viewController as? FormulaFilterable {
+                filterableVC.updateData(for: currentFormula)
+            }
+        }
     }
 }
 
