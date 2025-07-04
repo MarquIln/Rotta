@@ -9,6 +9,8 @@ import UIKit
 
 class CarComponentsDetailsVC: UIViewController {
     var carComponent: ComponentModel?
+    var allComponents: [ComponentModel] = []
+    let database = Database.shared
     
     func configure(with component: ComponentModel) {
         self.carComponent = component
@@ -75,11 +77,27 @@ class CarComponentsDetailsVC: UIViewController {
         addGradientGlossary()
         setupCustomBackButton()
         configureImageBackground()
+        loadAllComponents()
     }
     
     private func configureImageBackground() {
         if let imageName = carComponent?.image {
             imageBackground.image = UIImage(named: imageName)
+        }
+    }
+    
+    private func loadAllComponents() {
+        if !allComponents.isEmpty {
+            component.exploreCell.configure(with: allComponents)
+            return
+        }
+        
+        Task {
+            allComponents = await database.getAllComponents()
+            
+            await MainActor.run {
+                component.exploreCell.configure(with: allComponents)
+            }
         }
     }
     

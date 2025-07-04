@@ -7,8 +7,13 @@
 
 import UIKit
 
+protocol DriverTableViewDelegate: AnyObject {
+    func driverTableView(_ tableView: DriverTableView, didSelectDriver driver: DriverModel)
+}
+
 class DriverTableView: UIView {
     var drivers: [DriverModel] = []
+    weak var delegate: DriverTableViewDelegate?
     
     private let fixedCellCount = 20
 
@@ -77,6 +82,8 @@ extension DriverTableView: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        let driver = drivers[indexPath.row]
+        delegate?.driverTableView(self, didSelectDriver: driver)
         print("Driver cell at index \(indexPath.row) selected")
     }
 }

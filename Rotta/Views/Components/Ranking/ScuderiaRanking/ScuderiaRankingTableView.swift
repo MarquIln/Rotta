@@ -12,6 +12,8 @@ class ScuderiaRankingTableView: UIView {
     var lastScrollPosition: CGFloat = 0
     let scrollThreshold: CGFloat = 20
     var lastFeedbackTime: CFTimeInterval = 0
+    
+    weak var delegate: ScuderiaRankingTableViewDelegate?
 
     var scuderias: [ScuderiaModel] = []
 
@@ -92,4 +94,8 @@ class ScuderiaRankingTableView: UIView {
         self.scuderias = scuderias
         tableView.reloadData()
     }
+}
+
+protocol ScuderiaRankingTableViewDelegate: AnyObject {
+    func rankingTableView(_ view: ScuderiaRankingTableView, didSelect scuderia: ScuderiaModel)
 }

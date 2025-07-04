@@ -144,3 +144,19 @@ extension InfosViewController: UICollectionViewDelegateFlowLayout {
         return CGSize(width: width, height: height)
     }
 }
+
+extension InfosViewController: FormulaFilterable {
+    func updateData(for formula: FormulaType) {
+        // Atualizar os dados conforme a fórmula selecionada
+        // Por exemplo, você pode alterar os subtítulos dos cards para refletir a fórmula
+        updateCardsData(for: formula)
+        collectionView.reloadData()
+    }
+    
+    private func updateCardsData(for formula: FormulaType) {
+        // Esta é uma implementação de exemplo
+        // Você pode modificar os dados dos cards baseado na fórmula
+        // Por exemplo, alterar os subtítulos para mostrar informações específicas da fórmula
+        print("Atualizando dados para: \(formula.displayName)")
+    }
+}

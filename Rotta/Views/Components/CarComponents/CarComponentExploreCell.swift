@@ -9,6 +9,8 @@ import UIKit
 
 class CarComponentExploreCell: UIView {
     
+    private var allComponents: [ComponentModel] = []
+    
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Explore outros componentes"
@@ -59,19 +61,20 @@ class CarComponentExploreCell: UIView {
     required init?(coder: NSCoder) {
         fatalError("not implemented")
     }
-}
-
-extension CarComponentExploreCell: ViewCodeProtocol {
-    func addSubviews() {
-        addSubview(titleLabel)
-        addSubview(scrollView)
-        scrollView.addSubview(stackView)
-        addSubview(leftChevron)
-        addSubview(rightChevron)
+    
+    func configure(with components: [ComponentModel]) {
+        self.allComponents = components
+        updateContent()
+    }
+    
+    private func updateContent() {
+        stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         
+        let items = allComponents.map { component in
+            createCircleItem(title: component.name ?? "Componente", imageName: component.image)
+        }
         
-        let items = (1...10).map { _ in createCircleItem(title: "Palavra") }
-        
+        guard !items.isEmpty else { return }
         
         for i in stride(from: 0, to: items.count, by: 2) {
             let pageContainer = UIView()
@@ -83,7 +86,6 @@ extension CarComponentExploreCell: ViewCodeProtocol {
             pageStack.distribution = .fillEqually
             pageStack.translatesAutoresizingMaskIntoConstraints = false
             
-            
             let endIndex = min(i+2, items.count)
             for j in i..<endIndex {
                 pageStack.addArrangedSubview(items[j])
@@ -92,7 +94,6 @@ extension CarComponentExploreCell: ViewCodeProtocol {
             pageContainer.addSubview(pageStack)
             stackView.addArrangedSubview(pageContainer)
             
-          
             NSLayoutConstraint.activate([
                 pageContainer.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
                 pageStack.centerXAnchor.constraint(equalTo: pageContainer.centerXAnchor),
@@ -101,6 +102,52 @@ extension CarComponentExploreCell: ViewCodeProtocol {
                 pageStack.trailingAnchor.constraint(lessThanOrEqualTo: pageContainer.trailingAnchor, constant: -30)
             ])
         }
+    }
+    
+    private func createCircleItem(title: String, imageName: String? = nil) -> UIView {
+        let container = UIStackView()
+        container.axis = .vertical
+        container.alignment = .center
+        container.spacing = 8
+        
+        let circle = UIView()
+        circle.backgroundColor = .systemBlue
+        circle.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        circle.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        circle.layer.cornerRadius = 30
+        
+        if let imageName = imageName, let image = UIImage(named: imageName) {
+            let imageView = UIImageView(image: image)
+            imageView.contentMode = .scaleAspectFit
+            imageView.translatesAutoresizingMaskIntoConstraints = false
+            circle.addSubview(imageView)
+            
+            NSLayoutConstraint.activate([
+                imageView.centerXAnchor.constraint(equalTo: circle.centerXAnchor),
+                imageView.centerYAnchor.constraint(equalTo: circle.centerYAnchor),
+                imageView.widthAnchor.constraint(equalToConstant: 40),
+                imageView.heightAnchor.constraint(equalToConstant: 40)
+            ])
+        }
+        
+        let label = UILabel()
+        label.text = title
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textAlignment = .center
+        
+        container.addArrangedSubview(circle)
+        container.addArrangedSubview(label)
+        return container
+    }
+}
+
+extension CarComponentExploreCell: ViewCodeProtocol {
+    func addSubviews() {
+        addSubview(titleLabel)
+        addSubview(scrollView)
+        scrollView.addSubview(stackView)
+        addSubview(leftChevron)
+        addSubview(rightChevron)
     }
     
     func setupConstraints() {
@@ -131,26 +178,5 @@ extension CarComponentExploreCell: ViewCodeProtocol {
             rightChevron.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor),
             rightChevron.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -4)
         ])
-    }
-    
-    private func createCircleItem(title: String) -> UIView {
-        let container = UIStackView()
-        container.axis = .vertical
-        container.alignment = .center
-        container.spacing = 8
-        
-        let circle = UIView()
-        circle.backgroundColor = .systemBlue
-        circle.widthAnchor.constraint(equalToConstant: 60).isActive = true
-        circle.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        circle.layer.cornerRadius = 30
-        
-        let label = UILabel()
-        label.text = title
-        label.font = UIFont.systemFont(ofSize: 14)
-        
-        container.addArrangedSubview(circle)
-        container.addArrangedSubview(label)
-        return container
     }
 }

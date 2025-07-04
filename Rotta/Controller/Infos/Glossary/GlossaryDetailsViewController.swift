@@ -10,6 +10,8 @@ import UIKit
 class GlossaryDetailsViewController: UIViewController {
     
     var term: GlossaryModel?
+    var allTerms: [GlossaryModel] = []
+    let database = Database.shared
     
     lazy var component: GlossaryDetails = {
         guard let termUnwrapped = term else {
@@ -70,6 +72,22 @@ class GlossaryDetailsViewController: UIViewController {
         setupGestures()
         setup()
         addGradientGlossary()
+        loadAllTerms()
+    }
+    
+    private func loadAllTerms() {
+        if !allTerms.isEmpty {
+            component.exploreCell.configure(with: allTerms)
+            return
+        }
+        
+        Task {
+            allTerms = await database.getAllGlossaryTerms()
+            
+            await MainActor.run {
+                component.exploreCell.configure(with: allTerms)
+            }
+        }
     }
     
     private func setupGestures() {

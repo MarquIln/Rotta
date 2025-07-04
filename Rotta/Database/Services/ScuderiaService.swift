@@ -103,6 +103,15 @@ class ScuderiaService {
         }
         return scuderias
     }
+    
+    func getScuderias(for formula: FormulaType) async -> [ScuderiaModel] {
+        let formulaService = FormulaService()
+        let formulas = await formulaService.getAll()
+        guard let targetFormula = formulas.first(where: { $0.name == formula.rawValue }) else {
+            return []
+        }
+        return await getByFormula(idFormula: targetFormula.id)
+    }
 
     func add(name: String, logo: String, points: Double, historicPoints: Int16, idFormula: UUID, country: String, pole: Int16, victory: Int16, podium: Int16, details: String) async {
         let uuid = UUID().uuidString

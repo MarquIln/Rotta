@@ -156,6 +156,7 @@ extension GlossaryTableViewController: GlossaryTableViewDelegate {
     func didSelectItem(at index: Int) {
         let glossaryVC = GlossaryDetailsViewController()
         glossaryVC.term = terms[index]
+        glossaryVC.allTerms = terms
         navigationController?.pushViewController(glossaryVC, animated: true)
     }
 }
