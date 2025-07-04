@@ -118,20 +118,20 @@ class DriverPageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .raceFormula2
-        
+        setupNavigationBar()
         descriptionComponent.setContentHuggingPriority(.required, for: .vertical)
         
         addGradientGlossary()
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
-        navigationController?.setNavigationBarHidden(false, animated: false)
-        
-        title = "Pilotos"
         
         scrollView.delegate = self
         scrollView.alwaysBounceVertical = true
         
         setup()
-        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
     init(driver: DriverModel) {
@@ -181,6 +181,32 @@ class DriverPageViewController: UIViewController {
         fatalError("init(coder:) não implementado")
     }
     
+    @objc private func customBackTapped() {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    private func setupCustomBackButton() {
+        navigationItem.hidesBackButton = true
+    
+        let backButton = UIButton(type: .system)
+        backButton.setImage(UIImage(systemName: "chevron.left.circle.fill"), for: .normal)
+        backButton.tintColor = .rottaYellow
+        backButton.backgroundColor = .clear
+        backButton.layer.cornerRadius = 16
+        backButton.clipsToBounds = true
+        backButton.addTarget(self, action: #selector(customBackTapped), for: .touchUpInside)
+        
+        backButton.frame = CGRect(x: 0, y: 0, width: 32, height: 32)
+        
+        let barButton = UIBarButtonItem(customView: backButton)
+        navigationItem.leftBarButtonItem = barButton
+    }
+    
+    private func setupNavigationBar() {
+        title = "Detalhes do Piloto"
+        setupCustomBackButton()
+    }
+    
     @objc func addGradientGlossary() {
         DispatchQueue.main.async {
             self.gradientView.addGradientDriverDetails()
@@ -189,11 +215,6 @@ class DriverPageViewController: UIViewController {
 }
 
 extension DriverPageViewController: ViewCodeProtocol {
-    func setup() {
-        addSubviews()
-        setupConstraints()
-    }
-    
     func addSubviews() {
         view.addSubview(imagebackground)
         view.addSubview(backgroundColor)

@@ -1,11 +1,12 @@
 
 import UIKit
 
-class ScuderiaTableViewController: UIViewController {
+class ScuderiaTableViewController: UIViewController, FormulaFilterable {
     
     
     private let service = ScuderiaService()
     let database = Database.shared
+    private var currentFormula: FormulaType = .formula2
     
     private var scuderias: [ScuderiaModel] = [ ]
 
@@ -49,12 +50,17 @@ class ScuderiaTableViewController: UIViewController {
     
     private func loadScuderia() {
         Task {
-            scuderias = await database.getAllScuderias()
+            scuderias = await database.getScuderias(for: currentFormula)
             
             await MainActor.run {
                 self.scuderiaTableView.reloadData()
             }
         }
+    }
+    
+    func updateData(for formula: FormulaType) {
+        currentFormula = formula
+        loadScuderia()
     }
 
     lazy var backButton: UIButton = {

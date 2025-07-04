@@ -9,13 +9,17 @@ import UIKit
 
 class ScuderiaDetailsViewController: UIViewController {
     
-    var scuderia: ScuderiaModel?
+    var scuderia: ScuderiaModel? {
+        didSet {
+            print("Scuderia configurada: \(scuderia?.name ?? "nil")")
+            if let scuderia = scuderia {
+                component.configure(with: scuderia)
+            }
+        }
+    }
     
     lazy var component: ScuderiaDetails = {
-        guard let scuderiaUnwrapped = scuderia else {
-            fatalError("ScuderiaModel não pode ser nil ao criar o componente.")
-        }
-        var component = ScuderiaDetails()
+        let component = ScuderiaDetails()
         component.translatesAutoresizingMaskIntoConstraints = false
         return component
     }()
@@ -60,11 +64,6 @@ class ScuderiaDetailsViewController: UIViewController {
             self.gradientView.addGradientGlossary()
         }
     }
-
-        override func viewWillAppear(_ animated: Bool) {
-            super.viewWillAppear(animated)
-            navigationController?.setNavigationBarHidden(false, animated: animated)
-        }
         
         override func viewDidLoad() {
             super.viewDidLoad()
@@ -73,6 +72,15 @@ class ScuderiaDetailsViewController: UIViewController {
             setupGestures()
             setup()
             addGradientGlossary()
+        }
+        
+        override func viewWillAppear(_ animated: Bool) {
+            super.viewWillAppear(animated)
+            navigationController?.setNavigationBarHidden(false, animated: animated)
+            
+            if let scuderia = scuderia {
+                component.configure(with: scuderia)
+            }
         }
         
         private func setupGestures() {
