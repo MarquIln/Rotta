@@ -150,6 +150,32 @@ class CalendarCollectionView: UIView {
         }
     }
     
+    func updateEvents(_ events: [EventModel]) {
+        Task {
+            await updateEventsCache(with: events)
+        }
+    }
+    
+    @MainActor
+    private func updateEventsCache(with events: [EventModel]) async {
+        var calendar = Calendar.current
+        calendar.timeZone = TimeZone(secondsFromGMT: 0)!
+        
+        eventsCache.removeAll()
+        
+        for event in events {
+            guard let eventDate = event.date else { continue }
+            let dayKey = calendar.startOfDay(for: eventDate)
+            
+            if eventsCache[dayKey] == nil {
+                eventsCache[dayKey] = []
+            }
+            eventsCache[dayKey]?.append(event)
+        }
+        
+        monthsCollectionView.reloadData()
+    }
+    
     func preloadAllEvents() {
         Task {
             await loadAllEventsAtOnce()
@@ -233,15 +259,13 @@ class CalendarCollectionView: UIView {
             }
             eventsCache[dayKey]?.append(event)
         }
-        
-        // Marcar este mês como carregado
+
         loadedMonths.insert(monthKey)
         
         monthsCollectionView.reloadData()
     }
     
     func hasEvent(for date: Date) -> Bool {
-        // Usar o mesmo calendar configurado que foi usado no loadEventsForCurrentMonth
         var calendarForCheck = Calendar.current
         calendarForCheck.timeZone = TimeZone(secondsFromGMT: 0)!
         

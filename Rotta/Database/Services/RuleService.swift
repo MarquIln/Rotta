@@ -83,6 +83,15 @@ class RuleService {
         return rules
     }
 
+    func getRules(for formula: FormulaType) async -> [RuleModel] {
+        let formulaService = FormulaService()
+        let formulas = await formulaService.getAll()
+        guard let targetFormula = formulas.first(where: { $0.name == formula.rawValue }) else {
+            return []
+        }
+        return await getByFormula(idFormula: targetFormula.id)
+    }
+
     func add(name: String? = nil, details: String? = nil, idFormula: UUID? = nil) async {
         let uuid = UUID().uuidString
         let record = CKRecord(recordType: "Rule")

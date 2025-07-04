@@ -10,11 +10,7 @@ class ScuderiaDetails: UIView {
 //    var points: Int = 11
 //    var infos: String = "Resumo geralkljhgbvn m,k.jhgfdxvcfbnkl;oiuytredsfcvbhjkliuytrfdfgvbnjkuygtrfedswadfghjkn,mbv cxfdretyuioklbmnhgvfdsxcvbnm,kliouytrdtfyuiolkjhgvbnmklkijuhygtrfdesxdcfvghjl;kjfcld;skfjcldsjfcldjcflm,k.jhgfdxvcfbnkl;oiuytredsfcvbhjkliuytrfdfgvbnjkuygtrfedswadfghjkn,mbv cxfdretyuioklbmnhgvfdsxcvbnm,k.jhgfdxvcfbnkl;oiuytredsfcvbhjkliuytrfdfgvbnjkuygtrfedswadfghjkn,mbv cxfdretyuioklbmnhgvfdsxcvbn"
     
-    var scuderia: ScuderiaModel? = nil {
-        didSet {
-            configure(with: scuderia!)
-        }
-    }
+    var scuderia: ScuderiaModel? = nil
  
     lazy var scuderiaNameLabel: UILabel = {
         let label = UILabel()
@@ -364,6 +360,7 @@ extension ScuderiaDetails: ViewCodeProtocol {
 
 extension ScuderiaDetails {
     func configure(with model: ScuderiaModel) {
+        print("Configurando ScuderiaDetails com: \(model.name)")
         scuderiaNameLabel.text = model.name
         scuderiaLogo.image = UIImage(named: model.logo)
         countryLabel.text = model.country.getCountryFlag()

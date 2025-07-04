@@ -60,7 +60,7 @@ class SplashScreenVC: UIViewController {
     private func finishSequence() {
         let nextVC: UIViewController = MainTabController()
         
-        navigationController?.pushViewController(nextVC, animated: true)
+        navigationController?.setViewControllers([nextVC], animated: true)
         navigationController?.isNavigationBarHidden = true
     }
 }

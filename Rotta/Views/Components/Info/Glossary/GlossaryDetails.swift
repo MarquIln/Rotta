@@ -21,7 +21,7 @@ class GlossaryDetails: UIView {
         label.text = term?.title
         label.textColor = .white
         label.textAlignment = .center
-        label.font = Fonts.Title1
+        label.font = Fonts.Title3
         return label
     }()
     
@@ -40,7 +40,7 @@ class GlossaryDetails: UIView {
     lazy var descripContainer: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .fillsTextBox
+        view.backgroundColor = .fillsTextbox
         view.layer.cornerRadius = 32
 
         return view
@@ -78,7 +78,7 @@ class GlossaryDetails: UIView {
     lazy var descrip2Container: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .fillsTextBox
+        view.backgroundColor = .fillsTextbox
         view.layer.cornerRadius = 32
 
         return view

@@ -108,6 +108,15 @@ class DriverService {
         
         return drivers
     }
+    
+    func getDrivers(for formula: FormulaType) async -> [DriverModel] {
+        let formulaService = FormulaService()
+        let formulas = await formulaService.getAll()
+        guard let targetFormula = formulas.first(where: { $0.name == formula.rawValue }) else {
+            return []
+        }
+        return await getByFormula(idFormula: targetFormula.id)
+    }
 
     func add(name: String, country: String, number: Int16, points: Int16, scuderia: String, idFormula: UUID, photo: String, scuderiaLogo: String, height: String, birthDate: Date, championship: String, details: String) async {
         let uuid = UUID().uuidString

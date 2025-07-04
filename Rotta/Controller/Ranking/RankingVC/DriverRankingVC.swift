@@ -7,29 +7,27 @@
 
 import UIKit
 
-class DriverRankingVC: UIViewController {
+class DriverRankingVC: UIViewController, DriverRankingTableViewDelegate, FormulaFilterable {
+    func rankingTableView(_ view: DriverRankingTableView, didSelect driver: DriverModel) {
+        let detailVC = DriverPageViewController(driver: driver)
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
+    
     var drivers: [DriverModel] = []
     let database = Database.shared
     private let impactFeedback = UIImpactFeedbackGenerator(style: .light)
     private var lastScrollPosition: CGFloat = 0
     private let scrollThreshold: CGFloat = 30.0
+    private var currentFormula: FormulaType = .formula2
 
     lazy var rankingTableView: DriverRankingTableView = {
         let view = DriverRankingTableView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.isUserInteractionEnabled = true
-//        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-//        tap.cancelsTouchesInView = false
-//        tap.delegate = self
-//        view.addGestureRecognizer(tap)
+        view.delegate = self
 
         return view
     }()
-    
-//    @objc func handleTap() {
-//        let vc = OnBoardingVC()
-//        navigationController?.pushViewController(vc, animated: true)
-//    }
     
     lazy var backButton: UIButton = {
         let button = UIButton(type: .system)
@@ -57,14 +55,20 @@ class DriverRankingVC: UIViewController {
         navigationController?.isNavigationBarHidden = false
 
         navigationItem.title = "Drivers Ranking"
+        
+        rankingTableView.delegate = self
 
         loadDrivers()
         setup()
         impactFeedback.prepare()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+      navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
+
     override func viewWillDisappear(_ animated: Bool) {
-        navigationController?.isNavigationBarHidden = true
+      navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
     override func viewDidLayoutSubviews() {
@@ -78,13 +82,18 @@ class DriverRankingVC: UIViewController {
 
     private func loadDrivers() {
         Task {
-            drivers = await database.getAllDrivers()
+            drivers = await database.getDrivers(for: currentFormula)
 
             drivers.sort { $0.points > $1.points }
             await MainActor.run {
                 self.rankingTableView.configure(with: drivers)
             }
         }
+    }
+    
+    func updateData(for formula: FormulaType) {
+        currentFormula = formula
+        loadDrivers()
     }
 }
 

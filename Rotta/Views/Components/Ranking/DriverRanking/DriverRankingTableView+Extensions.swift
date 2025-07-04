@@ -33,6 +33,12 @@ extension DriverRankingTableView: UITableViewDataSource {
 }
 
 extension DriverRankingTableView: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let driver = drivers[indexPath.row]
+        delegate?.rankingTableView(self, didSelect: driver)
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 44
     }

@@ -100,6 +100,7 @@ class DriverRankingCell: UITableViewCell {
         setup()
     }
     
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         driverImageView.layer.cornerRadius = 14
@@ -147,8 +148,6 @@ extension DriverRankingCell: ViewCodeProtocol {
             driverImageView.heightAnchor.constraint(equalToConstant: 28),
             scuderiaLabel.widthAnchor.constraint(equalToConstant: 56),
             scuderiaLabel.heightAnchor.constraint(equalToConstant: 12)
-            
-            
         ])
     }
 }

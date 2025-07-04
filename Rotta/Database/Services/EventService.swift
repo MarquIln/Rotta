@@ -14,6 +14,16 @@ class EventService {
     init(container: CKContainer = .init(identifier: "iCloud.Rotta.CloudRotta")) {
         privateDatabase = container.publicCloudDatabase
     }
+    
+    func getEvents(for formula: FormulaType) async -> [EventModel] {
+        // Buscar a fórmula pelo nome para obter o ID
+        let formulaService = FormulaService()
+        let formulas = await formulaService.getAll()
+        guard let targetFormula = formulas.first(where: { $0.name == formula.rawValue }) else {
+            return []
+        }
+        return await getByFormula(idFormula: targetFormula.id)
+    }
 
     func getAll() async -> [EventModel] {
         var events: [EventModel] = []

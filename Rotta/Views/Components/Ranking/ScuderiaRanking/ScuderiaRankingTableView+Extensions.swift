@@ -37,6 +37,12 @@ extension ScuderiaRankingTableView: UITableViewDelegate {
         return 44
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let scuderia = scuderias[indexPath.row]
+        delegate?.rankingTableView(self, didSelect: scuderia)
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         impactFeedback.prepare()
         lastScrollPosition = scrollView.contentOffset.y

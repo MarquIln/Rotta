@@ -177,6 +177,58 @@ class Database {
         await glossaryService.add(title: title, details: details, subtitle: subtitle, image: image)
     }
     
+    // MARK: - Convenience Methods with FormulaType
+    
+    func getDrivers(for formula: FormulaType) async -> [DriverModel] {
+        let formulas = await getAllFormulas()
+        guard let targetFormula = formulas.first(where: { $0.name == formula.rawValue }) else {
+            return []
+        }
+        return await getDriversByFormula(idFormula: targetFormula.id)
+    }
+    
+    func getScuderias(for formula: FormulaType) async -> [ScuderiaModel] {
+        let formulas = await getAllFormulas()
+        guard let targetFormula = formulas.first(where: { $0.name == formula.rawValue }) else {
+            return []
+        }
+        return await getScuderiasByFormula(idFormula: targetFormula.id)
+    }
+    
+    func getEvents(for formula: FormulaType) async -> [EventModel] {
+        let formulas = await getAllFormulas()
+        guard let targetFormula = formulas.first(where: { $0.name == formula.rawValue }) else {
+            return []
+        }
+        return await getAllEventsByFormula(by: targetFormula.id)
+    }
+    
+    func getRules(for formula: FormulaType) async -> [RuleModel] {
+        let formulas = await getAllFormulas()
+        guard let targetFormula = formulas.first(where: { $0.name == formula.rawValue }) else {
+            return []
+        }
+        return await getAllRulesByFormula(by: targetFormula.id)
+    }
+    
+    func getCars(for formula: FormulaType) async -> [CarModel] {
+        let formulas = await getAllFormulas()
+        guard let targetFormula = formulas.first(where: { $0.name == formula.rawValue }) else {
+            return []
+        }
+        return await getAllCarsByFormula(by: targetFormula.id)
+    }
+    
+    func getTracks(for formula: FormulaType) async -> [TrackModel] {
+        let formulas = await getAllFormulas()
+        guard let targetFormula = formulas.first(where: { $0.name == formula.rawValue }) else {
+            return []
+        }
+        return await getAllTracksByFormula(by: targetFormula.id)
+    }
+
+    // MARK: - CloudKit Management
+    
     func deleteAllRecords(of recordTypes: [String]) async {
         for type in recordTypes {
             let predicate = NSPredicate(value: true)
