@@ -7,8 +7,7 @@
 
 import UIKit
 
-class DriverRankingVC: UIViewController, DriverRankingTableViewDelegate {
-    
+class DriverRankingVC: UIViewController, DriverRankingTableViewDelegate, FormulaFilterable {
     func rankingTableView(_ view: DriverRankingTableView, didSelect driver: DriverModel) {
         let detailVC = DriverPageViewController(driver: driver)
         navigationController?.pushViewController(detailVC, animated: true)
@@ -19,6 +18,7 @@ class DriverRankingVC: UIViewController, DriverRankingTableViewDelegate {
     private let impactFeedback = UIImpactFeedbackGenerator(style: .light)
     private var lastScrollPosition: CGFloat = 0
     private let scrollThreshold: CGFloat = 30.0
+    private var currentFormula: FormulaType = .formula2
 
     lazy var rankingTableView: DriverRankingTableView = {
         let view = DriverRankingTableView()
@@ -55,6 +55,8 @@ class DriverRankingVC: UIViewController, DriverRankingTableViewDelegate {
         navigationController?.isNavigationBarHidden = false
 
         navigationItem.title = "Drivers Ranking"
+        
+        rankingTableView.delegate = self
 
         loadDrivers()
         setup()
@@ -80,13 +82,18 @@ class DriverRankingVC: UIViewController, DriverRankingTableViewDelegate {
 
     private func loadDrivers() {
         Task {
-            drivers = await database.getAllDrivers()
+            drivers = await database.getDrivers(for: currentFormula)
 
             drivers.sort { $0.points > $1.points }
             await MainActor.run {
                 self.rankingTableView.configure(with: drivers)
             }
         }
+    }
+    
+    func updateData(for formula: FormulaType) {
+        currentFormula = formula
+        loadDrivers()
     }
 }
 

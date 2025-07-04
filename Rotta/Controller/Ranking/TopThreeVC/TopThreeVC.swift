@@ -28,6 +28,7 @@ class TopThreeVC: UIViewController {
     @objc func seeAllDrivers() {
         let vc = DriverRankingVC()
         vc.drivers = drivers
+        vc.updateData(for: getCurrentFormula())
         navigationController?.pushViewController(vc, animated: false)
     }
 
@@ -46,6 +47,7 @@ class TopThreeVC: UIViewController {
     @objc func seeAllScuderias() {
         let vc = ScuderiaRankingVC()
         vc.scuderias = scuderias
+        vc.updateData(for: getCurrentFormula())
         navigationController?.pushViewController(vc, animated: false)
     }
 
@@ -124,6 +126,56 @@ class TopThreeVC: UIViewController {
             await MainActor.run {
                 self.scuderiaPodium.update(with: scuderias)
             }
+        }
+    }
+
+    private func getCurrentFormula() -> FormulaType {
+        if let tabController = self.tabBarController as? MainTabController {
+            return tabController.currentFormula
+        }
+        return .formula2
+    }
+}
+
+extension TopThreeVC: FormulaFilterable {
+    func updateData(for formula: FormulaType) {
+        Task {
+            drivers = await database.getDrivers(for: formula)
+            scuderias = await database.getScuderias(for: formula)
+
+            await MainActor.run {
+                updatePodiums()
+            }
+        }
+    }
+
+    private func updatePodiums() {
+        // Atualizar pódio dos pilotos
+        drivers.sort { $0.points > $1.points }
+        driverPodium.update(with: drivers)
+
+        if drivers.count > 0 {
+            driverPodium.firstPlaceView.configure(with: drivers[0], rank: 1)
+        }
+        if drivers.count > 1 {
+            driverPodium.secondPlaceView.configure(with: drivers[1], rank: 2)
+        }
+        if drivers.count > 2 {
+            driverPodium.thirdPlaceView.configure(with: drivers[2], rank: 3)
+        }
+
+        // Atualizar pódio das scuderias
+        scuderias.sort { $0.points > $1.points }
+        scuderiaPodium.update(with: scuderias)
+
+        if scuderias.count > 0 {
+            scuderiaPodium.firstPlaceView.configure(with: scuderias[0], rank: 1)
+        }
+        if scuderias.count > 1 {
+            scuderiaPodium.secondPlaceView.configure(with: scuderias[1], rank: 2)
+        }
+        if scuderias.count > 2 {
+            scuderiaPodium.thirdPlaceView.configure(with: scuderias[2], rank: 3)
         }
     }
 }
