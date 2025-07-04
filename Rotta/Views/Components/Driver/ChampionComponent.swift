@@ -55,27 +55,25 @@ class ChampionComponent: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func setup() {
+        addSubviews()
+        setupConstraints()
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         layer.cornerRadius = bounds.height / 2
     }
 }
 extension ChampionComponent: ViewCodeProtocol {
-    func setup() {
-        addSubviews()
-        setupConstraints()
-    }
     func addSubviews() {
         addSubview(heightStack)
     }
+    
     func setupConstraints() {
         NSLayoutConstraint.activate([
             heightStack.topAnchor.constraint(equalTo: topAnchor, constant: 12),
-//            heightStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
-//            heightStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
             heightStack.bottomAnchor.constraint(equalTo: bottomAnchor),
-//            heightStack.centerXAnchor.constraint(equalTo: centerXAnchor),
-//            heightStack.centerYAnchor.constraint(equalTo: centerYAnchor),
             heightStack.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: 12),
             heightStack.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -12),
             heightStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12),
