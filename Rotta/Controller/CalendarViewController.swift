@@ -110,6 +110,8 @@ class CalendarViewController: UIViewController {
 }
 
 extension CalendarViewController: CalendarCollectionViewDelegate {
+    func didChangeMonth(_ month: Date) {}
+    
     func didSelectDate(_ date: Date) {
         Task {
             let filteredEvents = await eventService.getEvents(

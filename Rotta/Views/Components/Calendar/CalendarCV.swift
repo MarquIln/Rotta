@@ -9,6 +9,7 @@ import UIKit
 
 protocol CalendarCollectionViewDelegate: AnyObject {
     func didSelectDate(_ date: Date)
+    func didChangeMonth(_ month: Date)
 }
 
 class CalendarCollectionView: UIView {
