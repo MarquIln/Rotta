@@ -10,7 +10,6 @@ import UIKit
 class DriverTableViewController: UIViewController, DriverTableViewDelegate, FormulaFilterable {
     
     func driverTableView(_ tableView: DriverTableView, didSelectDriver driver: DriverModel) {
-        print("Navegando para piloto: \(driver.name)")
         let detailsVC = DriverPageViewController(driver: driver)
         navigationController?.pushViewController(detailsVC, animated: true)
     }
@@ -46,12 +45,20 @@ class DriverTableViewController: UIViewController, DriverTableViewDelegate, Form
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        currentFormula = UserPreferencesManager.shared.getSelectedFormula()
+        
         setupView()
         
         driverTableView.delegate = self
         
         addGradientGlossary()
         loadDrivers()
+        FormulaColorManager.shared.addDelegate(self)
+    }
+    
+    deinit {
+        FormulaColorManager.shared.removeDelegate(self)
     }
     
     private func loadDrivers() {
@@ -147,9 +154,16 @@ extension DriverTableViewController: UITableViewDelegate, UITableViewDataSource,
     }
 
     func didTapChevron(in cell: DriverCell) {
-        print("Chevron da célula tocado")
         let detailsVC = DriverPageViewController(driver: drivers[cell.tag])
         navigationController?.pushViewController(detailsVC, animated: true)
+    }
+}
+
+extension DriverTableViewController: FormulaColorManagerDelegate {
+    func formulaColorsDidChange() {
+        DispatchQueue.main.async {
+            self.addGradientGlossary()
+        }
     }
 }
 
