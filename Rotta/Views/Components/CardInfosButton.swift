@@ -67,10 +67,15 @@ class CardInfosButton: UIButton {
 
         setup()
         addGradientCardInfos()
+        FormulaColorManager.shared.addDelegate(self)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        FormulaColorManager.shared.removeDelegate(self)
     }
 
     @objc func addGradientCardInfos() {
@@ -110,5 +115,13 @@ extension CardInfosButton: ViewCodeProtocol {
             stackTitleSubtitle.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 65),
             stackTitleSubtitle.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -65),
         ])
+    }
+}
+
+extension CardInfosButton: FormulaColorManagerDelegate {
+    func formulaColorsDidChange() {
+        DispatchQueue.main.async {
+            self.addGradientCardInfos()
+        }
     }
 }
