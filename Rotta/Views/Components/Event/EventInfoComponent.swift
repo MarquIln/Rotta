@@ -34,6 +34,7 @@ class EventInfoComponent: UIView {
         var stack = UIStackView(arrangedSubviews: [eventIcon, eventTitle])
         stack.axis = .horizontal
         stack.spacing = 8
+        stack.alignment = .center
         
         return stack
     }()
@@ -114,7 +115,6 @@ extension EventInfoComponent: ViewCodeProtocol {
 
             eventIcon.widthAnchor.constraint(equalToConstant: 8),
             eventIcon.heightAnchor.constraint(equalToConstant: 8),
-            eventIcon.centerYAnchor.constraint(equalTo: eventTitle.firstBaselineAnchor),
 
         ])
     }

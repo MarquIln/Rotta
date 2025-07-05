@@ -2,7 +2,7 @@
 //  FormulaColorManager.swift
 //  Rotta
 //
-//  Created by GitHub Copilot on 05/07/25.
+//  Created by Marcos on 05/07/25.
 //
 
 import UIKit
@@ -11,7 +11,7 @@ protocol FormulaColorManagerDelegate: AnyObject {
     func formulaColorsDidChange()
 }
 
-private class WeakDelegate {
+private class Delegate {
     weak var delegate: FormulaColorManagerDelegate?
     
     init(_ delegate: FormulaColorManagerDelegate) {
@@ -23,14 +23,14 @@ class FormulaColorManager {
     static let shared = FormulaColorManager()
     
     private var currentFormula: FormulaType = .formula2
-    private var delegates: [WeakDelegate] = []
+    private var delegates: [Delegate] = []
     
     private init() {
         currentFormula = UserPreferencesManager.shared.getSelectedFormula()
     }
     
     func addDelegate(_ delegate: FormulaColorManagerDelegate) {
-        delegates.append(WeakDelegate(delegate))
+        delegates.append(Delegate(delegate))
         cleanupDelegates()
     }
     

@@ -22,6 +22,9 @@ class TopThreeVC: UIViewController {
                 action: #selector(seeAllDrivers)
             )
         )
+        view.onSeeAllTapped = { [weak self] in
+            self?.seeAllDrivers()
+        }
 
         return view
     }()
@@ -41,6 +44,9 @@ class TopThreeVC: UIViewController {
                 action: #selector(seeAllScuderias)
             )
         )
+        view.onSeeAllTapped = { [weak self] in
+            self?.seeAllScuderias()
+        }
 
         return view
     }()
@@ -55,7 +61,7 @@ class TopThreeVC: UIViewController {
     lazy var stackView: UIStackView = {
         let view = UIStackView(arrangedSubviews: [driverPodium, scuderiaPodium])
         view.axis = .vertical
-        view.distribution = .fill
+        view.distribution = .fillEqually
         view.spacing = 16
         view.translatesAutoresizingMaskIntoConstraints = false
         return view

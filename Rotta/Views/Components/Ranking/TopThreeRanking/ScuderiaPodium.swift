@@ -10,6 +10,7 @@ import SkeletonView
 
 class ScuderiaPodium: UIView {
     private var needsGradientUpdate = false
+    var onSeeAllTapped: (() -> Void)?
     
     private let headerLabel: UILabel = {
         let label = UILabel()
@@ -81,6 +82,7 @@ class ScuderiaPodium: UIView {
         super.init(frame: frame)
         setup()
         setupSkeleton()
+        setupButtonAction()
         FormulaColorManager.shared.addDelegate(self)
     }
     
@@ -88,6 +90,7 @@ class ScuderiaPodium: UIView {
         super.init(coder: coder)
         setup()
         setupSkeleton()
+        setupButtonAction()
         FormulaColorManager.shared.addDelegate(self)
     }
     
@@ -97,31 +100,28 @@ class ScuderiaPodium: UIView {
     
     
     private func setupSkeleton() {
-        // Configurar view principal
         isSkeletonable = true
+        skeletonCornerRadius = 32
         
-        // Configurar stacks
         containerStack.isSkeletonable = true
+        containerStack.skeletonCornerRadius = 32
+        
         headerStack.isSkeletonable = true
         scuderiaStack.isSkeletonable = true
         
-        // Configurar componentes do header
         headerLabel.isSkeletonable = true
-        seeAllButton.isSkeletonable = true
-        
-        // Configurar views das scuderias
-        firstPlaceView.isSkeletonable = true
-        secondPlaceView.isSkeletonable = true
-        thirdPlaceView.isSkeletonable = true
-        
-        // Configurar gradiente view
-        gradientView.isSkeletonable = true
-        
-        // Configurar propriedades específicas do skeleton
         headerLabel.linesCornerRadius = 8
+        
+        seeAllButton.isSkeletonable = true
         seeAllButton.skeletonCornerRadius = 12
+        
+        firstPlaceView.isSkeletonable = true
         firstPlaceView.skeletonCornerRadius = 12
+        
+        secondPlaceView.isSkeletonable = true
         secondPlaceView.skeletonCornerRadius = 12
+        
+        thirdPlaceView.isSkeletonable = true
         thirdPlaceView.skeletonCornerRadius = 12
     }
     
@@ -130,21 +130,23 @@ class ScuderiaPodium: UIView {
     }
     
     func hideSkeleton() {
-        hideSkeleton(reloadDataAfter: false, transition: .crossDissolve(0.25))
+        super.hideSkeleton(reloadDataAfter: false, transition: .crossDissolve(0.25))
     }
     
     func showLoadingSkeleton() {
+        containerStack.layer.sublayers?.removeAll { $0 is CAGradientLayer }
         showAnimatedGradientSkeleton()
     }
     
     func hideLoadingSkeleton() {
-        hideSkeleton(reloadDataAfter: false, transition: .crossDissolve(0.25))
+        super.hideSkeleton(reloadDataAfter: false, transition: .crossDissolve(0.25))
+        needsGradientUpdate = true
+        setNeedsLayout()
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        // Só aplica o gradiente se o containerStack tem um frame válido
         guard containerStack.bounds.width > 0 && containerStack.bounds.height > 0 else { return }
         
         let hasGradientLayer = containerStack.layer.sublayers?.contains { $0 is CAGradientLayer } ?? false
@@ -160,6 +162,15 @@ class ScuderiaPodium: UIView {
         if sorted.count > 1 { secondPlaceView.configure(with: sorted[1], rank: 2) }
         if sorted.count > 2 { thirdPlaceView.configure(with: sorted[2], rank: 3) }
     }
+    
+    private func setupButtonAction() {
+        seeAllButton.addTarget(self, action: #selector(seeAllButtonTapped), for: .touchUpInside)
+    }
+
+    @objc private func seeAllButtonTapped() {
+        onSeeAllTapped?()
+    }
+
 }
 
 extension ScuderiaPodium: ViewCodeProtocol {
@@ -174,6 +185,7 @@ extension ScuderiaPodium: ViewCodeProtocol {
             containerStack.leadingAnchor.constraint(equalTo: leadingAnchor),
             containerStack.trailingAnchor.constraint(equalTo: trailingAnchor),
             containerStack.bottomAnchor.constraint(equalTo: bottomAnchor),
+            heightAnchor.constraint(greaterThanOrEqualToConstant: 200),
         ])
     }
 }
@@ -187,3 +199,4 @@ extension ScuderiaPodium: FormulaColorManagerDelegate {
         }
     }
 }
+

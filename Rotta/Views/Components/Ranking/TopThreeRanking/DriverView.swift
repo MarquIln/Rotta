@@ -9,6 +9,9 @@ import UIKit
 import SkeletonView
 
 class DriverView: UIView {
+    private var imageWidthConstraint: NSLayoutConstraint?
+    private var imageHeightConstraint: NSLayoutConstraint?
+    
     private lazy var positionLabel: UILabel = {
         let label = UILabel()
         label.font = Fonts.Title2
@@ -21,6 +24,7 @@ class DriverView: UIView {
         let image = UIImageView()
         image.contentMode = .scaleAspectFill
         image.clipsToBounds = true
+        image.translatesAutoresizingMaskIntoConstraints = false
         return image
     }()
     
@@ -39,6 +43,7 @@ class DriverView: UIView {
         label.textAlignment = .center
         return label
     }()
+    
     private lazy var stackView: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [driverImageView, positionLabel, nameLabel, pointsLabel])
         stack.translatesAutoresizingMaskIntoConstraints = false
@@ -60,17 +65,21 @@ class DriverView: UIView {
     
     private func setupSkeleton() {
         isSkeletonable = true
-        stackView.isSkeletonable = true
-        positionLabel.isSkeletonable = true
-        driverImageView.isSkeletonable = true
-        nameLabel.isSkeletonable = true
-        pointsLabel.isSkeletonable = true
+        skeletonCornerRadius = 12
         
-        // Configurar propriedades específicas
+        stackView.isSkeletonable = true
+        
+        positionLabel.isSkeletonable = true
         positionLabel.linesCornerRadius = 8
-        nameLabel.linesCornerRadius = 6
-        pointsLabel.linesCornerRadius = 6
+        
+        driverImageView.isSkeletonable = true
         driverImageView.skeletonCornerRadius = 40
+        
+        nameLabel.isSkeletonable = true
+        nameLabel.linesCornerRadius = 6
+        
+        pointsLabel.isSkeletonable = true
+        pointsLabel.linesCornerRadius = 6
     }
 
     func configure(with driver: DriverModel, rank: Int) {
@@ -79,13 +88,20 @@ class DriverView: UIView {
         nameLabel.text = parts.count >= 2 ? "\(parts.first!.prefix(1)). \(parts.last!)" : driver.name
         pointsLabel.text = "\(driver.points) pontos"
         driverImageView.image = UIImage(named: driver.photo!) ?? UIImage(systemName: "person.fill")
+        
+        imageWidthConstraint?.isActive = false
+        imageHeightConstraint?.isActive = false
+        
         if rank == 1 {
-            driverImageView.heightAnchor.constraint(equalToConstant: 80).isActive = true
-            driverImageView.widthAnchor.constraint(equalToConstant: 80).isActive = true
+            imageWidthConstraint = driverImageView.widthAnchor.constraint(equalToConstant: 80)
+            imageHeightConstraint = driverImageView.heightAnchor.constraint(equalToConstant: 80)
         } else {
-            driverImageView.widthAnchor.constraint(equalToConstant: 60).isActive = true
-            driverImageView.heightAnchor.constraint(equalToConstant: 60).isActive = true
+            imageWidthConstraint = driverImageView.widthAnchor.constraint(equalToConstant: 60)
+            imageHeightConstraint = driverImageView.heightAnchor.constraint(equalToConstant: 60)
         }
+        
+        imageWidthConstraint?.isActive = true
+        imageHeightConstraint?.isActive = true
         
         self.layoutIfNeeded()
         
@@ -106,6 +122,7 @@ extension DriverView: ViewCodeProtocol {
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            heightAnchor.constraint(greaterThanOrEqualToConstant: 120),
         ])
     }
 }
