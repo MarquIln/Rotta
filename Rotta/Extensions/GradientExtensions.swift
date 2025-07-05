@@ -1,10 +1,12 @@
 //
-//  Extensions.swift
+//  ViewExtensions.swift
 //  Rotta
 //
-//  Created by Isadora Ferreira Guerra on 12/06/25.
+//  Created by Marcos on 05/07/25.
 //
+
 import UIKit
+
 extension UIView {
     func addGradientCardInfos(colors: [CGColor]? = nil) {
         self.layer.sublayers?.removeAll(where: { $0 is CAGradientLayer })
@@ -75,85 +77,5 @@ extension UIView {
         gradientLayer.colors = colors ?? FormulaColorManager.shared.getDriverDetailsGradientColors()
         gradientLayer.locations = [0.23, 0.4]
         layer.insertSublayer(gradientLayer, at: 0)
-    }
-}
-
-extension String {
-    func getCountryFlag() -> String {
-        let country = self.lowercased()
-        
-        let flagMapping: [String: String] = [
-            "brazil": "🇧🇷",
-            "ireland": "🇮🇪",
-            "united kingdom": "🇬🇧",
-            "england": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-            "france": "🇫🇷",
-            "spain": "🇪🇸",
-            "italy": "🇮🇹",
-            "germany": "🇩🇪",
-            "netherlands": "🇳🇱",
-            "monaco": "🇲🇨",
-            "australia": "🇦🇺",
-            "argentina": "🇦🇷",
-            "colombia": "🇨🇴",
-            "sweden": "🇸🇪",
-            "india": "🇮🇳",
-            "czech republic": "🇨🇿",
-            "paraguay": "🇵🇾",
-            "mexico": "🇲🇽",
-            "japan": "🇯🇵",
-            "belgium": "🇧🇪",
-            "estonia": "🇪🇪",
-            "bulgaria": "🇧🇬",
-            "austria": "🇦🇹",
-            "finland": "🇫🇮",
-            "poland": "🇵🇱",
-            "singapore": "🇸🇬",
-            "norway": "🇳🇴",
-            "denmark": "🇩🇰",
-            "thailand": "🇹🇭",
-            "united states": "🇺🇸",
-            "peru": "🇵🇪",
-            "united arab emirates": "🇦🇪",
-            "bahrain": "🇧🇭",
-            
-            "brasil": "🇧🇷",
-            "irlanda":  "🇮🇪",
-            "reino unido": "🇬🇧",
-            "frança": "🇫🇷",
-            "espanha": "🇪🇸",
-            "itália": "🇮🇹",
-            "alemanha": "🇩🇪",
-            "holanda": "🇳🇱",
-            "mônaco": "🇲🇨",
-            "austrália": "🇦🇺",
-            "estados unidos": "🇺🇸",
-            "colômbia": "🇨🇴",
-            "suécia": "🇸🇪",
-            "índia": "🇮🇳",
-            "república tcheca": "🇨🇿",
-            "paraguai": "🇵🇾",
-            "méxico": "🇲🇽",
-            "japão": "🇯🇵",
-            "bélgica": "🇧🇪",
-            "estônia": "🇪🇪",
-            "bulgária": "🇧🇬",
-            "áustria": "🇦🇹",
-            "finlândia": "🇫🇮",
-            "polônia": "🇵🇱",
-            "singapura": "🇸🇬",
-            "noruega": "🇳🇴",
-            "dinamarca": "🇩🇰",
-            "tailândia": "🇹🇭",
-            "emirados árabes unidos": "🇦🇪",
-            "UAE": "🇦🇪",
-            "Arábia Saudita": "🇸🇦",
-            "Azerbaijão": "🇦🇿",
-            "Hungria": "🇭🇺",
-            "UK": "🇬🇧",
-            "Emirados Árabes Unidos / Alemanha": "🇦🇪🇩🇪"
-        ]
-        
-        return flagMapping[country] ?? "🏁"
     }
 }
