@@ -19,7 +19,7 @@ class MonthCell: UICollectionViewCell {
     var days: [Date?] = []
     let calendar = Calendar.current
     
-    private lazy var daysCollectionView: UICollectionView = {
+    lazy var daysCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 8
         layout.minimumInteritemSpacing = 0
@@ -94,7 +94,7 @@ class MonthCell: UICollectionViewCell {
         }
     }
     
-    private func generateDaysInMonth() {
+    func generateDaysInMonth() {
         days.removeAll()
         
         guard let monthInterval = calendar.dateInterval(of: .month, for: month) else { return }

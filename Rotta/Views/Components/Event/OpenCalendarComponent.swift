@@ -74,18 +74,22 @@ class OpenCalendarComponent: UIView {
     }()
     
     // MARK: - Init
-    
-    override init(frame: CGRect) {
+     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
         addGradient()
+        FormulaColorManager.shared.addDelegate(self)
         Task {
             await loadEvents()
         }
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        FormulaColorManager.shared.removeDelegate(self)
     }
     
     @objc func addGradient() {
@@ -189,21 +193,29 @@ extension OpenCalendarComponent: ViewCodeProtocol {
             backgroundContainer.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             backgroundContainer.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             
+            backgroundImageView.topAnchor.constraint(equalTo: self.topAnchor),
+            backgroundImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            backgroundImageView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            backgroundImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            
             gradientView.topAnchor.constraint(equalTo: backgroundImageView.topAnchor),
             gradientView.leadingAnchor.constraint(equalTo: backgroundImageView.leadingAnchor),
             gradientView.trailingAnchor.constraint(equalTo: backgroundImageView.trailingAnchor),
             gradientView.bottomAnchor.constraint(equalTo: backgroundImageView.bottomAnchor),
             gradientView.heightAnchor.constraint(equalToConstant: 500),
             
-            backgroundImageView.topAnchor.constraint(equalTo: self.topAnchor),
-            backgroundImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            backgroundImageView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            backgroundImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            
             eventCalendarStack.topAnchor.constraint(equalTo: gradientView.topAnchor, constant: 16),
             eventCalendarStack.leadingAnchor.constraint(equalTo: gradientView.leadingAnchor, constant: 16),
             eventCalendarStack.trailingAnchor.constraint(equalTo: gradientView.trailingAnchor, constant: -16),
             eventCalendarStack.bottomAnchor.constraint(equalTo: gradientView.bottomAnchor, constant: -16),
         ])
+    }
+}
+
+extension OpenCalendarComponent: FormulaColorManagerDelegate {
+    func formulaColorsDidChange() {
+        DispatchQueue.main.async {
+            self.addGradient()
+        }
     }
 }

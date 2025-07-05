@@ -13,7 +13,7 @@ class EventInfoComponent: UIView {
     private lazy var eventIcon: UIImageView = {
         var icon = UIImageView()
         icon.image = UIImage(systemName: "circle.fill")
-        icon.tintColor = .f2Quali
+        icon.tintColor = FormulaColorManager.shared.qualiColor
         icon.contentMode = .scaleAspectFit
         icon.setContentHuggingPriority(.required, for: .horizontal)
         icon.setContentCompressionResistancePriority(.required, for: .horizontal)
@@ -84,10 +84,15 @@ class EventInfoComponent: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
+        FormulaColorManager.shared.addDelegate(self)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        FormulaColorManager.shared.removeDelegate(self)
     }
 }
 
@@ -112,5 +117,15 @@ extension EventInfoComponent: ViewCodeProtocol {
             eventIcon.centerYAnchor.constraint(equalTo: eventTitle.firstBaselineAnchor),
 
         ])
+    }
+}
+
+extension EventInfoComponent: FormulaColorManagerDelegate {
+    func formulaColorsDidChange() {
+        DispatchQueue.main.async {
+            if self.color == nil {
+                self.eventIcon.tintColor = FormulaColorManager.shared.qualiColor
+            }
+        }
     }
 }

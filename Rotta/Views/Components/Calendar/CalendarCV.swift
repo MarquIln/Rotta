@@ -9,7 +9,6 @@ import UIKit
 
 protocol CalendarCollectionViewDelegate: AnyObject {
     func didSelectDate(_ date: Date)
-    func didChangeMonth(_ date: Date)
 }
 
 class CalendarCollectionView: UIView {
@@ -17,6 +16,7 @@ class CalendarCollectionView: UIView {
     
     var currentDate = Date()
     var selectedDate: Date?
+    var currentFormula: FormulaType = .formula2
     let calendar = Calendar.current
     
     var months: [Date] = []
@@ -77,6 +77,7 @@ class CalendarCollectionView: UIView {
         setupView()
         setupMonths()
         updateHeaderLabel()
+        selectTodayByDefault()
     }
     
     required init?(coder: NSCoder) {
@@ -84,6 +85,20 @@ class CalendarCollectionView: UIView {
         setupView()
         setupMonths()
         updateHeaderLabel()
+        selectTodayByDefault()
+    }
+    
+    private func selectTodayByDefault() {
+        let today = Date()
+        selectedDate = today
+        
+        if currentFormula == .formula2 && UserPreferencesManager.shared.hasSelectedFormula() {
+            currentFormula = UserPreferencesManager.shared.getSelectedFormula()
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.updateSelectedDateOnVisibleCells()
+        }
     }
     
     private func setupView() {
@@ -130,6 +145,17 @@ class CalendarCollectionView: UIView {
         DispatchQueue.main.async {
             let indexPath = IndexPath(item: self.currentMonthIndex, section: 0)
             self.monthsCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
+            
+            self.updateSelectedDateOnVisibleCells()
+        }
+    }
+    
+    private func updateSelectedDateOnVisibleCells() {
+        for cell in monthsCollectionView.visibleCells {
+            if let monthCell = cell as? MonthCell {
+                monthCell.updateSelectedDate(selectedDate)
+                monthCell.daysCollectionView.reloadData()
+            }
         }
     }
     
@@ -142,15 +168,17 @@ class CalendarCollectionView: UIView {
     
     func selectDate(_ date: Date) {
         selectedDate = date
-        
-        for cell in monthsCollectionView.visibleCells {
-            if let monthCell = cell as? MonthCell {
-                monthCell.updateSelectedDate(selectedDate)
-            }
-        }
+        updateSelectedDateOnVisibleCells()
     }
     
     func updateEvents(_ events: [EventModel]) {
+        Task {
+            await updateEventsCache(with: events)
+        }
+    }
+    
+    func updateEvents(_ events: [EventModel], for formula: FormulaType) {
+        currentFormula = formula
         Task {
             await updateEventsCache(with: events)
         }
@@ -174,6 +202,8 @@ class CalendarCollectionView: UIView {
         }
         
         monthsCollectionView.reloadData()
+        
+        updateSelectedDateOnVisibleCells()
     }
     
     func preloadAllEvents() {
@@ -184,7 +214,7 @@ class CalendarCollectionView: UIView {
     
     @MainActor
     private func loadAllEventsAtOnce() async {
-        let allEvents = await eventService.getAll()
+        let allEvents = await eventService.getEvents(for: currentFormula)
         
         var calendar = Calendar.current
         calendar.timeZone = TimeZone(secondsFromGMT: 0)!
@@ -202,7 +232,7 @@ class CalendarCollectionView: UIView {
         }
         
         let startYear = 2024
-        let endYear = 2026
+        let endYear = 2030
         for year in startYear...endYear {
             for month in 1...12 {
                 let monthKey = String(format: "%04d-%02d", year, month)
@@ -211,6 +241,7 @@ class CalendarCollectionView: UIView {
         }
         
         monthsCollectionView.reloadData()
+        updateSelectedDateOnVisibleCells()
     }
     
     func loadEventsForVisibleDates() {
@@ -231,6 +262,7 @@ class CalendarCollectionView: UIView {
         
         guard !loadedMonths.contains(monthKey) else {
             monthsCollectionView.reloadData()
+            updateSelectedDateOnVisibleCells()
             return
         }
         
@@ -240,7 +272,11 @@ class CalendarCollectionView: UIView {
         let startOfMonth = calendar.dateInterval(of: .month, for: currentDate)?.start ?? currentDate
         let endOfMonth = calendar.dateInterval(of: .month, for: currentDate)?.end ?? currentDate
         
-        let allEvents = await eventService.getEventsInRange(startDate: startOfMonth, endDate: endOfMonth)
+        let allEventsForFormula = await eventService.getEvents(for: currentFormula)
+        let allEvents = allEventsForFormula.filter { event in
+            guard let eventDate = event.date else { return false }
+            return eventDate >= startOfMonth && eventDate < endOfMonth
+        }
         
         let daysInMonth = calendar.range(of: .day, in: .month, for: currentDate)?.count ?? 30
         for day in 1...daysInMonth {
@@ -263,6 +299,7 @@ class CalendarCollectionView: UIView {
         loadedMonths.insert(monthKey)
         
         monthsCollectionView.reloadData()
+        updateSelectedDateOnVisibleCells()
     }
     
     func hasEvent(for date: Date) -> Bool {
@@ -316,5 +353,28 @@ class CalendarCollectionView: UIView {
         
         updateHeaderLabel()
         delegate?.didChangeMonth(currentDate)
+    }
+    
+    func selectTodayManually() {
+        let today = Date()
+        selectedDate = today
+        
+        if let todayIndex = months.firstIndex(where: { calendar.isDate($0, equalTo: today, toGranularity: .month) }) {
+            currentMonthIndex = todayIndex
+            currentDate = months[currentMonthIndex]
+            
+            let indexPath = IndexPath(item: currentMonthIndex, section: 0)
+            monthsCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
+        }
+        
+        monthsCollectionView.reloadData()
+        updateSelectedDateOnVisibleCells()
+    }
+    
+    func clearCacheAndReload() {
+        eventsCache.removeAll()
+        loadedMonths.removeAll()
+        monthsCollectionView.reloadData()
+        loadEventsForVisibleDates()
     }
 }

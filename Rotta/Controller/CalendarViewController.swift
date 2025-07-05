@@ -8,15 +8,16 @@
 import UIKit
 
 class CalendarViewController: UIViewController {
-    
-    private var currentFormula: FormulaType?
-    
+
+    private var currentFormula: FormulaType = .formula2
+
     private lazy var scrollView: UIScrollView = {
         let scroll = UIScrollView()
         scroll.translatesAutoresizingMaskIntoConstraints = false
+        scroll.showsVerticalScrollIndicator = false
         return scroll
     }()
-    
+
     private lazy var contentView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -31,91 +32,107 @@ class CalendarViewController: UIViewController {
         calendar.translatesAutoresizingMaskIntoConstraints = false
         return calendar
     }()
-    
+
     private lazy var event: OpenCalendarComponent = {
         var event = OpenCalendarComponent()
         event.translatesAutoresizingMaskIntoConstraints = false
-        
+
         return event
     }()
-    
+
     private let eventService = EventService()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
         setup()
-        
-        // Inicializar com Formula 2 por padrão
-        if currentFormula == nil {
-            currentFormula = .formula2
+
+        currentFormula = UserPreferencesManager.shared.getSelectedFormula()
+        customCalendarView.currentFormula = currentFormula
+
+        setupTodaySelection()
+    }
+
+    private func setupTodaySelection() {
+        let today = Date()
+
+        DispatchQueue.main.asyncAfter(deadline: .now()) {
+            self.loadEventsForToday(today)
         }
     }
-    
+
+    private func loadEventsForToday(_ date: Date) {
+        Task {
+            let filteredEvents = await eventService.getEvents(
+                for: currentFormula
+            )
+            let eventsOfTheDay = filteredEvents.filter { event in
+                guard let eventDate = event.date else { return false }
+                return Calendar.current.isDate(eventDate, inSameDayAs: date)
+            }
+
+            if let roundNumber = eventsOfTheDay.first?.roundNumber {
+                let allEvents = await eventService.getEvents(
+                    for: currentFormula
+                )
+                let eventsOfRound = allEvents.filter {
+                    $0.roundNumber == roundNumber
+                }
+
+                await MainActor.run {
+                    self.event.update(with: eventsOfRound)
+                }
+            }
+        }
+    }
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        // Se uma fórmula específica está selecionada, carregue eventos filtrados
-        if let formula = currentFormula {
-            loadEventsForFormula(formula)
-        } else {
-            // Estado inicial: carregue eventos da Formula 2
-            loadEventsForFormula(.formula2)
-        }
+
+        loadEventsForFormula(currentFormula)
     }
-    
+
     private func loadEventsForFormula(_ formula: FormulaType) {
         Task {
             let filteredEvents = await eventService.getEvents(for: formula)
-            
+
             await MainActor.run {
-                customCalendarView.updateEvents(filteredEvents)
+                customCalendarView.updateEvents(filteredEvents, for: formula)
             }
         }
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        customCalendarView.selectTodayManually()
     }
 }
 
 extension CalendarViewController: CalendarCollectionViewDelegate {
     func didSelectDate(_ date: Date) {
-        print("Data selecionada: \(date)")
-
         Task {
-            let eventsOfTheDay: [EventModel]
-            
-            // Use eventos filtrados se uma fórmula específica estiver selecionada
-            if let formula = currentFormula {
-                let filteredEvents = await eventService.getEvents(for: formula)
-                eventsOfTheDay = filteredEvents.filter { event in
-                    guard let eventDate = event.date else { return false }
-                    return Calendar.current.isDate(eventDate, inSameDayAs: date)
-                }
-            } else {
-                eventsOfTheDay = await eventService.getOnDate(date)
+            let filteredEvents = await eventService.getEvents(
+                for: currentFormula
+            )
+            let eventsOfTheDay = filteredEvents.filter { event in
+                guard let eventDate = event.date else { return false }
+                return Calendar.current.isDate(eventDate, inSameDayAs: date)
             }
-            
+
             guard let roundNumber = eventsOfTheDay.first?.roundNumber else {
-                print("Nenhum evento nesse dia")
                 return
             }
-            
-            let allEvents: [EventModel]
-            if let formula = currentFormula {
-                allEvents = await eventService.getEvents(for: formula)
-            } else {
-                allEvents = await eventService.getAll()
+
+            let allEvents = await eventService.getEvents(for: currentFormula)
+            let eventsOfRound = allEvents.filter {
+                $0.roundNumber == roundNumber
             }
-            
-            let eventsOfRound = allEvents.filter { $0.roundNumber == roundNumber }
-            
+
             DispatchQueue.main.async {
                 self.event.update(with: eventsOfRound)
             }
         }
-    }
-
-    
-    func didChangeMonth(_ date: Date) {
-        print("Mês alterado para: \(date)")
     }
 }
 
@@ -163,18 +180,30 @@ extension CalendarViewController: ViewCodeProtocol {
             ),
             customCalendarView.leadingAnchor.constraint(
                 equalTo: contentView.leadingAnchor,
-                constant: 16
+                constant: 0
             ),
             customCalendarView.trailingAnchor.constraint(
                 equalTo: contentView.trailingAnchor,
-                constant: -16
+                constant: -0
             ),
-            customCalendarView.heightAnchor.constraint(equalToConstant: 500),
+            customCalendarView.heightAnchor.constraint(equalToConstant: 470),
 
-                   event.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-                   event.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-                   event.topAnchor.constraint(equalTo: customCalendarView.bottomAnchor, constant: 20),
-                   event.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0)
+            event.leadingAnchor.constraint(
+                equalTo: contentView.leadingAnchor,
+                constant: 0
+            ),
+            event.trailingAnchor.constraint(
+                equalTo: contentView.trailingAnchor,
+                constant: -0
+            ),
+            event.topAnchor.constraint(
+                equalTo: customCalendarView.bottomAnchor,
+                constant: 20
+            ),
+            event.bottomAnchor.constraint(
+                equalTo: contentView.bottomAnchor,
+                constant: 0
+            ),
 
         ])
     }
@@ -183,12 +212,13 @@ extension CalendarViewController: ViewCodeProtocol {
 extension CalendarViewController: FormulaFilterable {
     func updateData(for formula: FormulaType) {
         currentFormula = formula
-        
+
         Task {
             let filteredEvents = await eventService.getEvents(for: formula)
-            
+
             await MainActor.run {
-                customCalendarView.updateEvents(filteredEvents)
+                customCalendarView.updateEvents(filteredEvents, for: formula)
+                customCalendarView.clearCacheAndReload()
                 event.update(with: filteredEvents)
             }
         }
