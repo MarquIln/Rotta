@@ -43,7 +43,7 @@ class ScuderiaRankingTableView: UIView {
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .horizontal
         stack.distribution = .fill
-        stack.backgroundColor = .f2Corrida
+        stack.backgroundColor = FormulaColorManager.shared.raceColor
         stack.alignment = .fill
         stack.layer.cornerRadius = 12
         
@@ -82,12 +82,18 @@ class ScuderiaRankingTableView: UIView {
         super.init(frame: frame)
         impactFeedback.prepare()
         setup()
+        FormulaColorManager.shared.addDelegate(self)
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         impactFeedback.prepare()
         setup()
+        FormulaColorManager.shared.addDelegate(self)
+    }
+    
+    deinit {
+        FormulaColorManager.shared.removeDelegate(self)
     }
         
     func configure(with scuderias: [ScuderiaModel]) {
@@ -98,4 +104,12 @@ class ScuderiaRankingTableView: UIView {
 
 protocol ScuderiaRankingTableViewDelegate: AnyObject {
     func rankingTableView(_ view: ScuderiaRankingTableView, didSelect scuderia: ScuderiaModel)
+}
+
+extension ScuderiaRankingTableView: FormulaColorManagerDelegate {
+    func formulaColorsDidChange() {
+        DispatchQueue.main.async {
+            self.headerStack.backgroundColor = FormulaColorManager.shared.raceColor
+        }
+    }
 }

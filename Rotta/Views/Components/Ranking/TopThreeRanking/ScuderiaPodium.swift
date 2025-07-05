@@ -6,8 +6,12 @@
 //
 
 import UIKit
+import SkeletonView
 
 class ScuderiaPodium: UIView {
+    private var needsGradientUpdate = false
+    var onSeeAllTapped: (() -> Void)?
+    
     private let headerLabel: UILabel = {
         let label = UILabel()
         label.text = "Scuderias"
@@ -58,7 +62,7 @@ class ScuderiaPodium: UIView {
     
     @objc func addGradient() {
         DispatchQueue.main.async {
-            self.gradientView.addGradientGlossary()
+            self.gradientView.addGradientRankingView()
         }
     }
     
@@ -77,19 +81,79 @@ class ScuderiaPodium: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
-        addGradient()
+        setupSkeleton()
+        setupButtonAction()
+        FormulaColorManager.shared.addDelegate(self)
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setup()
-        addGradient()
+        setupSkeleton()
+        setupButtonAction()
+        FormulaColorManager.shared.addDelegate(self)
+    }
+    
+    deinit {
+        FormulaColorManager.shared.removeDelegate(self)
     }
     
     
+    private func setupSkeleton() {
+        isSkeletonable = true
+        skeletonCornerRadius = 32
+        
+        containerStack.isSkeletonable = true
+        containerStack.skeletonCornerRadius = 32
+        
+        headerStack.isSkeletonable = true
+        scuderiaStack.isSkeletonable = true
+        
+        headerLabel.isSkeletonable = true
+        headerLabel.linesCornerRadius = 8
+        
+        seeAllButton.isSkeletonable = true
+        seeAllButton.skeletonCornerRadius = 12
+        
+        firstPlaceView.isSkeletonable = true
+        firstPlaceView.skeletonCornerRadius = 12
+        
+        secondPlaceView.isSkeletonable = true
+        secondPlaceView.skeletonCornerRadius = 12
+        
+        thirdPlaceView.isSkeletonable = true
+        thirdPlaceView.skeletonCornerRadius = 12
+    }
+    
+    func showSkeleton() {
+        showAnimatedGradientSkeleton()
+    }
+    
+    func hideSkeleton() {
+        super.hideSkeleton(reloadDataAfter: false, transition: .crossDissolve(0.25))
+    }
+    
+    func showLoadingSkeleton() {
+        containerStack.layer.sublayers?.removeAll { $0 is CAGradientLayer }
+        showAnimatedGradientSkeleton()
+    }
+    
+    func hideLoadingSkeleton() {
+        super.hideSkeleton(reloadDataAfter: false, transition: .crossDissolve(0.25))
+        needsGradientUpdate = true
+        setNeedsLayout()
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
-        containerStack.addGradientRankingView()
+        
+        guard containerStack.bounds.width > 0 && containerStack.bounds.height > 0 else { return }
+        
+        let hasGradientLayer = containerStack.layer.sublayers?.contains { $0 is CAGradientLayer } ?? false
+        if needsGradientUpdate || !hasGradientLayer {
+            containerStack.addGradientRankingView()
+            needsGradientUpdate = false
+        }
     }
     
     func update(with scuderias: [ScuderiaModel]) {
@@ -98,6 +162,15 @@ class ScuderiaPodium: UIView {
         if sorted.count > 1 { secondPlaceView.configure(with: sorted[1], rank: 2) }
         if sorted.count > 2 { thirdPlaceView.configure(with: sorted[2], rank: 3) }
     }
+    
+    private func setupButtonAction() {
+        seeAllButton.addTarget(self, action: #selector(seeAllButtonTapped), for: .touchUpInside)
+    }
+
+    @objc private func seeAllButtonTapped() {
+        onSeeAllTapped?()
+    }
+
 }
 
 extension ScuderiaPodium: ViewCodeProtocol {
@@ -112,6 +185,18 @@ extension ScuderiaPodium: ViewCodeProtocol {
             containerStack.leadingAnchor.constraint(equalTo: leadingAnchor),
             containerStack.trailingAnchor.constraint(equalTo: trailingAnchor),
             containerStack.bottomAnchor.constraint(equalTo: bottomAnchor),
+            heightAnchor.constraint(greaterThanOrEqualToConstant: 200),
         ])
     }
 }
+
+extension ScuderiaPodium: FormulaColorManagerDelegate {
+    func formulaColorsDidChange() {
+        needsGradientUpdate = true
+        DispatchQueue.main.async {
+            self.addGradient()
+            self.setNeedsLayout()
+        }
+    }
+}
+

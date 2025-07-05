@@ -61,6 +61,8 @@ class ScuderiaRankingVC: UIViewController, ScuderiaRankingTableViewDelegate, For
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        currentFormula = UserPreferencesManager.shared.getSelectedFormula()
+
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             customView: backButton
         )
@@ -73,6 +75,11 @@ class ScuderiaRankingVC: UIViewController, ScuderiaRankingTableViewDelegate, For
         loadScuderias()
         setup()
         impactFeedback.prepare()
+        FormulaColorManager.shared.addDelegate(self)
+    }
+    
+    deinit {
+        FormulaColorManager.shared.removeDelegate(self)
     }
 
     override func viewDidLayoutSubviews() {
@@ -105,7 +112,14 @@ class ScuderiaRankingVC: UIViewController, ScuderiaRankingTableViewDelegate, For
     }
 }
 
-// MARK: - UIGestureRecognizerDelegate
+extension ScuderiaRankingVC: FormulaColorManagerDelegate {
+    func formulaColorsDidChange() {
+        DispatchQueue.main.async {
+            self.view.addGradientCardInfos()
+        }
+    }
+}
+
 extension ScuderiaRankingVC: UIGestureRecognizerDelegate {
     func gestureRecognizer(
         _ gestureRecognizer: UIGestureRecognizer,

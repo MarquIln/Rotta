@@ -56,10 +56,15 @@ class CarComponentExploreCell: UIView {
         setup()
         self.backgroundColor = .fillsTextbox
         self.layer.cornerRadius = 32
+        FormulaColorManager.shared.addDelegate(self)
     }
     
     required init?(coder: NSCoder) {
         fatalError("not implemented")
+    }
+    
+    deinit {
+        FormulaColorManager.shared.removeDelegate(self)
     }
     
     func configure(with components: [ComponentModel]) {
@@ -111,7 +116,7 @@ class CarComponentExploreCell: UIView {
         container.spacing = 8
         
         let circle = UIView()
-        circle.backgroundColor = .systemBlue
+        circle.backgroundColor = FormulaColorManager.shared.primaryColor
         circle.widthAnchor.constraint(equalToConstant: 60).isActive = true
         circle.heightAnchor.constraint(equalToConstant: 60).isActive = true
         circle.layer.cornerRadius = 30
@@ -178,5 +183,13 @@ extension CarComponentExploreCell: ViewCodeProtocol {
             rightChevron.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor),
             rightChevron.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -4)
         ])
+    }
+}
+
+extension CarComponentExploreCell: FormulaColorManagerDelegate {
+    func formulaColorsDidChange() {
+        DispatchQueue.main.async {
+            self.updateContent()
+        }
     }
 }

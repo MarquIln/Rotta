@@ -17,7 +17,11 @@ extension MonthCell: UICollectionViewDataSource {
         
         let day = days[indexPath.item]
         let isToday = day != nil && calendar.isDateInToday(day!)
-        let isSelected = day == selectedDate
+        
+        var isSelected = false
+        if let day = day, let selectedDate = selectedDate {
+            isSelected = calendar.isDate(day, inSameDayAs: selectedDate)
+        }
         
         let hasEvent = day != nil ? (delegate as? CalendarCollectionView)?.hasEvent(for: day!) ?? false : false
         

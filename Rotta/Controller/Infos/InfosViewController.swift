@@ -8,6 +8,8 @@
 import UIKit
 
 class InfosViewController: UIViewController {
+    private var currentFormula: FormulaType = .formula2
+    
     private let cardsData: [(title: String, subtitle: String, image: UIImage)] = [
         (
             title: "Glossário",
@@ -50,6 +52,10 @@ class InfosViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundPrimary
+        
+        // Carregar fórmula selecionada pelo usuário
+        currentFormula = UserPreferencesManager.shared.getSelectedFormula()
+        
         setup()
     }
 
@@ -62,17 +68,30 @@ class InfosViewController: UIViewController {
         switch selectedCard.title {
         case "Glossário":
             let vc = GlossaryTableViewController()
+            if let filterableVC = vc as? FormulaFilterable {
+                filterableVC.updateData(for: currentFormula)
+            }
             navigationController?.pushViewController(vc, animated: true)
 
         case "Scuderias":
             let vc = ScuderiaTableViewController()
+            if let filterableVC = vc as? FormulaFilterable {
+                filterableVC.updateData(for: currentFormula)
+            }
             navigationController?.pushViewController(vc, animated: true)
 
         case "Pilotos":
             let vc = DriverTableViewController()
+            if let filterableVC = vc as? FormulaFilterable {
+                filterableVC.updateData(for: currentFormula)
+            }
             navigationController?.pushViewController(vc, animated: true)
+            
         case "Peças":
             let vc = CarComponentsListVC()
+            if let filterableVC = vc as? FormulaFilterable {
+                filterableVC.updateData(for: currentFormula)
+            }
             navigationController?.pushViewController(vc, animated: true)
 
         default:
@@ -92,8 +111,8 @@ extension InfosViewController: ViewCodeProtocol {
     func setupConstraints() {
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16)
         ])
     }
@@ -147,6 +166,7 @@ extension InfosViewController: UICollectionViewDelegateFlowLayout {
 
 extension InfosViewController: FormulaFilterable {
     func updateData(for formula: FormulaType) {
+        currentFormula = formula
         // Atualizar os dados conforme a fórmula selecionada
         // Por exemplo, você pode alterar os subtítulos dos cards para refletir a fórmula
         updateCardsData(for: formula)

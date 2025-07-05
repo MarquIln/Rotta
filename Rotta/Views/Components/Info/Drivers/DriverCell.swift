@@ -45,7 +45,6 @@ class DriverCell: UITableViewCell {
     }()
 
     @objc private func chevronTapped() {
-        print("chevron tapped")
         delegate?.didTapChevron(in: self)
     }
 

@@ -136,7 +136,6 @@ class DriverPageViewController: UIViewController {
     
     init(driver: DriverModel) {
         self.driver = driver
-        print(driver)
         self.country = driver.country ?? "Unknown"
         if let country = driver.country {
             self.country = country

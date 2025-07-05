@@ -4,6 +4,7 @@
 //
 //  Created by Isadora Ferreira Guerra on 13/06/25.
 //
+
 import UIKit
 
 enum FormulaType: String, CaseIterable {
@@ -97,7 +98,6 @@ class MainTabController: UIViewController {
 
             stack.addArrangedSubview(button)
             
-            //separador
             if index < formulas.count - 1 {
                 let separator = UIView()
                 separator.backgroundColor = .separator
@@ -126,11 +126,19 @@ class MainTabController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundPrimary
+    
+        loadSelectedFormula()
+        
         setup()
         displayViewController(at: 0)
         
-        // Configurar fórmula inicial
         updateAllViewControllersForFormula()
+    }
+    
+    private func loadSelectedFormula() {
+        currentFormula = UserPreferencesManager.shared.getSelectedFormula()
+        selected = currentFormula.displayName
+        titleSelectorButton.setTitle(selected, for: .normal)
     }
 
     private func displayViewController(at index: Int) {
@@ -210,9 +218,10 @@ class MainTabController: UIViewController {
         dropdownView.isHidden = true
         selected = title
         
-        // Atualizar a fórmula atual
         if let newFormula = FormulaType(rawValue: title) {
             currentFormula = newFormula
+            UserPreferencesManager.shared.saveSelectedFormula(newFormula)
+            FormulaColorManager.shared.notifyFormulaChange(newFormula)
             updateAllViewControllersForFormula()
         }
         
@@ -265,8 +274,8 @@ extension MainTabController: ViewCodeProtocol {
             dropdownView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
 
             segmented.topAnchor.constraint(equalTo: titleSelectorButton.bottomAnchor, constant: 20),
-            segmented.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            segmented.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            segmented.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            segmented.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             segmented.heightAnchor.constraint(equalToConstant: 32)
         ])
 

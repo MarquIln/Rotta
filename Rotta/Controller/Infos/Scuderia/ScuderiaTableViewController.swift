@@ -39,6 +39,9 @@ class ScuderiaTableViewController: UIViewController, FormulaFilterable {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Carregar fórmula selecionada pelo usuário
+        currentFormula = UserPreferencesManager.shared.getSelectedFormula()
+        
         setupView()
         
 //        scuderiaTableView.tableView.delegate = self
@@ -46,6 +49,11 @@ class ScuderiaTableViewController: UIViewController, FormulaFilterable {
         
         addGradientGlossary()
         loadScuderia()
+        FormulaColorManager.shared.addDelegate(self)
+    }
+    
+    deinit {
+        FormulaColorManager.shared.removeDelegate(self)
     }
     
     private func loadScuderia() {
@@ -134,7 +142,13 @@ extension ScuderiaTableViewController: ScuderiaTableViewDelegate {
           detailsVC.component.configure(with: scuderias[index])
             navigationController?.pushViewController(detailsVC, animated: true)
     }
-    
-    
+}
+
+extension ScuderiaTableViewController: FormulaColorManagerDelegate {
+    func formulaColorsDidChange() {
+        DispatchQueue.main.async {
+            self.addGradientGlossary()
+        }
+    }
 }
 

@@ -55,7 +55,7 @@ class DriverRankingTableView: UIView {
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .horizontal
         stack.distribution = .fill
-        stack.backgroundColor = .f2Corrida
+        stack.backgroundColor = FormulaColorManager.shared.raceColor
         stack.layer.cornerRadius = 12
         stack.layoutMargins = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 3)
         stack.spacing = 12
@@ -93,12 +93,18 @@ class DriverRankingTableView: UIView {
         super.init(frame: frame)
         impactFeedback.prepare()
         setup()
+        FormulaColorManager.shared.addDelegate(self)
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         impactFeedback.prepare()
         setup()
+        FormulaColorManager.shared.addDelegate(self)
+    }
+    
+    deinit {
+        FormulaColorManager.shared.removeDelegate(self)
     }
         
     func configure(with drivers: [DriverModel]) {
@@ -109,4 +115,12 @@ class DriverRankingTableView: UIView {
 
 protocol DriverRankingTableViewDelegate: AnyObject {
   func rankingTableView(_ view: DriverRankingTableView, didSelect driver: DriverModel)
+}
+
+extension DriverRankingTableView: FormulaColorManagerDelegate {
+    func formulaColorsDidChange() {
+        DispatchQueue.main.async {
+            self.headerStack.backgroundColor = FormulaColorManager.shared.raceColor
+        }
+    }
 }

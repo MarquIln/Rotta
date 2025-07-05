@@ -36,15 +36,8 @@ class GlossaryCell: UITableViewCell {
     }()
     
     @objc private func chevronTapped() {
-        print("chevron tapped")
         delegate?.didTapChevron(in: self)
     }
-
-//    @objc private func chevronTapped() {
-//        print("chevron tapped")
-//        let vc = GlossaryTableViewController()
-//            navigationController?.pushViewController(vc, animated: true)
-//    }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

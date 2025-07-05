@@ -11,7 +11,6 @@ class ScuderiaDetailsViewController: UIViewController {
     
     var scuderia: ScuderiaModel? {
         didSet {
-            print("Scuderia configurada: \(scuderia?.name ?? "nil")")
             if let scuderia = scuderia {
                 component.configure(with: scuderia)
             }
