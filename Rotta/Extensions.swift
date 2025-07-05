@@ -14,10 +14,7 @@ extension UIView {
         gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
         gradientLayer.endPoint   = CGPoint(x: 0.5, y: 1.0)
 
-        gradientLayer.colors = colors ?? [
-            (UIColor(named: "SprintFormula2") ?? .clear).withAlphaComponent(0.2).cgColor,
-            (UIColor(named: "RaceFormula2") ?? .black).withAlphaComponent(1.0).cgColor
-        ]
+        gradientLayer.colors = colors ?? FormulaColorManager.shared.getCardInfosGradientColors()
         gradientLayer.locations = [0.4, 0.9]
         self.layer.insertSublayer(gradientLayer, at: 0)
     }
@@ -30,10 +27,7 @@ extension UIView {
         gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.0)
         gradientLayer.endPoint   = CGPoint(x: 0.0, y: 1.0)
 
-        gradientLayer.colors = colors ?? [
-            (UIColor(named: "CalendarGradientStart") ?? .clear).withAlphaComponent(1.0).cgColor,
-            (UIColor(named: "CalendarGradientEnd") ?? .black).withAlphaComponent(0.7).cgColor
-        ]
+        gradientLayer.colors = colors ?? FormulaColorManager.shared.getCalendarGradientColors()
         gradientLayer.locations = [0.1, 0.9]
         self.layer.insertSublayer(gradientLayer, at: 0)
     }
@@ -46,10 +40,7 @@ extension UIView {
         gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.0)
         gradientLayer.endPoint   = CGPoint(x: 0.0, y: 1.0)
 
-        gradientLayer.colors = colors ?? [
-            (UIColor(named: "SprintFormula2") ?? .clear).withAlphaComponent(0.8).cgColor,
-            (UIColor(named: "RaceFormula2") ?? .black).withAlphaComponent(0.7).cgColor
-        ]
+        gradientLayer.colors = colors ?? FormulaColorManager.shared.getGlossaryGradientColors()
         gradientLayer.locations = [0.4, 0.9]
         self.layer.insertSublayer(gradientLayer, at: 0)
     }
@@ -62,10 +53,7 @@ extension UIView {
         gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.0)
         gradientLayer.endPoint   = CGPoint(x: 0.0, y: 1.0)
 
-        gradientLayer.colors = colors ?? [
-            (UIColor(named: "RaceFormula2") ?? .clear).withAlphaComponent(0.7).cgColor,
-            (UIColor(named: "SprintFormula2") ?? .black).withAlphaComponent(0.5).cgColor
-        ]
+        gradientLayer.colors = colors ?? FormulaColorManager.shared.getRankingGradientColors()
         gradientLayer.locations = [0.0, 1.0]
         self.layer.insertSublayer(gradientLayer, at: 0)
     }
@@ -84,10 +72,7 @@ extension UIView {
         gradientLayer.frame = bounds
         gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.0)
         gradientLayer.endPoint   = CGPoint(x: 0.0, y: 1.0)
-        gradientLayer.colors = colors ?? [
-            (UIColor(named: "SprintFormula2") ?? .clear).withAlphaComponent(0.0).cgColor,
-            (UIColor(named: "RaceFormula2")   ?? .black).withAlphaComponent(1.0).cgColor
-        ]
+        gradientLayer.colors = colors ?? FormulaColorManager.shared.getDriverDetailsGradientColors()
         gradientLayer.locations = [0.23, 0.4]
         layer.insertSublayer(gradientLayer, at: 0)
     }
@@ -167,8 +152,6 @@ extension String {
             "Hungria": "🇭🇺",
             "UK": "🇬🇧",
             "Emirados Árabes Unidos / Alemanha": "🇦🇪🇩🇪"
-
-            
         ]
         
         return flagMapping[country] ?? "🏁"
