@@ -360,7 +360,6 @@ extension ScuderiaDetails: ViewCodeProtocol {
 
 extension ScuderiaDetails {
     func configure(with model: ScuderiaModel) {
-        print("Configurando ScuderiaDetails com: \(model.name)")
         scuderiaNameLabel.text = model.name
         scuderiaLogo.image = UIImage(named: model.logo)
         countryLabel.text = model.country.getCountryFlag()

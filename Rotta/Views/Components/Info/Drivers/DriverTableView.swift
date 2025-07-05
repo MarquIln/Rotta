@@ -84,7 +84,6 @@ extension DriverTableView: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         let driver = drivers[indexPath.row]
         delegate?.driverTableView(self, didSelectDriver: driver)
-        print("Driver cell at index \(indexPath.row) selected")
     }
 }
 
