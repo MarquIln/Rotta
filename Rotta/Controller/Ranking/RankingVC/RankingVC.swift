@@ -54,6 +54,8 @@ class RankingVC: UIViewController, FormulaFilterable {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        currentFormula = UserPreferencesManager.shared.getSelectedFormula()
+
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         navigationController?.isNavigationBarHidden = false
 

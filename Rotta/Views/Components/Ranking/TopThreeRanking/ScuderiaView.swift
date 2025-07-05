@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SkeletonView
 
 class ScuderiaView: UIView {
     private lazy var positionLabel: UILabel = {
@@ -65,10 +66,25 @@ class ScuderiaView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
+        setupSkeleton()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupSkeleton() {
+        isSkeletonable = true
+        stackView.isSkeletonable = true
+        positionLabel.isSkeletonable = true
+        imageView.isSkeletonable = true
+        nameLabel.isSkeletonable = true
+        pointsLabel.isSkeletonable = true
+
+        positionLabel.linesCornerRadius = 8
+        nameLabel.linesCornerRadius = 6
+        pointsLabel.linesCornerRadius = 6
+        imageView.skeletonCornerRadius = 50
     }
 }
 
@@ -86,4 +102,3 @@ extension ScuderiaView: ViewCodeProtocol {
         ])
     }
 }
-

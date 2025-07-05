@@ -51,6 +51,8 @@ class DriverRankingVC: UIViewController, DriverRankingTableViewDelegate, Formula
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        currentFormula = UserPreferencesManager.shared.getSelectedFormula()
+
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         navigationController?.isNavigationBarHidden = false
 
@@ -61,6 +63,11 @@ class DriverRankingVC: UIViewController, DriverRankingTableViewDelegate, Formula
         loadDrivers()
         setup()
         impactFeedback.prepare()
+        FormulaColorManager.shared.addDelegate(self)
+    }
+    
+    deinit {
+        FormulaColorManager.shared.removeDelegate(self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -97,7 +104,14 @@ class DriverRankingVC: UIViewController, DriverRankingTableViewDelegate, Formula
     }
 }
 
-// MARK: - UIGestureRecognizerDelegate
+extension DriverRankingVC: FormulaColorManagerDelegate {
+    func formulaColorsDidChange() {
+        DispatchQueue.main.async {
+            self.view.addGradientCardInfos()
+        }
+    }
+}
+
 extension DriverRankingVC: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true

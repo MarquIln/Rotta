@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SkeletonView
 
 class DriverView: UIView {
     private lazy var positionLabel: UILabel = {
@@ -50,10 +51,26 @@ class DriverView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
+        setupSkeleton()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupSkeleton() {
+        isSkeletonable = true
+        stackView.isSkeletonable = true
+        positionLabel.isSkeletonable = true
+        driverImageView.isSkeletonable = true
+        nameLabel.isSkeletonable = true
+        pointsLabel.isSkeletonable = true
+        
+        // Configurar propriedades específicas
+        positionLabel.linesCornerRadius = 8
+        nameLabel.linesCornerRadius = 6
+        pointsLabel.linesCornerRadius = 6
+        driverImageView.skeletonCornerRadius = 40
     }
 
     func configure(with driver: DriverModel, rank: Int) {

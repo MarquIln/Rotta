@@ -6,8 +6,11 @@
 //
 
 import UIKit
+import SkeletonView
 
 class ScuderiaPodium: UIView {
+    private var needsGradientUpdate = false
+    
     private let headerLabel: UILabel = {
         let label = UILabel()
         label.text = "Scuderias"
@@ -58,7 +61,7 @@ class ScuderiaPodium: UIView {
     
     @objc func addGradient() {
         DispatchQueue.main.async {
-            self.gradientView.addGradientGlossary()
+            self.gradientView.addGradientRankingView()
         }
     }
     
@@ -77,19 +80,78 @@ class ScuderiaPodium: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
-        addGradient()
+        setupSkeleton()
+        FormulaColorManager.shared.addDelegate(self)
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setup()
-        addGradient()
+        setupSkeleton()
+        FormulaColorManager.shared.addDelegate(self)
+    }
+    
+    deinit {
+        FormulaColorManager.shared.removeDelegate(self)
     }
     
     
+    private func setupSkeleton() {
+        // Configurar view principal
+        isSkeletonable = true
+        
+        // Configurar stacks
+        containerStack.isSkeletonable = true
+        headerStack.isSkeletonable = true
+        scuderiaStack.isSkeletonable = true
+        
+        // Configurar componentes do header
+        headerLabel.isSkeletonable = true
+        seeAllButton.isSkeletonable = true
+        
+        // Configurar views das scuderias
+        firstPlaceView.isSkeletonable = true
+        secondPlaceView.isSkeletonable = true
+        thirdPlaceView.isSkeletonable = true
+        
+        // Configurar gradiente view
+        gradientView.isSkeletonable = true
+        
+        // Configurar propriedades específicas do skeleton
+        headerLabel.linesCornerRadius = 8
+        seeAllButton.skeletonCornerRadius = 12
+        firstPlaceView.skeletonCornerRadius = 12
+        secondPlaceView.skeletonCornerRadius = 12
+        thirdPlaceView.skeletonCornerRadius = 12
+    }
+    
+    func showSkeleton() {
+        showAnimatedGradientSkeleton()
+    }
+    
+    func hideSkeleton() {
+        hideSkeleton(reloadDataAfter: false, transition: .crossDissolve(0.25))
+    }
+    
+    func showLoadingSkeleton() {
+        showAnimatedGradientSkeleton()
+    }
+    
+    func hideLoadingSkeleton() {
+        hideSkeleton(reloadDataAfter: false, transition: .crossDissolve(0.25))
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
-        containerStack.addGradientRankingView()
+        
+        // Só aplica o gradiente se o containerStack tem um frame válido
+        guard containerStack.bounds.width > 0 && containerStack.bounds.height > 0 else { return }
+        
+        let hasGradientLayer = containerStack.layer.sublayers?.contains { $0 is CAGradientLayer } ?? false
+        if needsGradientUpdate || !hasGradientLayer {
+            containerStack.addGradientRankingView()
+            needsGradientUpdate = false
+        }
     }
     
     func update(with scuderias: [ScuderiaModel]) {
@@ -113,5 +175,15 @@ extension ScuderiaPodium: ViewCodeProtocol {
             containerStack.trailingAnchor.constraint(equalTo: trailingAnchor),
             containerStack.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
+    }
+}
+
+extension ScuderiaPodium: FormulaColorManagerDelegate {
+    func formulaColorsDidChange() {
+        needsGradientUpdate = true
+        DispatchQueue.main.async {
+            self.addGradient()
+            self.setNeedsLayout()
+        }
     }
 }
