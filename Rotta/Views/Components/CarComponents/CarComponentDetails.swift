@@ -7,6 +7,7 @@
 
 import UIKit
 import AudioToolbox
+import AVFoundation
 
 class CarComponentDetails: UIView {
     
@@ -18,6 +19,9 @@ class CarComponentDetails: UIView {
     
     private var vibrateTimer: Timer?
     private var impactFeedback: UIImpactFeedbackGenerator?
+    private var currentIntensity: Float = 0.1
+    private var intensityStep: Float = 0.1
+    private var audioPlayer: AVAudioPlayer?
     
     lazy var imageView: UIImageView = {
         let imageView = UIImageView()
@@ -33,14 +37,13 @@ class CarComponentDetails: UIView {
         button.backgroundColor = .rottaYellow
         button.layer.cornerRadius = 24
         
-        button.setTitle("Sinta a vibração do motor", for: .normal)
+        button.setTitle("Mantenha pressionado para acelerar →", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.titleLabel?.font = Fonts.BodyRegular
         
         button.tintColor = .black
         button.imageView?.contentMode = .scaleAspectFit
         
-        // Adicionar os eventos de touch para vibração contínua
         button.addTarget(self, action: #selector(startVibrating), for: .touchDown)
         button.addTarget(self, action: #selector(stopVibrating), for: [.touchUpInside, .touchUpOutside, .touchCancel])
         
@@ -147,20 +150,29 @@ class CarComponentDetails: UIView {
     deinit {
         vibrateTimer?.invalidate()
         vibrateTimer = nil
+        audioPlayer?.stop()
+        audioPlayer = nil
     }
     
     @objc private func startVibrating() {
         impactFeedback = UIImpactFeedbackGenerator(style: .heavy)
         impactFeedback?.prepare()
         
-        impactFeedback?.impactOccurred()
-        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
-
-        startContinuousAnimations()
+        currentIntensity = 0.1
+        startComponentSpecificVibration()
         
         vibrateTimer = Timer.scheduledTimer(withTimeInterval: 0.15, repeats: true) { _ in
-            self.impactFeedback?.impactOccurred()
-            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+            self.currentIntensity = min(1.0, self.currentIntensity + self.intensityStep)
+            self.impactFeedback?.impactOccurred(intensity: CGFloat(self.currentIntensity))
+            
+            if self.currentIntensity > 0.7 {
+                self.impactFeedback = UIImpactFeedbackGenerator(style: .heavy)
+            } else if self.currentIntensity > 0.4 {
+                self.impactFeedback = UIImpactFeedbackGenerator(style: .medium)
+            } else {
+                self.impactFeedback = UIImpactFeedbackGenerator(style: .light)
+            }
+            self.impactFeedback?.prepare()
         }
     }
     
@@ -168,47 +180,88 @@ class CarComponentDetails: UIView {
         vibrateTimer?.invalidate()
         vibrateTimer = nil
         
-        impactFeedback = nil
+        let strongFeedback = UIImpactFeedbackGenerator(style: .heavy)
+        strongFeedback.prepare()
         
-        stopContinuousAnimations()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+            strongFeedback.impactOccurred(intensity: 1.0)
+        }
+        
+        impactFeedback = nil
+        currentIntensity = 0.1
+        stopComponentSpecificVibration()
     }
     
-    private func startContinuousAnimations() {
-        let shakeAnimation = CAKeyframeAnimation(keyPath: "transform.translation.x")
-        shakeAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
-        shakeAnimation.duration = 0.3
-        shakeAnimation.values = [-3.0, 3.0, -2.0, 2.0, -1.0, 1.0, 0.0]
-        shakeAnimation.repeatCount = .infinity
+    private func startComponentSpecificVibration() {
+        guard let component = component else { return }
         
-        let imageShakeAnimation = CAKeyframeAnimation(keyPath: "transform.translation.y")
-        imageShakeAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
-        imageShakeAnimation.duration = 0.3
-        imageShakeAnimation.values = [-2.0, 2.0, -1.5, 1.5, -1.0, 1.0, 0.0]
-        imageShakeAnimation.repeatCount = .infinity
-        
-        let pulseAnimation = CABasicAnimation(keyPath: "transform.scale")
-        pulseAnimation.duration = 0.15
-        pulseAnimation.fromValue = 1.0
-        pulseAnimation.toValue = 0.98
-        pulseAnimation.autoreverses = true
-        pulseAnimation.repeatCount = .infinity
-        
-        vibrateButton.layer.add(shakeAnimation, forKey: "continuousShake")
-        imageView.layer.add(imageShakeAnimation, forKey: "continuousImageShake")
-        vibrateButton.layer.add(pulseAnimation, forKey: "continuousPulse")
-        
-        UIView.animate(withDuration: 0.1) {
-            self.vibrateButton.backgroundColor = .rottaYellow.withAlphaComponent(0.8)
+        switch component.name?.lowercased() {
+        case let name where name?.contains("motor") == true || name?.contains("engine") == true:
+            intensityStep = 0.15
+            vibrateButton.f1EngineAnimation()
+            imageView.f1EngineAnimation()
+            playComponentSound("engine_sound")
+            
+        case let name where name?.contains("freio") == true || name?.contains("brake") == true:
+            intensityStep = 0.2
+            vibrateButton.f1BrakeAnimation()
+            imageView.f1BrakeAnimation()
+            playComponentSound("brake_sound")
+            
+        case let name where name?.contains("pneu") == true || name?.contains("tire") == true || name?.contains("roda") == true:
+            intensityStep = 0.08
+            vibrateButton.f1TireAnimation()
+            imageView.f1TireAnimation()
+            playComponentSound("tire_sound")
+            
+        case let name where name?.contains("asa") == true || name?.contains("wing") == true || name?.contains("aerodin") == true:
+            intensityStep = 0.05
+            vibrateButton.f1AeroAnimation()
+            imageView.f1AeroAnimation()
+            playComponentSound("aero_sound")
+            
+        case let name where name?.contains("suspensão") == true || name?.contains("suspension") == true:
+            intensityStep = 0.12
+            vibrateButton.f1SuspensionAnimation()
+            imageView.f1SuspensionAnimation()
+            playComponentSound("suspension_sound")
+            
+        case let name where name?.contains("câmbio") == true || name?.contains("gearbox") == true || name?.contains("transmissão") == true:
+            intensityStep = 0.25
+            vibrateButton.f1GearboxAnimation()
+            imageView.f1GearboxAnimation()
+            playComponentSound("gearbox_sound")
+            
+        default:
+            intensityStep = 0.1
+            vibrateButton.f1EngineAnimation()
+            imageView.f1EngineAnimation()
+            playComponentSound("default_sound")
         }
     }
     
-    private func stopContinuousAnimations() {
-        vibrateButton.layer.removeAnimation(forKey: "continuousShake")
-        imageView.layer.removeAnimation(forKey: "continuousImageShake")
-        vibrateButton.layer.removeAnimation(forKey: "continuousPulse")
+    private func stopComponentSpecificVibration() {
+        vibrateButton.stopAllF1Animations()
+        imageView.stopAllF1Animations()
+        audioPlayer?.stop()
+        vibrateButton.backgroundColor = .rottaYellow
+    }
+    
+    private func playComponentSound(_ soundName: String) {
+        guard let path = Bundle.main.path(forResource: soundName, ofType: "mp3") else { 
+            print("Som não encontrado: \(soundName)")
+            return 
+        }
         
-        UIView.animate(withDuration: 0.1) {
-            self.vibrateButton.backgroundColor = .rottaYellow
+        let url = URL(fileURLWithPath: path)
+        
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: url)
+            audioPlayer?.numberOfLoops = -1
+            audioPlayer?.volume = 0.3
+            audioPlayer?.play()
+        } catch {
+            print("Erro ao reproduzir som: \(error)")
         }
     }
     

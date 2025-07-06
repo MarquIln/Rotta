@@ -41,6 +41,9 @@ extension ScuderiaRankingTableView: UITableViewDelegate {
         let scuderia = scuderias[indexPath.row]
         delegate?.rankingTableView(self, didSelect: scuderia)
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        // Vibração de mudança de marcha ao selecionar scuderia
+        formulaGearShiftHaptic()
     }
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {

@@ -43,7 +43,6 @@ extension String {
             "peru": "🇵🇪",
             "united arab emirates": "🇦🇪",
             "bahrain": "🇧🇭",
-            
             "brasil": "🇧🇷",
             "irlanda":  "🇮🇪",
             "reino unido": "🇬🇧",
@@ -73,12 +72,12 @@ extension String {
             "dinamarca": "🇩🇰",
             "tailândia": "🇹🇭",
             "emirados árabes unidos": "🇦🇪",
-            "UAE": "🇦🇪",
+            "uae": "🇦🇪",
             "arábia Saudita": "🇸🇦",
             "azerbaijão": "🇦🇿",
             "hungria": "🇭🇺",
             "uk": "🇬🇧",
-            "Emirados Árabes Unidos / Alemanha": "🇦🇪🇩🇪"
+            "emirados Árabes Unidos / alemanha": "🇦🇪🇩🇪"
         ]
         
         return flagMapping[country] ?? "🏁"

@@ -37,6 +37,8 @@ extension DriverRankingTableView: UITableViewDelegate {
         let driver = drivers[indexPath.row]
         delegate?.rankingTableView(self, didSelect: driver)
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        formulaGearShiftHaptic()
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
