@@ -74,16 +74,12 @@ class InfosViewController: UIViewController {
 
         case "Scuderias":
             let vc = ScuderiaTableViewController()
-            if let filterableVC = vc as? FormulaFilterable {
-                filterableVC.updateData(for: currentFormula)
-            }
+            vc.updateData(for: currentFormula)
             navigationController?.pushViewController(vc, animated: true)
 
         case "Pilotos":
             let vc = DriverTableViewController()
-            if let filterableVC = vc as? FormulaFilterable {
-                filterableVC.updateData(for: currentFormula)
-            }
+            vc.updateData(for: currentFormula)
             navigationController?.pushViewController(vc, animated: true)
             
         case "Peças":
