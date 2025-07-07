@@ -50,6 +50,7 @@ class DriverRankingVC: UIViewController, DriverRankingTableViewDelegate, Formula
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .backgroundPrimary
 
         currentFormula = Database.shared.getSelectedFormula()
 
@@ -64,6 +65,19 @@ class DriverRankingVC: UIViewController, DriverRankingTableViewDelegate, Formula
         setup()
         impactFeedback.prepare()
         FormulaColorManager.shared.addDelegate(self)
+        setupSwipeGesture()
+    }
+    
+    private func setupSwipeGesture() {
+        let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture(_:)))
+        swipeGesture.direction = .right
+        view.addGestureRecognizer(swipeGesture)
+    }
+    
+    @objc private func handleSwipeGesture(_ gesture: UISwipeGestureRecognizer) {
+        if gesture.direction == .right {
+            navigationController?.popViewController(animated: true)
+        }
     }
     
     deinit {

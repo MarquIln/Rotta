@@ -20,6 +20,7 @@ class GlossaryExploreCell: UIView {
     private lazy var scrollView: UIScrollView = {
         let scroll = UIScrollView()
         scroll.showsHorizontalScrollIndicator = false
+        scroll.showsVerticalScrollIndicator = false
         scroll.isPagingEnabled = true
         scroll.translatesAutoresizingMaskIntoConstraints = false
         return scroll

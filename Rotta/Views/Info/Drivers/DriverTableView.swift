@@ -24,6 +24,7 @@ class DriverTableView: UIView {
         table.dataSource = self
         table.backgroundColor = .clear
         table.separatorStyle = .none
+        table.showsVerticalScrollIndicator = false
         table.register(DriverCell.self, forCellReuseIdentifier: "DriverCell")
         return table
     }()

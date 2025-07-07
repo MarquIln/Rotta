@@ -172,6 +172,7 @@ class LoginVC: UIViewController {
         )
         view.addGestureRecognizer(tapGesture)
         setup()
+        setupSwipeGesture()
         loginButton.addTarget(
             self,
             action: #selector(didTapLoginButton),
@@ -187,6 +188,18 @@ class LoginVC: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+    }
+
+    private func setupSwipeGesture() {
+        let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture(_:)))
+        swipeGesture.direction = .right
+        view.addGestureRecognizer(swipeGesture)
+    }
+    
+    @objc private func handleSwipeGesture(_ gesture: UISwipeGestureRecognizer) {
+        if gesture.direction == .right {
+            navigationController?.popViewController(animated: true)
+        }
     }
 
     @objc func dismissKeyboard() {

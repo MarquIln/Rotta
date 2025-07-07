@@ -68,6 +68,7 @@ class CalendarCollectionView: UIView {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.register(MonthCell.self, forCellWithReuseIdentifier: "MonthCell")
         collectionView.showsHorizontalScrollIndicator = false
+        collectionView.showsVerticalScrollIndicator = false
         collectionView.isPagingEnabled = true
         collectionView.decelerationRate = .fast
         return collectionView

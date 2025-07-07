@@ -33,7 +33,7 @@ class TopThreeVC: UIViewController {
         let vc = DriverRankingVC()
         vc.drivers = drivers
         vc.updateData(for: currentFormula)
-        navigationController?.pushViewController(vc, animated: false)
+        navigationController?.pushViewController(vc, animated: true)
     }
 
     lazy var scuderiaPodium: ScuderiaPodium = {
@@ -55,7 +55,7 @@ class TopThreeVC: UIViewController {
         let vc = ScuderiaRankingVC()
         vc.scuderias = scuderias
         vc.updateData(for: currentFormula)
-        navigationController?.pushViewController(vc, animated: false)
+        navigationController?.pushViewController(vc, animated: true)
     }
 
     lazy var stackView: UIStackView = {
@@ -75,6 +75,19 @@ class TopThreeVC: UIViewController {
         setup()
         loadDrivers()
         loadScuderias()
+        setupSwipeGesture()
+    }
+    
+    private func setupSwipeGesture() {
+        let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture(_:)))
+        swipeGesture.direction = .right
+        view.addGestureRecognizer(swipeGesture)
+    }
+    
+    @objc private func handleSwipeGesture(_ gesture: UISwipeGestureRecognizer) {
+        if gesture.direction == .right {
+            navigationController?.popViewController(animated: true)
+        }
     }
 
     private func loadDrivers() {
