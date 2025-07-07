@@ -39,13 +39,9 @@ class ScuderiaTableViewController: UIViewController, FormulaFilterable {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Carregar fórmula selecionada pelo usuário
-        currentFormula = UserPreferencesManager.shared.getSelectedFormula()
+        currentFormula = Database.shared.getSelectedFormula()
         
         setupView()
-        
-//        scuderiaTableView.tableView.delegate = self
-//        scuderiaTableView.tableView.dataSource = self
         
         addGradientGlossary()
         loadScuderia()

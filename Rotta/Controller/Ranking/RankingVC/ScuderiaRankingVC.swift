@@ -61,7 +61,7 @@ class ScuderiaRankingVC: UIViewController, ScuderiaRankingTableViewDelegate, For
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        currentFormula = UserPreferencesManager.shared.getSelectedFormula()
+        currentFormula = Database.shared.getSelectedFormula()
 
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             customView: backButton

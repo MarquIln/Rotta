@@ -46,7 +46,7 @@ class DriverTableViewController: UIViewController, DriverTableViewDelegate, Form
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        currentFormula = UserPreferencesManager.shared.getSelectedFormula()
+        currentFormula = Database.shared.getSelectedFormula()
         
         setupView()
         

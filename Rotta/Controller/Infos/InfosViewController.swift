@@ -53,7 +53,7 @@ class InfosViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .backgroundPrimary
         
-        currentFormula = UserPreferencesManager.shared.getSelectedFormula()
+        currentFormula = Database.shared.getSelectedFormula()
         
         setup()
     }

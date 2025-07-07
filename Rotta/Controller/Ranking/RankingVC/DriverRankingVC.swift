@@ -51,7 +51,7 @@ class DriverRankingVC: UIViewController, DriverRankingTableViewDelegate, Formula
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        currentFormula = UserPreferencesManager.shared.getSelectedFormula()
+        currentFormula = Database.shared.getSelectedFormula()
 
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         navigationController?.isNavigationBarHidden = false

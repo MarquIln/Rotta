@@ -70,7 +70,7 @@ class TopThreeVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        currentFormula = UserPreferencesManager.shared.getSelectedFormula()
+        currentFormula = Database.shared.getSelectedFormula()
         
         setup()
         loadDrivers()
