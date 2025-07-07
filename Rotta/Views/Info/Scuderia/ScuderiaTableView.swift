@@ -18,6 +18,7 @@ class ScuderiaTableView: UIView {
         table.dataSource = self
         table.backgroundColor = .clear
         table.separatorStyle = .none
+        table.showsVerticalScrollIndicator = false
         table.register(ScuderiaCell.self, forCellReuseIdentifier: "ScuderiaCell")
         return table
     }()
