@@ -26,7 +26,7 @@ class FormulaColorManager {
     private var delegates: [Delegate] = []
     
     private init() {
-        currentFormula = UserPreferencesManager.shared.getSelectedFormula()
+        currentFormula = Database.shared.getSelectedFormula()
     }
     
     func addDelegate(_ delegate: FormulaColorManagerDelegate) {
