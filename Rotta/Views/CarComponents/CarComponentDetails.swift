@@ -37,7 +37,7 @@ class CarComponentDetails: UIView {
         button.backgroundColor = .rottaYellow
         button.layer.cornerRadius = 24
         
-        button.setTitle("Mantenha pressionado para acelerar →", for: .normal)
+        button.setTitle("Mantenha pressionado para acelerar", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.titleLabel?.font = Fonts.BodyRegular
         

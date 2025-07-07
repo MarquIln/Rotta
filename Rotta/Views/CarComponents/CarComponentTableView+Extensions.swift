@@ -33,7 +33,7 @@ extension CarComponentTableView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let formula = UserPreferencesManager.shared.getSelectedFormula()
+        let formula = Database.shared.getSelectedFormula()
         tableView.formulaEngineHaptic(formula: formula)
     }
 }

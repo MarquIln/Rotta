@@ -78,7 +78,7 @@ class DriverRankingCell: UITableViewCell {
     private lazy var performanceStackView: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [pointsLabel, scuderiaLabel])
         stack.axis = .horizontal
-        stack.spacing = 24
+        stack.spacing = 40
         stack.alignment = .center
         
         return stack
