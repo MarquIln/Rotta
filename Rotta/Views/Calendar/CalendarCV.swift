@@ -93,8 +93,8 @@ class CalendarCollectionView: UIView {
         let today = Date()
         selectedDate = today
         
-        if currentFormula == .formula2 && UserPreferencesManager.shared.hasSelectedFormula() {
-            currentFormula = UserPreferencesManager.shared.getSelectedFormula()
+        if currentFormula == .formula2 && Database.shared.hasSelectedFormula() {
+            currentFormula = Database.shared.getSelectedFormula()
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
