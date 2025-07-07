@@ -24,13 +24,8 @@ class MainTabController: UIViewController {
         button.setImage(UIImage(systemName: "chevron.down"), for: .normal)
         button.tintColor = .labelsPrimary
         button.semanticContentAttribute = .forceRightToLeft
-        button.addTarget(
-            self,
-            action: #selector(didTapTitleSelector),
-            for: .touchUpInside
-        )
+        button.addTarget(self, action: #selector(didTapTitleSelector), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
-
         return button
     }()
 
@@ -38,142 +33,26 @@ class MainTabController: UIViewController {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(systemName: "person.crop.circle"), for: .normal)
         button.tintColor = .labelsPrimary
-        button.addTarget(
-            self,
-            action: #selector(didTapProfile),
-            for: .touchUpInside
-        )
+        button.addTarget(self, action: #selector(didTapProfile), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
-
         button.layer.cornerRadius = 32
         button.clipsToBounds = true
         button.imageView?.contentMode = .scaleAspectFill
-
         return button
     }()
 
-    lazy var dropdownView: UIVisualEffectView = {
-        let blurView = createBlurContainer()
-        let stackView = createDropdownStack()
-
-        blurView.contentView.addSubview(stackView)
-
-        NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(
-                equalTo: blurView.contentView.topAnchor,
-                constant: 12
-            ),
-            stackView.bottomAnchor.constraint(
-                equalTo: blurView.contentView.bottomAnchor,
-                constant: -12
-            ),
-            stackView.leadingAnchor.constraint(
-                equalTo: blurView.contentView.leadingAnchor,
-                constant: 16
-            ),
-            stackView.trailingAnchor.constraint(
-                equalTo: blurView.contentView.trailingAnchor,
-                constant: -16
-            ),
-        ])
-
-        return blurView
-    }()
-
-    private func createDropdownStack() -> UIStackView {
-        let stack = UIStackView()
-        stack.axis = .vertical
-        stack.alignment = .fill
-        stack.spacing = 11
-        stack.translatesAutoresizingMaskIntoConstraints = false
-
-        let formulas = FormulaType.allCases.map { $0.displayName }
-        for (index, option) in formulas.enumerated() {  //.enumerated() transforma o array em tupla com indice :)
-            var buttonConfig = UIButton.Configuration.plain()
-            buttonConfig.title = option
-            buttonConfig.baseForegroundColor = .labelsPrimary
-            buttonConfig.contentInsets = NSDirectionalEdgeInsets(
-                top: 0,
-                leading: 10,
-                bottom: 0,
-                trailing: 0
-            )
-            buttonConfig.titleAlignment = .leading
-
-            if option == selected {
-                // item selecionado: mostra check e padding menor
-                buttonConfig.image = UIImage(systemName: "checkmark")
-                buttonConfig.imagePlacement = .leading
-                buttonConfig.imagePadding = 8
-                buttonConfig.contentInsets = NSDirectionalEdgeInsets(
-                    top: 0,
-                    leading: 0,
-                    bottom: 0,
-                    trailing: 0
-                )
-            } else {
-                // itens sem check: aumenta só o leading
-                buttonConfig.contentInsets = NSDirectionalEdgeInsets(
-                    top: 0,
-                    leading: 31,
-                    bottom: 0,
-                    trailing: 0
-                )
-            }
-
-            let button = UIButton(configuration: buttonConfig)
-            button.contentHorizontalAlignment = .leading
-            button.semanticContentAttribute = .forceLeftToRight
-            button.addTarget(
-                self,
-                action: #selector(didSelectDropdownOption(_:)),
-                for: .touchUpInside
-            )
-
-            //            //check mark
-            //            if option == selected {
-            //                button.setImage(UIImage(systemName: "checkmark"), for: .normal)
-            //                button.semanticContentAttribute = .forceLeftToRight
-            //            }
-
-            stack.isUserInteractionEnabled = true
-
-            stack.addArrangedSubview(button)
-
-            if index < formulas.count - 1 {
-                let separator = UIView()
-                separator.backgroundColor = .separator
-                separator.translatesAutoresizingMaskIntoConstraints = false
-                separator.heightAnchor.constraint(equalToConstant: 1).isActive =
-                    true
-                stack.addArrangedSubview(separator)
-            }
-
-        }
-
-        return stack
-    }
+    lazy var dropdownView: UIVisualEffectView = createDropdownView()
 
     var isArrowRotated = false
-
-    let viewControllers: [UIViewController] = [
-        CalendarVC(),
-        TopThreeVC(),
-        InfosViewController(),
-
-    ]
-
+    let viewControllers: [UIViewController] = [CalendarVC(), TopThreeVC(), InfosViewController()]
     var currentVC: UIViewController?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundPrimary
-
         loadSelectedFormula()
-
         setup()
         displayViewController(at: 0)
-
         updateAllViewControllersForFormula()
         updateProfileButton()
     }
@@ -184,13 +63,8 @@ class MainTabController: UIViewController {
 
     @objc private func userDidLogout() {
         let loginVC = LoginVC()
-
         loginVC.modalPresentationStyle = .fullScreen
         present(loginVC, animated: true)
-    }
-
-    deinit {
-        NotificationCenter.default.removeObserver(self)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -199,33 +73,7 @@ class MainTabController: UIViewController {
         updateProfileButton()
     }
 
-    private func updateProfileButton() {
-        if UserService.shared.getLoggedUser() != nil {
-            if let imageData = Database.shared.getProfileImageData(),
-               let profileImage = UIImage(data: imageData) {
-
-                let originalImage = profileImage.withRenderingMode(.alwaysOriginal)
-                profileButton.setImage(originalImage, for: .normal)
-                profileButton.tintColor = nil
-            } else {
-                let iconImage = UIImage(systemName: "person.crop.circle.fill")?.withRenderingMode(.alwaysTemplate)
-                profileButton.setImage(iconImage, for: .normal)
-                profileButton.tintColor = .labelsPrimary
-            }
-        } else {
-            let iconImage = UIImage(systemName: "person.crop.circle")?.withRenderingMode(.alwaysTemplate)
-            profileButton.setImage(iconImage, for: .normal)
-            profileButton.tintColor = .labelsPrimary
-        }
-    }
-
-    private func loadSelectedFormula() {
-        currentFormula = Database.shared.getSelectedFormula()
-        selected = currentFormula.displayName
-        titleSelectorButton.setTitle(selected, for: .normal)
-    }
-
-    private func displayViewController(at index: Int) {
+    func displayViewController(at index: Int) {
         currentVC?.removeFromParent()
         currentVC?.view.removeFromSuperview()
 
@@ -235,16 +83,9 @@ class MainTabController: UIViewController {
 
         selectedVC.view.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            selectedVC.view.topAnchor.constraint(
-                equalTo: segmented.bottomAnchor,
-                constant: 8
-            ),
-            selectedVC.view.leadingAnchor.constraint(
-                equalTo: view.leadingAnchor
-            ),
-            selectedVC.view.trailingAnchor.constraint(
-                equalTo: view.trailingAnchor
-            ),
+            selectedVC.view.topAnchor.constraint(equalTo: segmented.bottomAnchor, constant: 8),
+            selectedVC.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            selectedVC.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             selectedVC.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
 
@@ -268,153 +109,31 @@ class MainTabController: UIViewController {
         present(profileVC, animated: true)
     }
 
-    private func resetArrow() {
-        UIView.animate(
-            withDuration: 0.2,
-            animations: {
-                self.titleSelectorButton.imageView?.alpha = 0
-            }
-        ) { _ in
-            self.titleSelectorButton.imageView?.transform = .identity
-            UIView.animate(withDuration: 0.2) {
-                self.titleSelectorButton.imageView?.alpha = 1
-            }
+    private func updateProfileButton() {
+        if UserService.shared.getLoggedUser() != nil,
+           let imageData = Database.shared.getProfileImageData(),
+           let profileImage = UIImage(data: imageData) {
+            let originalImage = profileImage.withRenderingMode(.alwaysOriginal)
+            profileButton.setImage(originalImage, for: .normal)
+            profileButton.tintColor = nil
+        } else {
+            let iconImage = UIImage(systemName: "person.crop.circle")?.withRenderingMode(.alwaysTemplate)
+            profileButton.setImage(iconImage, for: .normal)
+            profileButton.tintColor = .labelsPrimary
         }
-        isArrowRotated = false
     }
 
-    private func createBlurContainer() -> UIVisualEffectView {
-        let blur = UIBlurEffect(style: .systemThinMaterialDark)
-        let blurView = UIVisualEffectView(effect: blur)
-        blurView.layer.cornerRadius = 12
-        blurView.clipsToBounds = true
-        blurView.translatesAutoresizingMaskIntoConstraints = false
-        blurView.isHidden = true
-        return blurView
+    private func loadSelectedFormula() {
+        currentFormula = Database.shared.getSelectedFormula()
+        selected = currentFormula.displayName
+        titleSelectorButton.setTitle(selected, for: .normal)
     }
 
-    private func checkMark() -> UIButton {
-        var config = UIButton.Configuration.plain()
-        config.image = UIImage(systemName: "checkmark.circle.fill")
-        config.baseForegroundColor = .labelsPrimary
-        config.contentInsets = .zero
-        config.imagePlacement = .leading
-
-        let button = UIButton(configuration: config)
-        button.isUserInteractionEnabled = false
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }
-
-    @objc private func didSelectDropdownOption(_ sender: UIButton) {
-        guard let title = sender.titleLabel?.text else { return }
-        titleSelectorButton.setTitle("\(title) ", for: .normal)
-        dropdownView.isHidden = true
-        selected = title
-
-        if let newFormula = FormulaType(rawValue: title) {
-            currentFormula = newFormula
-            Database.shared.saveSelectedFormula(newFormula)
-            FormulaColorManager.shared.notifyFormulaChange(newFormula)
-            updateAllViewControllersForFormula()
-        }
-
-        resetArrow()
-
-        dropdownView.contentView.subviews.forEach { $0.removeFromSuperview() }
-        let newStack = createDropdownStack()
-        dropdownView.contentView.addSubview(newStack)
-
-        NSLayoutConstraint.activate([
-            newStack.topAnchor.constraint(
-                equalTo: dropdownView.contentView.topAnchor,
-                constant: 12
-            ),
-            newStack.bottomAnchor.constraint(
-                equalTo: dropdownView.contentView.bottomAnchor,
-                constant: -12
-            ),
-            newStack.leadingAnchor.constraint(
-                equalTo: dropdownView.contentView.leadingAnchor,
-                constant: 16
-            ),
-            newStack.trailingAnchor.constraint(
-                equalTo: dropdownView.contentView.trailingAnchor,
-                constant: -16
-            ),
-        ])
-    }
-
-    private func updateAllViewControllersForFormula() {
+    func updateAllViewControllersForFormula() {
         viewControllers.forEach { viewController in
             if let filterableVC = viewController as? FormulaFilterable {
                 filterableVC.updateData(for: currentFormula)
             }
-        }
-    }
-}
-
-// MARK: - ViewCodeProtocol
-
-extension MainTabController: ViewCodeProtocol {
-    func setup() {
-        addSubviews()
-        setupConstraints()
-    }
-
-    func addSubviews() {
-        view.addSubview(titleSelectorButton)
-        view.addSubview(segmented)
-        view.addSubview(dropdownView)
-        view.addSubview(profileButton)
-    }
-
-    func setupConstraints() {
-        segmented.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            titleSelectorButton.topAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.topAnchor,
-                constant: 44
-            ),
-            titleSelectorButton.leadingAnchor.constraint(
-                equalTo: view.leadingAnchor,
-                constant: 16
-            ),
-
-            dropdownView.topAnchor.constraint(
-                equalTo: titleSelectorButton.bottomAnchor,
-                constant: 4
-            ),
-            dropdownView.centerXAnchor.constraint(
-                equalTo: titleSelectorButton.centerXAnchor
-            ),
-            dropdownView.leadingAnchor.constraint(
-                equalTo: view.leadingAnchor,
-                constant: 16
-            ),
-
-            segmented.topAnchor.constraint(
-                equalTo: titleSelectorButton.bottomAnchor,
-                constant: 20
-            ),
-            segmented.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            segmented.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            segmented.heightAnchor.constraint(equalToConstant: 32),
-
-            profileButton.centerYAnchor.constraint(
-                equalTo: titleSelectorButton.centerYAnchor
-            ),
-            profileButton.trailingAnchor.constraint(
-                equalTo: view.trailingAnchor,
-                constant: -16
-            ),
-            profileButton.widthAnchor.constraint(equalToConstant: 50),
-            profileButton.heightAnchor.constraint(equalToConstant: 50),
-        ])
-
-        segmented.didSelectSegment = { [weak self] index in
-            self?.displayViewController(at: index)
         }
     }
 }
