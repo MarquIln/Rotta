@@ -127,6 +127,19 @@ class DriverPageViewController: UIViewController {
         scrollView.alwaysBounceVertical = true
         
         setup()
+        setupSwipeGesture()
+    }
+    
+    private func setupSwipeGesture() {
+        let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture(_:)))
+        swipeGesture.direction = .right
+        view.addGestureRecognizer(swipeGesture)
+    }
+    
+    @objc private func handleSwipeGesture(_ gesture: UISwipeGestureRecognizer) {
+        if gesture.direction == .right {
+            navigationController?.popViewController(animated: true)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -136,7 +149,6 @@ class DriverPageViewController: UIViewController {
     
     init(driver: DriverModel) {
         self.driver = driver
-        print(driver)
         self.country = driver.country ?? "Unknown"
         if let country = driver.country {
             self.country = country

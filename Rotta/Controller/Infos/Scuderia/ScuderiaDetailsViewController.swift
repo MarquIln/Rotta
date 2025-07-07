@@ -11,7 +11,6 @@ class ScuderiaDetailsViewController: UIViewController {
     
     var scuderia: ScuderiaModel? {
         didSet {
-            print("Scuderia configurada: \(scuderia?.name ?? "nil")")
             if let scuderia = scuderia {
                 component.configure(with: scuderia)
             }
@@ -72,6 +71,19 @@ class ScuderiaDetailsViewController: UIViewController {
             setupGestures()
             setup()
             addGradientGlossary()
+            setupSwipeGesture()
+        }
+        
+        private func setupSwipeGesture() {
+            let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture(_:)))
+            swipeGesture.direction = .right
+            view.addGestureRecognizer(swipeGesture)
+        }
+        
+        @objc private func handleSwipeGesture(_ gesture: UISwipeGestureRecognizer) {
+            if gesture.direction == .right {
+                navigationController?.popViewController(animated: true)
+            }
         }
         
         override func viewWillAppear(_ animated: Bool) {
@@ -90,12 +102,6 @@ class ScuderiaDetailsViewController: UIViewController {
             let swipeRightGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture(_:)))
             swipeRightGesture.direction = .right
             view.addGestureRecognizer(swipeRightGesture)
-        }
-        
-        @objc private func handleSwipeGesture(_ gesture: UISwipeGestureRecognizer) {
-            if gesture.direction == .right {
-                navigationController?.popViewController(animated: true)
-            }
         }
         
         @objc private func handleEdgePanGesture(_ gesture: UIScreenEdgePanGestureRecognizer) {

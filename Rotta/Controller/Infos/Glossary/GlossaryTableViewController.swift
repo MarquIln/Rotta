@@ -53,6 +53,19 @@ class GlossaryTableViewController: UIViewController {
         addGradientGlossary()
         loadGlossary()
         navigationController?.isNavigationBarHidden = false
+        setupSwipeGesture()
+    }
+    
+    private func setupSwipeGesture() {
+        let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture(_:)))
+        swipeGesture.direction = .right
+        view.addGestureRecognizer(swipeGesture)
+    }
+    
+    @objc private func handleSwipeGesture(_ gesture: UISwipeGestureRecognizer) {
+        if gesture.direction == .right {
+            navigationController?.popViewController(animated: true)
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {

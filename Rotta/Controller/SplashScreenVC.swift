@@ -9,6 +9,7 @@ import UIKit
 import Lottie
 
 class SplashScreenVC: UIViewController {
+    var onFinish: (() -> Void)?
     
     private var animationView: LottieAnimationView?
     private let animationNames = ["Rotta"]
@@ -58,9 +59,12 @@ class SplashScreenVC: UIViewController {
     }
 
     private func finishSequence() {
-        let nextVC: UIViewController = MainTabController()
-        
-        navigationController?.setViewControllers([nextVC], animated: true)
-        navigationController?.isNavigationBarHidden = true
+        if let onFinish = onFinish {
+            onFinish()
+        } else {
+            let nextVC: UIViewController = MainTabController()
+            navigationController?.setViewControllers([nextVC], animated: true)
+            navigationController?.isNavigationBarHidden = true
+        }
     }
 }

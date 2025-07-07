@@ -50,6 +50,9 @@ class DriverRankingVC: UIViewController, DriverRankingTableViewDelegate, Formula
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .backgroundPrimary
+
+        currentFormula = Database.shared.getSelectedFormula()
 
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         navigationController?.isNavigationBarHidden = false
@@ -61,6 +64,24 @@ class DriverRankingVC: UIViewController, DriverRankingTableViewDelegate, Formula
         loadDrivers()
         setup()
         impactFeedback.prepare()
+        FormulaColorManager.shared.addDelegate(self)
+        setupSwipeGesture()
+    }
+    
+    private func setupSwipeGesture() {
+        let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture(_:)))
+        swipeGesture.direction = .right
+        view.addGestureRecognizer(swipeGesture)
+    }
+    
+    @objc private func handleSwipeGesture(_ gesture: UISwipeGestureRecognizer) {
+        if gesture.direction == .right {
+            navigationController?.popViewController(animated: true)
+        }
+    }
+    
+    deinit {
+        FormulaColorManager.shared.removeDelegate(self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -97,7 +118,14 @@ class DriverRankingVC: UIViewController, DriverRankingTableViewDelegate, Formula
     }
 }
 
-// MARK: - UIGestureRecognizerDelegate
+extension DriverRankingVC: FormulaColorManagerDelegate {
+    func formulaColorsDidChange() {
+        DispatchQueue.main.async {
+            self.view.addGradientCardInfos()
+        }
+    }
+}
+
 extension DriverRankingVC: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true

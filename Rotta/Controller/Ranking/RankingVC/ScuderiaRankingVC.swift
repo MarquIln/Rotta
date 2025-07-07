@@ -60,19 +60,52 @@ class ScuderiaRankingVC: UIViewController, ScuderiaRankingTableViewDelegate, For
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        view.backgroundColor = .backgroundPrimary
+        
+        currentFormula = Database.shared.getSelectedFormula()
 
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             customView: backButton
         )
         navigationController?.isNavigationBarHidden = false
 
-        navigationItem.title = "Scuderia Ranking"
+        navigationItem.title = "Ranking de Scuderias"
 
         rankingTableView.delegate = self
 
         loadScuderias()
         setup()
         impactFeedback.prepare()
+        FormulaColorManager.shared.addDelegate(self)
+        setupSwipeGesture()
+    }
+    
+    private func setupSwipeGesture() {
+        let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture(_:)))
+        swipeGesture.direction = .right
+        view.addGestureRecognizer(swipeGesture)
+    }
+    
+    @objc private func handleSwipeGesture(_ gesture: UISwipeGestureRecognizer) {
+        if gesture.direction == .right {
+            navigationController?.popViewController(animated: true)
+        }
+    }
+    
+    private func setup() {
+        view.addSubview(rankingTableView)
+        
+        NSLayoutConstraint.activate([
+            rankingTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            rankingTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            rankingTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            rankingTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+
+    deinit {
+        FormulaColorManager.shared.removeDelegate(self)
     }
 
     override func viewDidLayoutSubviews() {
@@ -105,7 +138,14 @@ class ScuderiaRankingVC: UIViewController, ScuderiaRankingTableViewDelegate, For
     }
 }
 
-// MARK: - UIGestureRecognizerDelegate
+extension ScuderiaRankingVC: FormulaColorManagerDelegate {
+    func formulaColorsDidChange() {
+        DispatchQueue.main.async {
+            self.view.addGradientCardInfos()
+        }
+    }
+}
+
 extension ScuderiaRankingVC: UIGestureRecognizerDelegate {
     func gestureRecognizer(
         _ gestureRecognizer: UIGestureRecognizer,

@@ -39,13 +39,30 @@ class ScuderiaTableViewController: UIViewController, FormulaFilterable {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupView()
+        currentFormula = Database.shared.getSelectedFormula()
         
-//        scuderiaTableView.tableView.delegate = self
-//        scuderiaTableView.tableView.dataSource = self
+        setupView()
         
         addGradientGlossary()
         loadScuderia()
+        FormulaColorManager.shared.addDelegate(self)
+        setupSwipeGesture()
+    }
+    
+    private func setupSwipeGesture() {
+        let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture(_:)))
+        swipeGesture.direction = .right
+        view.addGestureRecognizer(swipeGesture)
+    }
+    
+    @objc private func handleSwipeGesture(_ gesture: UISwipeGestureRecognizer) {
+        if gesture.direction == .right {
+            navigationController?.popViewController(animated: true)
+        }
+    }
+    
+    deinit {
+        FormulaColorManager.shared.removeDelegate(self)
     }
     
     private func loadScuderia() {
@@ -134,7 +151,13 @@ extension ScuderiaTableViewController: ScuderiaTableViewDelegate {
           detailsVC.component.configure(with: scuderias[index])
             navigationController?.pushViewController(detailsVC, animated: true)
     }
-    
-    
+}
+
+extension ScuderiaTableViewController: FormulaColorManagerDelegate {
+    func formulaColorsDidChange() {
+        DispatchQueue.main.async {
+            self.addGradientGlossary()
+        }
+    }
 }
 

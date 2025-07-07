@@ -8,6 +8,8 @@
 import UIKit
 
 class InfosViewController: UIViewController {
+    private var currentFormula: FormulaType = .formula2
+    
     private let cardsData: [(title: String, subtitle: String, image: UIImage)] = [
         (
             title: "Glossário",
@@ -41,6 +43,7 @@ class InfosViewController: UIViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .clear
         collectionView.showsHorizontalScrollIndicator = false
+        collectionView.showsVerticalScrollIndicator = false
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(CardInfosCell.self, forCellWithReuseIdentifier: CardInfosCell.identifier)
@@ -50,7 +53,23 @@ class InfosViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundPrimary
+        
+        currentFormula = Database.shared.getSelectedFormula()
+        
         setup()
+        setupSwipeGesture()
+    }
+    
+    private func setupSwipeGesture() {
+        let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture(_:)))
+        swipeGesture.direction = .right
+        view.addGestureRecognizer(swipeGesture)
+    }
+    
+    @objc private func handleSwipeGesture(_ gesture: UISwipeGestureRecognizer) {
+        if gesture.direction == .right {
+            navigationController?.popViewController(animated: true)
+        }
     }
 
     @objc private func cardInfoTapped(_ sender: UIButton) {
@@ -62,17 +81,26 @@ class InfosViewController: UIViewController {
         switch selectedCard.title {
         case "Glossário":
             let vc = GlossaryTableViewController()
+            if let filterableVC = vc as? FormulaFilterable {
+                filterableVC.updateData(for: currentFormula)
+            }
             navigationController?.pushViewController(vc, animated: true)
 
         case "Scuderias":
             let vc = ScuderiaTableViewController()
+            vc.updateData(for: currentFormula)
             navigationController?.pushViewController(vc, animated: true)
 
         case "Pilotos":
             let vc = DriverTableViewController()
+            vc.updateData(for: currentFormula)
             navigationController?.pushViewController(vc, animated: true)
+            
         case "Peças":
             let vc = CarComponentsListVC()
+            if let filterableVC = vc as? FormulaFilterable {
+                filterableVC.updateData(for: currentFormula)
+            }
             navigationController?.pushViewController(vc, animated: true)
 
         default:
@@ -92,8 +120,8 @@ extension InfosViewController: ViewCodeProtocol {
     func setupConstraints() {
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16)
         ])
     }
@@ -147,6 +175,7 @@ extension InfosViewController: UICollectionViewDelegateFlowLayout {
 
 extension InfosViewController: FormulaFilterable {
     func updateData(for formula: FormulaType) {
+        currentFormula = formula
         // Atualizar os dados conforme a fórmula selecionada
         // Por exemplo, você pode alterar os subtítulos dos cards para refletir a fórmula
         updateCardsData(for: formula)
