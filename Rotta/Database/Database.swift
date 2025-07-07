@@ -12,7 +12,7 @@ class Database {
     static var shared = Database()
     
     private let container = CKContainer(identifier: "iCloud.Rotta.CloudRotta")
-    private var privateDatabase: CKDatabase {
+    private var publicDatabase: CKDatabase {
         return container.publicCloudDatabase
     }
     
@@ -25,6 +25,10 @@ class Database {
     private let ruleService = RuleService()
     private let glossaryService = GlossaryService()
     private let trackService = TrackService()
+
+    private let userDefaults = UserDefaults.standard
+    private let selectedFormulaKey = "selectedFormula"
+    private let profileImageKey = "profileImage"
     
     private init() {}
     
@@ -227,27 +231,50 @@ class Database {
         return await getAllTracksByFormula(by: targetFormula.id)
     }
 
-    // MARK: - CloudKit Management
-    
-    func deleteAllRecords(of recordTypes: [String]) async {
-        for type in recordTypes {
-            let predicate = NSPredicate(value: true)
-            let query = CKQuery(recordType: type, predicate: predicate)
-            do {
-                let resultados = try await privateDatabase.records(matching: query)
-                let recordIDs = resultados.matchResults.compactMap { try? $0.1.get().recordID }
-                if !recordIDs.isEmpty {
-                    _ = try await privateDatabase.modifyRecords(saving: [], deleting: recordIDs)
-                    print("Deleted \(recordIDs.count) records of type \(type)")
+    // MARK: - User Preferences Functions
+
+    func saveSelectedFormula(_ formula: FormulaType) {
+        userDefaults.set(formula.rawValue, forKey: selectedFormulaKey)
+        if var user = UserService.shared.getLoggedUser() {
+            user.currentFormula = formula.rawValue
+            Task {
+                do {
+                    try await UserService.shared.updateUser(user)
+                } catch {
+                    print("Failed to update user with new formula: \(error)")
                 }
-            } catch {
-                print("Error deleting records for type \(type): \(error.localizedDescription)")
             }
         }
     }
 
-    func resetCloudKit() async {
-        let types = ["Formula", "Driver", "Scuderia", "Event", "Car", "Component", "Rule", "Glossary", "Track"]
-        await deleteAllRecords(of: types)
+    func getSelectedFormula() -> FormulaType {
+        if let user = UserService.shared.getLoggedUser(), let formula = FormulaType(rawValue: user.currentFormula) {
+            return formula
+        }
+        guard let formulaString = userDefaults.string(forKey: selectedFormulaKey),
+              let formula = FormulaType(rawValue: formulaString) else {
+            return .formula2
+        }
+        return formula
+    }
+
+    func hasSelectedFormula() -> Bool {
+        return userDefaults.string(forKey: selectedFormulaKey) != nil
+    }
+
+    func clearSelectedFormula() {
+        userDefaults.removeObject(forKey: selectedFormulaKey)
+    }
+
+    func saveProfileImageData(_ data: Data) {
+        userDefaults.set(data, forKey: profileImageKey)
+    }
+
+    func getProfileImageData() -> Data? {
+        return userDefaults.data(forKey: profileImageKey)
+    }
+
+    func clearProfileImageData() {
+        userDefaults.removeObject(forKey: profileImageKey)
     }
 }

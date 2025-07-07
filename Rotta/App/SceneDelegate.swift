@@ -11,22 +11,65 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
-
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        
         window = UIWindow(windowScene: windowScene)
-        let navigationController = UINavigationController(rootViewController: SplashScreenVC())
-//        let navigationController = UINavigationController(rootViewController: DriverPageViewController())
-        window?.rootViewController = navigationController
-        window?.makeKeyAndVisible()
-
+        
+        setupRootViewController()
     }
+    
+    private func setupRootViewController() {
+        let splashVC = SplashScreenVC()
+        
+        splashVC.onFinish = { [weak self] in
+            self?.showMainInterface()
+        }
+        
+        window?.rootViewController = splashVC
+        window?.makeKeyAndVisible()
+    }
+    
+    private func showMainInterface() {
+        if UserService.shared.getLoggedUser() != nil {
+            showMainTabController()
+        } else {
+            showLoginScreen()
+        }
+    }
+    
+    private func showMainTabController() {
+        let mainTabController = MainTabController()
+        let navigationController = UINavigationController(rootViewController: mainTabController)
+        
+        window?.rootViewController = navigationController
 
+        UIView.transition(with: window!, duration: 0.5, options: .transitionCrossDissolve, animations: nil)
+    }
+    
+    private func showLoginScreen() {
+        let loginVC = LoginVC()
+        
+        let navigationController = UINavigationController(rootViewController: loginVC)
+        
+        window?.rootViewController = navigationController
+        
+        UIView.transition(with: window!, duration: 0.5, options: .transitionCrossDissolve, animations: nil)
+    }
+    
+    func changeRootViewController(to viewController: UIViewController, animated: Bool = true) {
+        guard let window = window else { return }
+        
+        if animated {
+            UIView.transition(with: window, duration: 0.4, options: .transitionCrossDissolve, animations: {
+                window.rootViewController = viewController
+            })
+        } else {
+            window.rootViewController = viewController
+        }
+
+        window.makeKeyAndVisible()
+    }
 
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
@@ -34,7 +77,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Release any resources associated with this scene that can be re-created the next time the scene connects.
         // The scene may re-connect later, as its session was not necessarily discarded (see `application:didDiscardSceneSessions` instead).
     }
-
+    
     func sceneDidBecomeActive(_ scene: UIScene) {
         // Called when the scene has moved from an inactive state to an active state.
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.

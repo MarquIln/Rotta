@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CalendarViewController: UIViewController {
+class CalendarVC: UIViewController {
     private var currentFormula: FormulaType = .formula2
     private let eventService = EventService()
     private let eventManager = CalendarEventManager()
@@ -78,7 +78,7 @@ class CalendarViewController: UIViewController {
 }
 
 // MARK: - CalendarCollectionViewDelegate
-extension CalendarViewController: CalendarCollectionViewDelegate {
+extension CalendarVC: CalendarCollectionViewDelegate {
     func didChangeMonth(_ month: Date) {}
     
     func didSelectDate(_ date: Date) {
@@ -89,7 +89,7 @@ extension CalendarViewController: CalendarCollectionViewDelegate {
 }
 
 // MARK: - ViewCodeProtocol
-extension CalendarViewController: ViewCodeProtocol {
+extension CalendarVC: ViewCodeProtocol {
     func addSubviews() {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
@@ -124,7 +124,7 @@ extension CalendarViewController: ViewCodeProtocol {
 }
 
 // MARK: - FormulaFilterable
-extension CalendarViewController: FormulaFilterable {
+extension CalendarVC: FormulaFilterable {
     func updateData(for formula: FormulaType) {
         currentFormula = formula
         Task {
