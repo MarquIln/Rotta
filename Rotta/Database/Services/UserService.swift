@@ -16,7 +16,7 @@ class UserService {
 
     private let container = CKContainer(identifier: "iCloud.Rotta.CloudRotta")
     private var privateDatabase: CKDatabase {
-        return container.privateCloudDatabase
+        return container.publicCloudDatabase
     }
     private let recordType = "User"
 
@@ -36,7 +36,6 @@ class UserService {
             return nil
         }
 
-        // Verifica se o usuário tem senha (não é Apple ID)
         guard let userPassword = user.password, !userPassword.isEmpty else {
             print("❌ User with Apple ID cannot login with password")
             return nil
@@ -94,7 +93,38 @@ class UserService {
     }
 
     func updateUser(_ user: User) async throws {
-        try await saveUser(user)
+        let predicate = NSPredicate(format: "userID == %@", user.id.uuidString)
+        let query = CKQuery(recordType: recordType, predicate: predicate)
+
+        let result = try await privateDatabase.records(matching: query)
+        guard let firstResult = result.matchResults.first else {
+            throw NSError(domain: "UserService", code: 404, userInfo: [
+                NSLocalizedDescriptionKey: "User not found for update."
+            ])
+        }
+
+        let (_, recordResult) = firstResult
+
+        switch recordResult {
+        case .success(let record):
+            record["name"] = user.name
+            record["email"] = user.email
+            record["password"] = user.password != nil ? hashPassword(user.password!) : ""
+            record["favoriteDriver"] = user.favoriteDriver
+            record["currentFormula"] = user.currentFormula
+            record["appleID"] = user.appleID
+
+            do {
+                _ = try await privateDatabase.save(record)
+                updateLoggedUser(with: user)
+            } catch let error as CKError {
+                print("❌ CloudKit update error: \(error)")
+                throw error
+            }
+
+        case .failure(let error):
+            throw error
+        }
     }
 
     func updateLoggedUser(with user: User) {

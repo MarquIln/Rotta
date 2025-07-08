@@ -1,5 +1,5 @@
 //
-//  CalendarDayCell.swift
+//  DayCell.swift
 //  Rotta
 //
 //  Created by Marcos on 11/06/25.
@@ -7,8 +7,8 @@
 
 import UIKit
 
-class CalendarDayCell: UICollectionViewCell {
-    private lazy var dayLabel: UILabel = {
+class DayCell: UICollectionViewCell {
+    lazy var dayLabel: UILabel = {
         let dayLabel = UILabel()
         dayLabel.textAlignment = .center
         dayLabel.font = .systemFont(ofSize: 16)
@@ -18,7 +18,7 @@ class CalendarDayCell: UICollectionViewCell {
         return dayLabel
     }()
 
-    private lazy var decorationView: UIView = {
+    lazy var decorationView: UIView = {
         let dotView = UIView()
         dotView.layer.cornerRadius = 4
         dotView.translatesAutoresizingMaskIntoConstraints = false
@@ -64,7 +64,7 @@ class CalendarDayCell: UICollectionViewCell {
     
     private func applySelectedState(hasEvent: Bool) {
         dayLabel.font = .boldSystemFont(ofSize: 16)
-        dayLabel.textColor = .formulaPrimary // Usar cor dinâmica da fórmula
+        dayLabel.textColor = .formulaPrimary
         
         if hasEvent {
             decorationView.isHidden = false
@@ -104,40 +104,10 @@ class CalendarDayCell: UICollectionViewCell {
     deinit {
         FormulaColorManager.shared.removeDelegate(self)
     }
-}
-
-extension CalendarDayCell: ViewCodeProtocol {
-    func addSubviews() {
-        contentView.addSubview(decorationView)
-        contentView.addSubview(dayLabel)
-    }
-
-    func setupConstraints() {
-        NSLayoutConstraint.activate([
-            decorationView.centerXAnchor.constraint(
-                equalTo: contentView.centerXAnchor
-            ),
-            decorationView.topAnchor.constraint(
-                equalTo: dayLabel.bottomAnchor,
-                constant: 8
-            ),
-            decorationView.widthAnchor.constraint(equalToConstant: 8),
-            decorationView.heightAnchor.constraint(equalToConstant: 8),
-
-            dayLabel.centerXAnchor.constraint(
-                equalTo: contentView.centerXAnchor
-            ),
-            dayLabel.centerYAnchor.constraint(
-                equalTo: contentView.centerYAnchor
-            ),
-        ])
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        dayLabel.layer.cornerRadius = dayLabel.frame.width / 2
     }
 }
 
-extension CalendarDayCell: FormulaColorManagerDelegate {
-    func formulaColorsDidChange() {
-        DispatchQueue.main.async {
-            self.setNeedsDisplay()
-        }
-    }
-}

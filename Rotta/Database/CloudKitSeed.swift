@@ -102,7 +102,7 @@ class CloudKitSeed {
         
         let formulas = [
             ("F1 Academy", "#FF0000"),
-//            ("Formula 2", "#0000FF"),
+            ("Formula 2", "#0000FF"),
             ("Formula 3", "#00FF00"),
         ]
         

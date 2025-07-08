@@ -7,26 +7,22 @@
 
 import UIKit
 
-class DriverTableViewController: UIViewController, DriverTableViewDelegate, FormulaFilterable {
-    
-    func driverTableView(_ tableView: DriverTableView, didSelectDriver driver: DriverModel) {
-        let detailsVC = DriverPageViewController(driver: driver)
-        navigationController?.pushViewController(detailsVC, animated: true)
-    }
-    
+class AllDriversVC: UIViewController {
     var drivers: [DriverModel] = []
     let database = Database.shared
     private var currentFormula: FormulaType = .formula2
 
-    private lazy var headerView: DriverHeader = {
+    lazy var headerView: DriverHeader = {
         let headerView = DriverHeader()
         headerView.translatesAutoresizingMaskIntoConstraints = false
         return headerView
     }()
 
-    private lazy var driverTableView: DriverTableView = {
+    lazy var driverTableView: DriverTableView = {
         let tableView = DriverTableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.delegate = self
+        
         return tableView
     }()
 
@@ -45,13 +41,9 @@ class DriverTableViewController: UIViewController, DriverTableViewDelegate, Form
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setup()
         currentFormula = Database.shared.getSelectedFormula()
-        
-        setupView()
-        
-        driverTableView.delegate = self
-        
+
         addGradientGlossary()
         loadDrivers()
         FormulaColorManager.shared.addDelegate(self)
@@ -120,66 +112,4 @@ class DriverTableViewController: UIViewController, DriverTableViewDelegate, Form
         self.drivers = drivers
         driverTableView.configure(with: drivers)
     }
-
-    private func setupView() {
-        view.backgroundColor = .systemBackground
-        title = "Pilotos"
-        navigationController?.isNavigationBarHidden = false
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
-
-        view.addSubview(gradientView)
-        view.addSubview(headerView)
-        view.addSubview(driverTableView)
-
-        NSLayoutConstraint.activate([
-            gradientView.topAnchor.constraint(equalTo: view.topAnchor),
-            gradientView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            gradientView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            gradientView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-
-            headerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 118),
-            headerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            headerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-
-            driverTableView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 20),
-            driverTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            driverTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            driverTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-    }
 }
-
-extension DriverTableViewController: UITableViewDelegate, UITableViewDataSource, DriverCellDelegate {
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 20
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let identifier = "DriverCell"
-        let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? DriverCell ?? DriverCell(style: .default, reuseIdentifier: identifier)
-        let driver = drivers[indexPath.row]
-        
-        cell.config(with: driver, cellIndex: indexPath.row)
-        cell.tag = indexPath.row
-        cell.delegate = self
-        return cell
-    }
-
-    func didTapChevron(in cell: DriverCell) {
-        let detailsVC = DriverPageViewController(driver: drivers[cell.tag])
-        navigationController?.pushViewController(detailsVC, animated: true)
-    }
-}
-
-extension DriverTableViewController: FormulaColorManagerDelegate {
-    func formulaColorsDidChange() {
-        DispatchQueue.main.async {
-            self.addGradientGlossary()
-        }
-    }
-}
-
-
-
-

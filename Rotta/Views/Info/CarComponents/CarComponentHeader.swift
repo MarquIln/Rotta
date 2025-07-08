@@ -31,16 +31,7 @@ class CarComponentHeader: UIView {
     }
 
     private func setupViews() {
-        addSubview(containerView)
-
-        NSLayoutConstraint.activate([
-            containerView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            containerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            containerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            containerView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
-            containerView.heightAnchor.constraint(equalToConstant: 100)
-        ])
-
+        setup()
         setupImageViews()
     }
 
@@ -74,7 +65,7 @@ class CarComponentHeader: UIView {
             for _ in 0..<5 {
                 let imageView = UIImageView()
                 imageView.translatesAutoresizingMaskIntoConstraints = false
-                imageView.backgroundColor = .systemTeal
+                imageView.backgroundColor = FormulaColorManager.shared.primaryColor
                 imageView.layer.cornerRadius = 30 / 2
                 imageView.clipsToBounds = true
                 imageView.widthAnchor.constraint(equalToConstant: 30).isActive = true
@@ -87,4 +78,18 @@ class CarComponentHeader: UIView {
     }
 }
 
-
+extension CarComponentHeader: ViewCodeProtocol {
+    func addSubviews() {
+        addSubview(containerView)
+    }
+    
+    func setupConstraints() {
+        NSLayoutConstraint.activate([
+            containerView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
+            containerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            containerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            containerView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
+            containerView.heightAnchor.constraint(equalToConstant: 100)
+        ])
+    }
+}

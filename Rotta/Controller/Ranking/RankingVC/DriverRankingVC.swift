@@ -7,18 +7,14 @@
 
 import UIKit
 
-class DriverRankingVC: UIViewController, DriverRankingTableViewDelegate, FormulaFilterable {
-    func rankingTableView(_ view: DriverRankingTableView, didSelect driver: DriverModel) {
-        let detailVC = DriverPageViewController(driver: driver)
-        navigationController?.pushViewController(detailVC, animated: true)
-    }
-    
+class DriverRankingVC: UIViewController {
     var drivers: [DriverModel] = []
     let database = Database.shared
+    
     private let impactFeedback = UIImpactFeedbackGenerator(style: .light)
     private var lastScrollPosition: CGFloat = 0
     private let scrollThreshold: CGFloat = 30.0
-    private var currentFormula: FormulaType = .formula2
+    private var currentFormula: FormulaType = Database.shared.getSelectedFormula()
 
     lazy var rankingTableView: DriverRankingTableView = {
         let view = DriverRankingTableView()
@@ -52,19 +48,14 @@ class DriverRankingVC: UIViewController, DriverRankingTableViewDelegate, Formula
         super.viewDidLoad()
         view.backgroundColor = .backgroundPrimary
 
-        currentFormula = Database.shared.getSelectedFormula()
-
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         navigationController?.isNavigationBarHidden = false
 
-        navigationItem.title = "Drivers Ranking"
-        
-        rankingTableView.delegate = self
+        navigationItem.title = "Ranking de Pilotos"
 
         loadDrivers()
         setup()
         impactFeedback.prepare()
-        FormulaColorManager.shared.addDelegate(self)
         setupSwipeGesture()
     }
     
@@ -78,10 +69,6 @@ class DriverRankingVC: UIViewController, DriverRankingTableViewDelegate, Formula
         if gesture.direction == .right {
             navigationController?.popViewController(animated: true)
         }
-    }
-    
-    deinit {
-        FormulaColorManager.shared.removeDelegate(self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -115,19 +102,5 @@ class DriverRankingVC: UIViewController, DriverRankingTableViewDelegate, Formula
     func updateData(for formula: FormulaType) {
         currentFormula = formula
         loadDrivers()
-    }
-}
-
-extension DriverRankingVC: FormulaColorManagerDelegate {
-    func formulaColorsDidChange() {
-        DispatchQueue.main.async {
-            self.view.addGradientCardInfos()
-        }
-    }
-}
-
-extension DriverRankingVC: UIGestureRecognizerDelegate {
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
     }
 }

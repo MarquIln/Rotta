@@ -29,7 +29,7 @@ class MonthCell: UICollectionViewCell {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.register(CalendarDayCell.self, forCellWithReuseIdentifier: "CalendarDayCell")
+        collectionView.register(DayCell.self, forCellWithReuseIdentifier: "DayCell")
         collectionView.showsVerticalScrollIndicator = false
         collectionView.isScrollEnabled = false
         return collectionView

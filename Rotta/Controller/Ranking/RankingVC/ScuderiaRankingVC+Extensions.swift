@@ -21,3 +21,29 @@ extension ScuderiaRankingVC: ViewCodeProtocol {
         ])
     }
 }
+
+extension ScuderiaRankingVC: ScuderiaRankingTableViewDelegate {
+    func rankingTableView(_ view: ScuderiaRankingTableView, didSelect scuderia: ScuderiaModel) {
+        let detailsVC = ScuderiaDetailsVC()
+        detailsVC.scuderia = scuderia
+        navigationController?.pushViewController(detailsVC, animated: true)
+    }
+}
+
+extension ScuderiaRankingVC: FormulaColorManagerDelegate {
+    func formulaColorsDidChange() {
+        DispatchQueue.main.async {
+            self.view.addGradientCardInfos()
+        }
+    }
+}
+
+extension ScuderiaRankingVC: UIGestureRecognizerDelegate {
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith otherGestureRecognizer:
+            UIGestureRecognizer
+    ) -> Bool {
+        return true
+    }
+}

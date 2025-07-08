@@ -21,3 +21,25 @@ extension DriverRankingVC: ViewCodeProtocol {
         ])
     }
 }
+
+
+extension DriverRankingVC: DriverRankingTableViewDelegate {
+    func rankingTableView(_ view: DriverRankingTableView, didSelect driver: DriverModel) {
+        let detailVC = DriverDetailsVC(driver: driver)
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
+}
+
+extension DriverRankingVC: FormulaColorManagerDelegate {
+    func formulaColorsDidChange() {
+        DispatchQueue.main.async {
+            self.view.addGradientCardInfos()
+        }
+    }
+}
+
+extension DriverRankingVC: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+}

@@ -43,7 +43,7 @@ class EventDayComponent: UIView {
     private lazy var eventName: EventInfoComponent = {
         var event = EventInfoComponent()
         event.translatesAutoresizingMaskIntoConstraints = false
-        event.color = .cyan
+        event.color = FormulaColorManager.shared.qualiColor
         
         return event
     }()

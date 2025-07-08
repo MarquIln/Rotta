@@ -7,24 +7,19 @@
 
 import UIKit
 
-class ScuderiaRankingVC: UIViewController, ScuderiaRankingTableViewDelegate, FormulaFilterable {
-    func rankingTableView(_ view: ScuderiaRankingTableView, didSelect scuderia: ScuderiaModel) {
-        let detailsVC = ScuderiaDetailsViewController()
-        detailsVC.scuderia = scuderia
-        navigationController?.pushViewController(detailsVC, animated: true)
-    }
-
+class ScuderiaRankingVC: UIViewController {
     var scuderias: [ScuderiaModel] = []
     let database = Database.shared
     private let impactFeedback = UIImpactFeedbackGenerator(style: .light)
     private var lastScrollPosition: CGFloat = 0
     private let scrollThreshold: CGFloat = 30.0
-    private var currentFormula: FormulaType = .formula2
+    private var currentFormula: FormulaType = Database.shared.getSelectedFormula()
 
     lazy var rankingTableView: ScuderiaRankingTableView = {
         let view = ScuderiaRankingTableView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.isUserInteractionEnabled = true
+        view.delegate = self
 
         return view
     }()
@@ -63,16 +58,12 @@ class ScuderiaRankingVC: UIViewController, ScuderiaRankingTableViewDelegate, For
         
         view.backgroundColor = .backgroundPrimary
         
-        currentFormula = Database.shared.getSelectedFormula()
-
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             customView: backButton
         )
         navigationController?.isNavigationBarHidden = false
 
         navigationItem.title = "Ranking de Scuderias"
-
-        rankingTableView.delegate = self
 
         loadScuderias()
         setup()
@@ -93,21 +84,6 @@ class ScuderiaRankingVC: UIViewController, ScuderiaRankingTableViewDelegate, For
         }
     }
     
-    private func setup() {
-        view.addSubview(rankingTableView)
-        
-        NSLayoutConstraint.activate([
-            rankingTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            rankingTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            rankingTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            rankingTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-    }
-
-    deinit {
-        FormulaColorManager.shared.removeDelegate(self)
-    }
-
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         view.addGradientCardInfos()
@@ -138,20 +114,3 @@ class ScuderiaRankingVC: UIViewController, ScuderiaRankingTableViewDelegate, For
     }
 }
 
-extension ScuderiaRankingVC: FormulaColorManagerDelegate {
-    func formulaColorsDidChange() {
-        DispatchQueue.main.async {
-            self.view.addGradientCardInfos()
-        }
-    }
-}
-
-extension ScuderiaRankingVC: UIGestureRecognizerDelegate {
-    func gestureRecognizer(
-        _ gestureRecognizer: UIGestureRecognizer,
-        shouldRecognizeSimultaneouslyWith otherGestureRecognizer:
-            UIGestureRecognizer
-    ) -> Bool {
-        return true
-    }
-}

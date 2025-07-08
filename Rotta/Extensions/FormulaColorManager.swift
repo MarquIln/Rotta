@@ -50,44 +50,55 @@ class FormulaColorManager {
     var primaryColor: UIColor {
         switch currentFormula {
         case .formula2:
-            return UIColor(named: "SprintFormula2") ?? .systemBlue
+            return .sprintFormula2
         case .formula3:
-            return UIColor(named: "SprintFormula3") ?? .systemRed
+            return .sprintFormula3
         case .f1Academy:
-            return UIColor(named: "SprintAcademy") ?? .systemPurple
+            return .sprintAcademy
+        }
+    }
+    
+    var backgroundColor: UIColor {
+        switch currentFormula {
+        case .formula2:
+            return .raceFormula250
+        case .formula3:
+            return .raceFormula360
+        case .f1Academy:
+            return .raceAcademy80
         }
     }
     
     var raceColor: UIColor {
         switch currentFormula {
         case .formula2:
-            return UIColor(named: "RaceFormula2") ?? .systemBlue
+            return .raceFormula2
         case .formula3:
-            return UIColor(named: "RaceFormula3") ?? .systemRed
+            return .raceFormula3
         case .f1Academy:
-            return UIColor(named: "RaceAcademy") ?? .systemPurple
+            return .raceAcademy
         }
     }
     
     var qualiColor: UIColor {
         switch currentFormula {
         case .formula2:
-            return UIColor(named: "QualiFormula2") ?? .systemBlue
+            return .qualiFormula2
         case .formula3:
-            return UIColor(named: "QualiFormula3") ?? .systemRed
+            return .qualiFormula3
         case .f1Academy:
-            return UIColor(named: "QualiAcademy") ?? .systemPurple
+            return .qualiAcademy
         }
     }
     
     var practiceColor: UIColor {
         switch currentFormula {
         case .formula2:
-            return UIColor(named: "PracticeFormula2") ?? .systemBlue
+            return .practiceFormula2
         case .formula3:
-            return UIColor(named: "PracticeFormula3") ?? .systemRed
+            return .practiceFormula3
         case .f1Academy:
-            return UIColor(named: "PracticeAcademy") ?? .systemPurple
+            return .practiceAcademy
         }
     }
     

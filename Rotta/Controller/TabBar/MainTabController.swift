@@ -35,7 +35,7 @@ class MainTabController: UIViewController {
         button.tintColor = .labelsPrimary
         button.addTarget(self, action: #selector(didTapProfile), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.layer.cornerRadius = 32
+        button.layer.cornerRadius = 24
         button.clipsToBounds = true
         button.imageView?.contentMode = .scaleAspectFill
         return button
@@ -44,7 +44,7 @@ class MainTabController: UIViewController {
     lazy var dropdownView: UIVisualEffectView = createDropdownView()
 
     var isArrowRotated = false
-    let viewControllers: [UIViewController] = [CalendarVC(), TopThreeVC(), InfosViewController()]
+    let viewControllers: [UIViewController] = [CalendarVC(), TopThreeVC(), InfosVC()]
     var currentVC: UIViewController?
 
     override func viewDidLoad() {
