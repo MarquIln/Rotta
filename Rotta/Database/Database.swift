@@ -27,6 +27,7 @@ class Database {
     private let trackService = TrackService()
 
     private let userDefaults = UserDefaults.standard
+    let appleUserIdentifierKey = "appleUserIdentifier"
     private let selectedFormulaKey = "selectedFormula"
     private let profileImageKey = "profileImage"
     
@@ -232,7 +233,6 @@ class Database {
     }
 
     // MARK: - User Preferences Functions
-
     func saveSelectedFormula(_ formula: FormulaType) {
         userDefaults.set(formula.rawValue, forKey: selectedFormulaKey)
         if var user = UserService.shared.getLoggedUser() {
@@ -248,8 +248,10 @@ class Database {
     }
 
     func getSelectedFormula() -> FormulaType {
-        if let user = UserService.shared.getLoggedUser(), let formula = FormulaType(rawValue: user.currentFormula) {
-            return formula
+        if let user = UserService.shared.getLoggedUser() {
+            if let formula = FormulaType(rawValue: user.currentFormula ?? "Formula 2") {
+                return formula
+            }
         }
         guard let formulaString = userDefaults.string(forKey: selectedFormulaKey),
               let formula = FormulaType(rawValue: formulaString) else {

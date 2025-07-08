@@ -121,7 +121,7 @@ class ProfileVC: UIViewController {
             nameLabel.text = user.name
             emailLabel.text = user.email
             favoriteDriverLabel.text = "Piloto favorito: \(user.favoriteDriver ?? "Não informado")"
-            currentFormulaLabel.text = "Fórmula atual: \(user.currentFormula)"
+            currentFormulaLabel.text = "Fórmula atual: \(user.currentFormula ?? "Não informado")"
         }
 
         if let imageData = Database.shared.getProfileImageData(),
@@ -131,7 +131,6 @@ class ProfileVC: UIViewController {
     }
 
     // MARK: - Actions
-
     @objc private func dismissViewController() {
         dismiss(animated: true)
     }

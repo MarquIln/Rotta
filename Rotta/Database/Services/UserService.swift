@@ -8,6 +8,7 @@
 import UIKit
 import CloudKit
 import CryptoKit
+import AuthenticationServices
 
 class UserService {
     static let shared = UserService()
@@ -21,7 +22,7 @@ class UserService {
 
     private init() {}
 
-    private func hashPassword(_ password: String) -> String {
+    func hashPassword(_ password: String) -> String {
         let data = Data(password.utf8)
         let hashedData = SHA256.hash(data: data)
         return hashedData.compactMap { String(format: "%02x", $0) }.joined()
@@ -35,9 +36,15 @@ class UserService {
             return nil
         }
 
+        // Verifica se o usuário tem senha (não é Apple ID)
+        guard let userPassword = user.password, !userPassword.isEmpty else {
+            print("❌ User with Apple ID cannot login with password")
+            return nil
+        }
+
         let hashedPassword = hashPassword(password)
 
-        if user.password == hashedPassword {
+        if userPassword == hashedPassword {
             print("✅ Login successful for user: \(user.name)")
             updateLoggedUser(with: user)
             return user
@@ -59,10 +66,11 @@ class UserService {
         record["userID"] = user.id.uuidString
         record["name"] = user.name
         record["email"] = user.email
-        record["password"] = hashPassword(user.password)
+        record["password"] = user.password != nil ? hashPassword(user.password!) : nil
         record["favoriteDriver"] = user.favoriteDriver
         record["currentFormula"] = user.currentFormula
         record["dateCreated"] = user.dateCreated
+        record["appleID"] = user.appleID
 
         do {
             _ = try await privateDatabase.save(record)
@@ -71,10 +79,11 @@ class UserService {
                 id: user.id,
                 name: user.name,
                 email: user.email,
-                password: hashPassword(user.password),
+                password: user.password != nil ? hashPassword(user.password!) : "",
                 favoriteDriver: user.favoriteDriver,
-                currentFormula: user.currentFormula,
-                dateCreated: user.dateCreated
+                currentFormula: user.currentFormula ?? "Formula 2",
+                dateCreated: user.dateCreated,
+                appleID: user.appleID
             )
 
             updateLoggedUser(with: hashedUser)
@@ -116,7 +125,8 @@ class UserService {
                     password: record["password"] as? String ?? "",
                     favoriteDriver: record["favoriteDriver"] as? String,
                     currentFormula: record["currentFormula"] as? String ?? "Formula 2",
-                    dateCreated: record["dateCreated"] as? Date ?? Date()
+                    dateCreated: record["dateCreated"] as? Date ?? Date(),
+                    appleID: record["appleID"] as? String
                 )
             }
             return nil
@@ -150,7 +160,48 @@ class UserService {
         try await saveUser(user)
         return user
     }
+    
+    func registerAppleUser(
+        credential: ASAuthorizationAppleIDCredential,
+        customName: String? = nil,
+        customEmail: String? = nil,
+        favoriteDriver: String? = nil,
+        preferredFormula: FormulaType = .formula2
+    ) async throws -> User {
+        let appleID = credential.user
+        let userName = customName ?? credential.fullName?.givenName ?? "Apple User"
+        let userEmail = customEmail ?? credential.email ?? ""
 
+        if let _ = try? await getUserByAppleID(appleID) {
+            throw NSError(domain: "UserService", code: 409, userInfo: [
+                NSLocalizedDescriptionKey: "An account with this Apple ID already exists."
+            ])
+        }
+
+        if !userEmail.isEmpty {
+            if let _ = try? await getUserByEmail(userEmail) {
+                throw NSError(domain: "UserService", code: 409, userInfo: [
+                    NSLocalizedDescriptionKey: "An account with this email already exists."
+                ])
+            }
+        }
+        
+        let user = User(
+            id: UUID(),
+            name: userName,
+            email: userEmail,
+            password: "",
+            favoriteDriver: favoriteDriver,
+            currentFormula: preferredFormula.rawValue,
+            dateCreated: Date(),
+            appleID: appleID
+        )
+        
+        try await saveUser(user)
+        
+        return user
+    }
+    
     func logout() {
         UserDefaults.standard.removeObject(forKey: loggedUserKey)
     }
@@ -172,7 +223,8 @@ class UserService {
                         password: record["password"] as? String ?? "",
                         favoriteDriver: record["favoriteDriver"] as? String,
                         currentFormula: record["currentFormula"] as? String ?? "Formula 2",
-                        dateCreated: record["dateCreated"] as? Date ?? Date()
+                        dateCreated: record["dateCreated"] as? Date ?? Date(),
+                        appleID: record["appleID"] as? String
                     )
                     users.append(user)
                 } catch {
@@ -196,7 +248,8 @@ class UserService {
                 password: record["password"] as? String ?? "",
                 favoriteDriver: record["favoriteDriver"] as? String,
                 currentFormula: record["currentFormula"] as? String ?? "Formula 2",
-                dateCreated: record["dateCreated"] as? Date ?? Date()
+                dateCreated: record["dateCreated"] as? Date ?? Date(),
+                appleID: record["appleID"] as? String
             )
         } catch {
             print("Erro ao buscar User por ID: \(error.localizedDescription)")
@@ -213,6 +266,34 @@ class UserService {
             print("❌ CloudKit delete error: \(error)")
             throw NSError(domain: "UserService", code: 1004, userInfo: [
                 NSLocalizedDescriptionKey: "Failed to delete user. Please try again."
+            ])
+        }
+    }
+    
+    func getUserByAppleID(_ appleID: String) async throws -> User? {
+        let predicate = NSPredicate(format: "appleID == %@", appleID)
+        let query = CKQuery(recordType: recordType, predicate: predicate)
+
+        do {
+            let (matchResults, _) = try await privateDatabase.records(matching: query)
+            if let result = matchResults.first {
+                let record = try result.1.get()
+                return User(
+                    id: UUID(uuidString: record["userID"] as? String ?? "") ?? UUID(),
+                    name: record["name"] as? String ?? "",
+                    email: record["email"] as? String ?? "",
+                    password: record["password"] as? String ?? "",
+                    favoriteDriver: record["favoriteDriver"] as? String,
+                    currentFormula: record["currentFormula"] as? String ?? "Formula 2",
+                    dateCreated: record["dateCreated"] as? Date ?? Date(),
+                    appleID: record["appleID"] as? String
+                )
+            }
+            return nil
+        } catch {
+            print("❌ CloudKit query error: \(error)")
+            throw NSError(domain: "UserService", code: 1003, userInfo: [
+                NSLocalizedDescriptionKey: "Failed to search for user. Please try again."
             ])
         }
     }
