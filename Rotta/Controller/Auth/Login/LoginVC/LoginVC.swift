@@ -117,7 +117,7 @@ class LoginVC: UIViewController {
     lazy var forgotPassword: UILabel = {
         var label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .formulaRace
+        label.textColor = .raceFormula2
         label.font = UIFont(name: "SFProRounded-Semibold", size: 16)
         label.text = "Forgot password?"
         label.textAlignment = .right
@@ -140,7 +140,7 @@ class LoginVC: UIViewController {
     lazy var createAccountButton: UIButton = {
         var button = UIButton()
         button.setTitle("Create an account", for: .normal)
-        button.setTitleColor(.formulaRace, for: .normal)
+        button.setTitleColor(.raceFormula2, for: .normal)
         button.titleLabel?.font = UIFont(
             name: "SFProRounded-Semibold",
             size: 16
@@ -160,7 +160,7 @@ class LoginVC: UIViewController {
         var button = UIButton()
         button.setTitle("Login", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .formulaRace
+        button.backgroundColor = .raceFormula2
         button.layer.cornerRadius = 12
         button.titleLabel?.font = UIFont(
             name: "SFProRounded-Semibold",

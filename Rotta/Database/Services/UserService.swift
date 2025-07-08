@@ -29,26 +29,20 @@ class UserService {
     }
 
     func loginUser(email: String, password: String) async throws -> User? {
-        print("🔍 Attempting to login user with email: \(email)")
 
         guard let user = try await getUserByEmail(email) else {
-            print("❌ User not found for email: \(email)")
             return nil
         }
 
         guard let userPassword = user.password, !userPassword.isEmpty else {
-            print("❌ User with Apple ID cannot login with password")
             return nil
         }
 
         let hashedPassword = hashPassword(password)
 
         if userPassword == hashedPassword {
-            print("✅ Login successful for user: \(user.name)")
             updateLoggedUser(with: user)
             return user
-        } else {
-            print("❌ Invalid password for user: \(email)")
         }
 
         return nil
@@ -61,7 +55,8 @@ class UserService {
             ])
         }
 
-        let record = CKRecord(recordType: recordType)
+        let recordID = CKRecord.ID(recordName: user.id.uuidString)
+        let record = CKRecord(recordType: recordType, recordID: recordID)
         record["userID"] = user.id.uuidString
         record["name"] = user.name
         record["email"] = user.email
@@ -70,10 +65,14 @@ class UserService {
         record["currentFormula"] = user.currentFormula
         record["dateCreated"] = user.dateCreated
         record["appleID"] = user.appleID
+    
+        if let imageData = user.profileImageData {
+            record["profileImageData"] = imageData
+        }
 
         do {
             _ = try await privateDatabase.save(record)
-
+            
             let hashedUser = User(
                 id: user.id,
                 name: user.name,
@@ -82,17 +81,47 @@ class UserService {
                 favoriteDriver: user.favoriteDriver,
                 currentFormula: user.currentFormula ?? "Formula 2",
                 dateCreated: user.dateCreated,
-                appleID: user.appleID
+                appleID: user.appleID,
+                profileImageData: user.profileImageData
             )
-
+            
             updateLoggedUser(with: hashedUser)
-            print("✅ User saved successfully to CloudKit")
-        } catch let error as CKError {
-            print("❌ CloudKit save error: \(error)")
+        } catch {
+            throw error
         }
     }
 
     func updateUser(_ user: User) async throws {
+        let recordID = CKRecord.ID(recordName: user.id.uuidString)
+        
+        do {
+            let record = try await privateDatabase.record(for: recordID)
+            
+            record["name"] = user.name
+            record["email"] = user.email
+            record["password"] = user.password != nil ? hashPassword(user.password!) : ""
+            record["favoriteDriver"] = user.favoriteDriver
+            record["currentFormula"] = user.currentFormula
+            record["appleID"] = user.appleID
+            
+            if let imageData = user.profileImageData {
+                record["profileImageData"] = imageData
+            } else {
+                record["profileImageData"] = nil
+            }
+
+            _ = try await privateDatabase.save(record)
+            updateLoggedUser(with: user)
+            
+        } catch CKError.unknownItem {
+            try await updateUserByQuery(user)
+            
+        } catch {
+            throw error
+        }
+    }
+    
+    private func updateUserByQuery(_ user: User) async throws {
         let predicate = NSPredicate(format: "userID == %@", user.id.uuidString)
         let query = CKQuery(recordType: recordType, predicate: predicate)
 
@@ -113,14 +142,15 @@ class UserService {
             record["favoriteDriver"] = user.favoriteDriver
             record["currentFormula"] = user.currentFormula
             record["appleID"] = user.appleID
-
-            do {
-                _ = try await privateDatabase.save(record)
-                updateLoggedUser(with: user)
-            } catch let error as CKError {
-                print("❌ CloudKit update error: \(error)")
-                throw error
+            
+            if let imageData = user.profileImageData {
+                record["profileImageData"] = imageData
+            } else {
+                record["profileImageData"] = nil
             }
+
+            _ = try await privateDatabase.save(record)
+            updateLoggedUser(with: user)
 
         case .failure(let error):
             throw error
@@ -128,7 +158,9 @@ class UserService {
     }
 
     func updateLoggedUser(with user: User) {
-        guard let data = try? JSONEncoder().encode(user) else { return }
+        guard let data = try? JSONEncoder().encode(user) else {
+            return 
+        }
         UserDefaults.standard.set(data, forKey: loggedUserKey)
     }
 
@@ -156,12 +188,12 @@ class UserService {
                     favoriteDriver: record["favoriteDriver"] as? String,
                     currentFormula: record["currentFormula"] as? String ?? "Formula 2",
                     dateCreated: record["dateCreated"] as? Date ?? Date(),
-                    appleID: record["appleID"] as? String
+                    appleID: record["appleID"] as? String,
+                    profileImageData: record["profileImageData"] as? Data
                 )
             }
             return nil
         } catch {
-            print("❌ CloudKit query error: \(error)")
             throw NSError(domain: "UserService", code: 1003, userInfo: [
                 NSLocalizedDescriptionKey: "Failed to search for user. Please try again."
             ])
@@ -184,7 +216,8 @@ class UserService {
             password: hashedPassword,
             favoriteDriver: favoriteDriver,
             currentFormula: Database.shared.getSelectedFormula().rawValue,
-            dateCreated: Date()
+            dateCreated: Date(),
+            profileImageData: nil
         )
 
         try await saveUser(user)
@@ -224,16 +257,22 @@ class UserService {
             favoriteDriver: favoriteDriver,
             currentFormula: preferredFormula.rawValue,
             dateCreated: Date(),
-            appleID: appleID
+            appleID: appleID,
+            profileImageData: nil
         )
         
         try await saveUser(user)
         
-        return user
+        if let savedUser = getLoggedUser() {
+            return savedUser
+        } else {
+            return user
+        }
     }
     
-    func logout() {
+    func logout() async {
         UserDefaults.standard.removeObject(forKey: loggedUserKey)
+        await Database.shared.clearProfileImageData()
     }
 
     func getAll() async -> [User] {
@@ -254,7 +293,8 @@ class UserService {
                         favoriteDriver: record["favoriteDriver"] as? String,
                         currentFormula: record["currentFormula"] as? String ?? "Formula 2",
                         dateCreated: record["dateCreated"] as? Date ?? Date(),
-                        appleID: record["appleID"] as? String
+                        appleID: record["appleID"] as? String,
+                        profileImageData: record["profileImageData"] as? Data
                     )
                     users.append(user)
                 } catch {
@@ -279,7 +319,8 @@ class UserService {
                 favoriteDriver: record["favoriteDriver"] as? String,
                 currentFormula: record["currentFormula"] as? String ?? "Formula 2",
                 dateCreated: record["dateCreated"] as? Date ?? Date(),
-                appleID: record["appleID"] as? String
+                appleID: record["appleID"] as? String,
+                profileImageData: record["profileImageData"] as? Data
             )
         } catch {
             print("Erro ao buscar User por ID: \(error.localizedDescription)")
@@ -291,9 +332,7 @@ class UserService {
         let recordID = CKRecord.ID(recordName: id.uuidString)
         do {
             _ = try await privateDatabase.deleteRecord(withID: recordID)
-            print("✅ User deleted successfully from CloudKit")
         } catch {
-            print("❌ CloudKit delete error: \(error)")
             throw NSError(domain: "UserService", code: 1004, userInfo: [
                 NSLocalizedDescriptionKey: "Failed to delete user. Please try again."
             ])
@@ -316,15 +355,60 @@ class UserService {
                     favoriteDriver: record["favoriteDriver"] as? String,
                     currentFormula: record["currentFormula"] as? String ?? "Formula 2",
                     dateCreated: record["dateCreated"] as? Date ?? Date(),
-                    appleID: record["appleID"] as? String
+                    appleID: record["appleID"] as? String,
+                    profileImageData: record["profileImageData"] as? Data
                 )
             }
             return nil
         } catch {
-            print("❌ CloudKit query error: \(error)")
             throw NSError(domain: "UserService", code: 1003, userInfo: [
                 NSLocalizedDescriptionKey: "Failed to search for user. Please try again."
             ])
         }
+    }
+}
+
+// MARK: - Profile Image Management
+extension UserService {
+    func updateUserProfileImage(_ imageData: Data) async throws {
+        guard var user = getLoggedUser() else {
+            throw NSError(domain: "UserService", code: 1001, userInfo: [
+                NSLocalizedDescriptionKey: "No logged user found."
+            ])
+        }
+        
+        print("🔄 Updating profile image for user: \(user.name)")
+        user.profileImageData = imageData
+        
+        do {
+            try await updateUser(user)
+            print("✅ Profile image updated successfully for user: \(user.name)")
+        } catch {
+            print("❌ Failed to update profile image: \(error)")
+            throw error
+        }
+    }
+    
+    func getUserProfileImage() -> Data? {
+        guard let user = getLoggedUser() else {
+            return nil
+        }
+        
+        if let imageData = user.profileImageData {
+            return imageData
+        }
+        
+        return nil
+    }
+    
+    func clearUserProfileImage() async throws {
+        guard var user = getLoggedUser() else {
+            throw NSError(domain: "UserService", code: 1001, userInfo: [
+                NSLocalizedDescriptionKey: "No logged user found."
+            ])
+        }
+        
+        user.profileImageData = nil
+        try await updateUser(user)
     }
 }

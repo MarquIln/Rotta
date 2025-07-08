@@ -35,9 +35,11 @@ class MainTabController: UIViewController {
         button.tintColor = .labelsPrimary
         button.addTarget(self, action: #selector(didTapProfile), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.layer.cornerRadius = 24
+        button.layer.cornerRadius = 25
         button.clipsToBounds = true
         button.imageView?.contentMode = .scaleAspectFill
+        button.imageView?.layer.cornerRadius = 25
+        button.imageView?.clipsToBounds = true
         return button
     }()
 
@@ -65,6 +67,11 @@ class MainTabController: UIViewController {
         let loginVC = LoginVC()
         loginVC.modalPresentationStyle = .fullScreen
         present(loginVC, animated: true)
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        updateProfileButton()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -110,12 +117,18 @@ class MainTabController: UIViewController {
     }
 
     private func updateProfileButton() {
-        if UserService.shared.getLoggedUser() != nil,
-           let imageData = Database.shared.getProfileImageData(),
-           let profileImage = UIImage(data: imageData) {
-            let originalImage = profileImage.withRenderingMode(.alwaysOriginal)
-            profileButton.setImage(originalImage, for: .normal)
-            profileButton.tintColor = nil
+        if let loggedUser = UserService.shared.getLoggedUser() {
+            
+            if let imageData = Database.shared.getProfileImageData(),
+               let profileImage = UIImage(data: imageData) {
+                let originalImage = profileImage.withRenderingMode(.alwaysOriginal)
+                profileButton.setImage(originalImage, for: .normal)
+                profileButton.tintColor = nil
+            } else {
+                let iconImage = UIImage(systemName: "person.crop.circle")?.withRenderingMode(.alwaysTemplate)
+                profileButton.setImage(iconImage, for: .normal)
+                profileButton.tintColor = .labelsPrimary
+            }
         } else {
             let iconImage = UIImage(systemName: "person.crop.circle")?.withRenderingMode(.alwaysTemplate)
             profileButton.setImage(iconImage, for: .normal)

@@ -57,6 +57,8 @@ extension AppleLoginVC: ViewCodeProtocol {
         
         driverSelectionView.addSubview(driverLabel)
         driverSelectionView.addSubview(driverPickerView)
+        
+        profileImageContainerView.addSubview(profileImageHorizontalStack)
     }
 
     func setupConstraints() {
@@ -104,6 +106,14 @@ extension AppleLoginVC: ViewCodeProtocol {
             driverPickerView.trailingAnchor.constraint(equalTo: driverSelectionView.trailingAnchor),
             driverPickerView.bottomAnchor.constraint(equalTo: driverSelectionView.bottomAnchor),
             driverPickerView.heightAnchor.constraint(equalToConstant: 120),
+            
+            profileImageHorizontalStack.topAnchor.constraint(equalTo: profileImageContainerView.topAnchor),
+            profileImageHorizontalStack.leadingAnchor.constraint(equalTo: profileImageContainerView.leadingAnchor),
+            profileImageHorizontalStack.trailingAnchor.constraint(equalTo: profileImageContainerView.trailingAnchor),
+            profileImageHorizontalStack.bottomAnchor.constraint(equalTo: profileImageContainerView.bottomAnchor),
+            
+            profileImageView.widthAnchor.constraint(equalToConstant: 100),
+            profileImageView.heightAnchor.constraint(equalToConstant: 100),
         ])
     }
 }
