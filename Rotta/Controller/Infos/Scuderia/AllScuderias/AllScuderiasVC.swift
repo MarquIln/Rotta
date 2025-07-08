@@ -1,22 +1,19 @@
 
 import UIKit
 
-class ScuderiaTableViewController: UIViewController, FormulaFilterable {
-    
-    
-    private let service = ScuderiaService()
+class AllScuderiasVC: UIViewController, FormulaFilterable {
     let database = Database.shared
     private var currentFormula: FormulaType = .formula2
     
-    private var scuderias: [ScuderiaModel] = [ ]
+    var scuderias: [ScuderiaModel] = [ ]
 
-    private lazy var headerView: ScuderiaHeaderView = {
+    lazy var headerView: ScuderiaHeaderView = {
         let headerView = ScuderiaHeaderView()
         headerView.translatesAutoresizingMaskIntoConstraints = false
         return headerView
     }()
 
-    private lazy var scuderiaTableView: ScuderiaTableView = {
+    lazy var scuderiaTableView: ScuderiaTableView = {
         let tableView = ScuderiaTableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
@@ -41,11 +38,10 @@ class ScuderiaTableViewController: UIViewController, FormulaFilterable {
         
         currentFormula = Database.shared.getSelectedFormula()
         
-        setupView()
+        setup()
         
         addGradientGlossary()
         loadScuderia()
-        FormulaColorManager.shared.addDelegate(self)
         setupSwipeGesture()
     }
     
@@ -59,10 +55,6 @@ class ScuderiaTableViewController: UIViewController, FormulaFilterable {
         if gesture.direction == .right {
             navigationController?.popViewController(animated: true)
         }
-    }
-    
-    deinit {
-        FormulaColorManager.shared.removeDelegate(self)
     }
     
     private func loadScuderia() {
@@ -106,58 +98,4 @@ class ScuderiaTableViewController: UIViewController, FormulaFilterable {
     @objc private func customBackTapped() {
         navigationController?.popViewController(animated: true)
     }
-
-    private func setupView() {
-        view.backgroundColor = .systemBackground
-        title = "Scuderias"
-        navigationController?.isNavigationBarHidden = false
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
-
-        view.addSubview(gradientView)
-        view.addSubview(headerView)
-        view.addSubview(scuderiaTableView)
-
-        NSLayoutConstraint.activate([
-            gradientView.topAnchor.constraint(equalTo: view.topAnchor),
-            gradientView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            gradientView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            gradientView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-
-            headerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 118),
-            headerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            headerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-
-            scuderiaTableView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 20),
-            scuderiaTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scuderiaTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scuderiaTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-        
-        scuderiaTableView.reloadData()
-    }
 }
-extension ScuderiaTableViewController: ScuderiaTableViewDelegate {
-    func numberOfItems() -> Int {
-        scuderias.count
-    }
-    
-    func item(at index: Int) -> (title: String, imageName: String) {
-        return (scuderias[index].name, scuderias[index].logo)
-    }
-    
-    func didSelectItem(at index: Int) {
-        let detailsVC = ScuderiaDetailsViewController()
-            detailsVC.scuderia = scuderias[index]
-          detailsVC.component.configure(with: scuderias[index])
-            navigationController?.pushViewController(detailsVC, animated: true)
-    }
-}
-
-extension ScuderiaTableViewController: FormulaColorManagerDelegate {
-    func formulaColorsDidChange() {
-        DispatchQueue.main.async {
-            self.addGradientGlossary()
-        }
-    }
-}
-

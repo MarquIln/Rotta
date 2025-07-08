@@ -82,18 +82,12 @@ class ScuderiaRankingTableView: UIView {
         super.init(frame: frame)
         impactFeedback.prepare()
         setup()
-        FormulaColorManager.shared.addDelegate(self)
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         impactFeedback.prepare()
         setup()
-        FormulaColorManager.shared.addDelegate(self)
-    }
-    
-    deinit {
-        FormulaColorManager.shared.removeDelegate(self)
     }
         
     func configure(with scuderias: [ScuderiaModel]) {

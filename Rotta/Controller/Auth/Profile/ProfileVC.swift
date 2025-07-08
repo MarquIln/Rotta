@@ -147,12 +147,14 @@ class ProfileVC: UIViewController {
         let alert = UIAlertController(title: "Sair", message: "Tem certeza que deseja sair?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Cancelar", style: .cancel))
         alert.addAction(UIAlertAction(title: "Sair", style: .destructive) { _ in
-            UserService.shared.logout()
+            Task {
+                await UserService.shared.logout()
 
-            let loginVC = UINavigationController(rootViewController: LoginVC())
+                let loginVC = UINavigationController(rootViewController: LoginVC())
 
-            if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
-                sceneDelegate.changeRootViewController(to: loginVC)
+                if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
+                    sceneDelegate.changeRootViewController(to: loginVC)
+                }
             }
         })
         present(alert, animated: true)

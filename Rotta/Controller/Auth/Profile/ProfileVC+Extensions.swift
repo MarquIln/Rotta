@@ -20,7 +20,12 @@ extension ProfileVC: UIImagePickerControllerDelegate, UINavigationControllerDele
         if let image = selectedImage {
             profileImageView.image = image
             if let imageData = image.jpegData(compressionQuality: 0.8) {
-                Database.shared.saveProfileImageData(imageData)
+                Task {
+                    await Database.shared.saveProfileImageData(imageData)
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: NSNotification.Name("ProfileImageUpdated"), object: nil)
+                    }
+                }
             }
         }
         

@@ -88,7 +88,7 @@ class RegisterVC: UIViewController {
         let button = UIButton()
         button.setTitle("Create Account", for: .normal)
         button.titleLabel?.font = UIFont(name: "SFProRounded-Semibold", size: 16)
-        button.backgroundColor = .formulaRace
+        button.backgroundColor = .raceFormula2
         button.layer.cornerRadius = 8
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
@@ -176,7 +176,6 @@ class RegisterVC: UIViewController {
                     self.navigateToMainTab() 
                 }
             } catch {
-                print("Erro ao registrar:", error.localizedDescription)
                 await MainActor.run {
                     self.showRegistrationError(error.localizedDescription)
                     self.resetCreateButton()

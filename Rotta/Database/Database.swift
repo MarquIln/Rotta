@@ -268,15 +268,26 @@ class Database {
         userDefaults.removeObject(forKey: selectedFormulaKey)
     }
 
-    func saveProfileImageData(_ data: Data) {
-        userDefaults.set(data, forKey: profileImageKey)
+    func saveProfileImageData(_ data: Data) async {
+        do {
+            try await UserService.shared.updateUserProfileImage(data)
+        } catch {
+            print("❌ Error saving profile image: \(error)")
+        }
     }
 
     func getProfileImageData() -> Data? {
-        return userDefaults.data(forKey: profileImageKey)
+        if let imageData = UserService.shared.getUserProfileImage() {
+            return imageData
+        }
+        return nil
     }
 
-    func clearProfileImageData() {
-        userDefaults.removeObject(forKey: profileImageKey)
+    func clearProfileImageData() async {
+        do {
+            try await UserService.shared.clearUserProfileImage()
+        } catch {
+            print("❌ Error clearing profile image: \(error)")
+        }
     }
 }

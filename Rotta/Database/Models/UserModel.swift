@@ -17,8 +17,9 @@ struct User: Codable {
     var currentFormula: String?
     var dateCreated: Date
     var appleID: String?
+    var profileImageData: Data?
     
-    init(id: UUID = UUID(), name: String, email: String, password: String, favoriteDriver: String? = nil, currentFormula: String = "Formula 2", dateCreated: Date = Date(), appleID: String? = nil) {
+    init(id: UUID = UUID(), name: String, email: String, password: String, favoriteDriver: String? = nil, currentFormula: String = "Formula 2", dateCreated: Date = Date(), appleID: String? = nil, profileImageData: Data? = nil) {
         self.id = id
         self.name = name
         self.email = email
@@ -27,6 +28,7 @@ struct User: Codable {
         self.currentFormula = currentFormula
         self.dateCreated = dateCreated
         self.appleID = appleID
+        self.profileImageData = profileImageData
     }
     
     init(id: UUID = UUID(), credentials: ASAuthorizationAppleIDCredential) {
@@ -38,5 +40,6 @@ struct User: Codable {
         self.password = nil
         self.favoriteDriver = nil
         self.currentFormula = "Formula 2"
+        self.profileImageData = nil
     }
 }

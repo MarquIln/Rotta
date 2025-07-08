@@ -123,9 +123,7 @@ extension EventInfoComponent: ViewCodeProtocol {
 extension EventInfoComponent: FormulaColorManagerDelegate {
     func formulaColorsDidChange() {
         DispatchQueue.main.async {
-            if self.color == nil {
-                self.eventIcon.tintColor = FormulaColorManager.shared.qualiColor
-            }
+            self.eventIcon.tintColor = FormulaColorManager.shared.qualiColor
         }
     }
 }

@@ -13,6 +13,7 @@ class AppleLoginVC: UIViewController {
     var availableDrivers: [DriverModel] = []
     var selectedDriver: DriverModel?
     var selectedFormula: FormulaType = .formula2
+    var selectedProfileImage: UIImage?
     
     lazy var headerView: UIView = {
         let headerView = UIView()
@@ -120,7 +121,7 @@ class AppleLoginVC: UIViewController {
 
     lazy var mainStackView: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [
-            nameComponent, emailComponent, formulaSelectionView, driverSelectionView
+            nameComponent, emailComponent, profileImageContainerView, formulaSelectionView, driverSelectionView
         ])
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .vertical
@@ -138,6 +139,63 @@ class AppleLoginVC: UIViewController {
         button.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
+    }()
+
+    lazy var profileImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "person.crop.circle.fill")
+        imageView.tintColor = .systemGray3
+        imageView.contentMode = .scaleAspectFill
+        imageView.layer.cornerRadius = 50
+        imageView.layer.masksToBounds = true
+        imageView.layer.borderWidth = 2
+        imageView.layer.borderColor = UIColor.systemGray4.cgColor
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(profileImageTapped))
+        imageView.addGestureRecognizer(tapGesture)
+        return imageView
+    }()
+    
+    lazy var profileImageLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Profile Picture (optional)"
+        label.font = Fonts.Subtitle1
+        label.textColor = .labelsPrimary
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    lazy var profileImageSubLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Tap to add a profile picture"
+        label.font = Fonts.Subtitle1
+        label.textColor = .labelsPrimary
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    lazy var profileImageStackView: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [profileImageLabel, profileImageSubLabel])
+        stack.axis = .vertical
+        stack.spacing = 4
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+    
+    lazy var profileImageContainerView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    lazy var profileImageHorizontalStack: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [profileImageView, profileImageStackView])
+        stack.axis = .horizontal
+        stack.spacing = 16
+        stack.alignment = .center
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
     }()
 
     init(appleCredential: ASAuthorizationAppleIDCredential) {
@@ -200,16 +258,36 @@ class AppleLoginVC: UIViewController {
         
         Task {
             do {
-                let _ = try await UserService.shared.registerAppleUser(
+                let user = try await UserService.shared.registerAppleUser(
                     credential: appleCredential,
                     customName: name,
                     customEmail: email,
                     favoriteDriver: selectedDriver?.name,
                     preferredFormula: selectedFormula
                 )
+
+                if let selectedImage = selectedProfileImage,
+                   let imageData = selectedImage.jpegData(compressionQuality: 0.8) {
+                    do {
+                        try await UserService.shared.updateUserProfileImage(imageData)
+                        
+                        DispatchQueue.main.async {
+                            NotificationCenter.default.post(name: NSNotification.Name("ProfileImageUpdated"), object: nil)
+                        }
+                    } catch {
+                    }
+                }
                 
-                DispatchQueue.main.async {
-                    self.navigateToMainTab()
+                try await Task.sleep(nanoseconds: 500_000_000)
+                
+                if UserService.shared.getLoggedUser() != nil {
+                    DispatchQueue.main.async {
+                        self.navigateToMainTab()
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.showAlert(message: "Login verification failed. Please try again.")
+                    }
                 }
             } catch {
                 DispatchQueue.main.async {
@@ -219,6 +297,32 @@ class AppleLoginVC: UIViewController {
         }
     }
 
+    @objc private func profileImageTapped() {
+        let actionSheet = UIAlertController(title: "Profile Picture", message: "Choose an option", preferredStyle: .actionSheet)
+        
+        actionSheet.addAction(UIAlertAction(title: "Select Photo", style: .default) { _ in
+            let imagePickerController = UIImagePickerController()
+            imagePickerController.delegate = self
+            imagePickerController.sourceType = .photoLibrary
+            imagePickerController.allowsEditing = true
+            self.present(imagePickerController, animated: true)
+        })
+        
+        if selectedProfileImage != nil {
+            actionSheet.addAction(UIAlertAction(title: "Remove Photo", style: .destructive) { _ in
+                self.profileImageView.image = UIImage(systemName: "person.crop.circle.fill")
+                self.profileImageView.tintColor = .systemGray3
+                self.profileImageView.layer.borderColor = UIColor.systemGray4.cgColor
+                self.selectedProfileImage = nil
+                self.profileImageSubLabel.text = "Tap to add a profile picture"
+            })
+        }
+        
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        
+        present(actionSheet, animated: true)
+    }
+
     private func showAlert(message: String) {
         let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
@@ -226,15 +330,48 @@ class AppleLoginVC: UIViewController {
     }
 
     private func navigateToMainTab() {
-        let mainTabBarController = MainTabController()
-        let navController = UINavigationController(rootViewController: mainTabBarController)
-
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let window = windowScene.windows.first {
-            window.rootViewController = navController
-            window.makeKeyAndVisible()
+        if let loggedUser = UserService.shared.getLoggedUser() {
             
-            UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: nil, completion: nil)
+            let mainTabBarController = MainTabController()
+            
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let window = windowScene.windows.first {
+                window.rootViewController = mainTabBarController
+                window.makeKeyAndVisible()
+                
+                UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: nil)
+                
+            } else {
+                showAlert(message: "Navigation error. Please restart the app.")
+            }
+        } else {
+            showAlert(message: "Login verification failed. Please try again.")
         }
+    }
+}
+
+extension AppleLoginVC: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        var selectedImage: UIImage?
+        
+        if let editedImage = info[.editedImage] as? UIImage {
+            selectedImage = editedImage
+        } else if let originalImage = info[.originalImage] as? UIImage {
+            selectedImage = originalImage
+        }
+        
+        if let image = selectedImage {
+            profileImageView.image = image
+            profileImageView.tintColor = nil
+            profileImageView.layer.borderColor = UIColor.formulaRace.cgColor
+            self.selectedProfileImage = image
+            profileImageSubLabel.text = "Profile picture selected"
+        }
+        
+        picker.dismiss(animated: true)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true)
     }
 }
