@@ -31,7 +31,7 @@ class CloudKitSeed {
         
         await seedAllDrivers()
         try? await Task.sleep(nanoseconds: 1_000_000_000)
-        
+
         await seedTracks()
         try? await Task.sleep(nanoseconds: 1_000_000_000)
         
@@ -101,9 +101,9 @@ class CloudKitSeed {
         }
         
         let formulas = [
-            //            ("Formula 1 Academy", "#FF0000"),
-            ("Formula 2", "#0000FF"),
-            //            ("Formula 3", "#00FF00"),
+            ("F1 Academy", "#FF0000"),
+//            ("Formula 2", "#0000FF"),
+            ("Formula 3", "#00FF00"),
         ]
         
         for formula in formulas {
@@ -114,7 +114,6 @@ class CloudKitSeed {
     private func seedAllScuderias() async {
         print("Seeding scuderias...")
         
-        // Verificar se já existem scuderias
         let existingScuderias = await database.getAllScuderias()
         if !existingScuderias.isEmpty {
             print("Scuderias already exist, skipping...")
@@ -123,23 +122,36 @@ class CloudKitSeed {
         
         let formulas = await database.getAllFormulas()
         
-        guard let f2Id = formulas.first(where: { $0.name == "Formula 2" })?.id else {
+        guard let f2Id = formulas.first(where: { $0.name == "Formula 2" })?.id,
+              let f3Id = formulas.first(where: { $0.name == "Formula 3" })?.id,
+              let f1AcademyId = formulas.first(where: { $0.name == "F1 Academy" })?.id else {
             print("Formulas not found after retries")
             return
         }
         
-        //        let f1AcademyTeams = [
-        //            ("Campos Racing", "campos_logo", 108.0),
-        //            ("MP Motorsport", "mp_logo", 94.0),
-        //            ("PREMA Racing", "prema_logo", 88.0),
-        //            ("Rodin Motorsport", "rodin_logo", 34.0),
-        //            ("ART Grand Prix", "art_logo", 5.0),
-        //            ("Hitech TGR", "hitech_logo", 1.0)
-        //        ]
-        //
-        //        for team in f1AcademyTeams {
-        //            await database.addScuderia(name: team.0, logo: team.1, points: team.2, idFormula: f1AcademyId)
-        //        }
+        let f1AcademyTeams = [
+            ("Campos Racing", "campos_logo", 64.0, 250.0, "Espanha", 0, 1, 8, "Equipe espanhola que compete na F1 Academy desde 2023, com foco no desenvolvimento de pilotos femininas no automobilismo."),
+            ("MP Motorsport", "mp_logo", 91.0, 350.0, "Holanda", 1, 3, 12, "Equipe holandesa tradicional no automobilismo feminino, com excelente histórico de desenvolvimento de talentos."),
+            ("PREMA Racing", "prema_logo", 67.0, 400.0, "Itália", 2, 4, 15, "Equipe italiana reconhecida mundialmente por sua excelência no desenvolvimento de jovens pilotos."),
+            ("Rodin Motorsport", "rodin_logo", 50.0, 150.0, "Reino Unido", 0, 2, 6, "Equipe britânica que ingressou na F1 Academy em 2024, focada no desenvolvimento de pilotos femininas."),
+            ("ART Grand Prix", "art_logo", 13.0, 300.0, "França", 1, 1, 4, "Equipe francesa tradicional nas categorias de base, com ampla experiência no desenvolvimento de pilotos."),
+            ("Hitech TGR", "hitech_logo", 14.0, 200.0, "Reino Unido", 0, 1, 3, "Equipe britânica que participa da F1 Academy, conhecida por sua abordagem técnica e profissional.")
+        ]
+        
+        for team in f1AcademyTeams {
+            await database.addScuderia(
+                name: team.0,
+                logo: team.1,
+                points: team.2,
+                historicPoints: Int16(team.3),
+                idFormula: f1AcademyId,
+                country: team.4,
+                pole: Int16(team.5),
+                victory: Int16(team.6),
+                podium: Int16(team.7),
+                details: team.8
+            )
+        }
         
         
         
@@ -172,22 +184,33 @@ class CloudKitSeed {
             )
         }
         
-        //        let f3Teams = [
-        //            ("TRIDENT", "trident_logo", 176.0),
-        //            ("Campos Racing", "campos_logo", 130.0),
-        //            ("MP Motorsport", "mp_logo", 126.0),
-        //            ("Van Amersfoort Racing", "var_logo", 106.0),
-        //            ("Rodin Motorsport", "rodin_logo", 90.0),
-        //            ("ART Grand Prix", "art_logo", 90.0),
-        //            ("Hitech TGR", "hitech_logo", 37.0),
-        //            ("AIX Racing", "aix_logo", 27.0),
-        //            ("DAMS Lucas Oil", "dams_logo", 10.0),
-        //            ("PREMA Racing", "prema_logo", 8.0)
-        //        ]
-        //
-        //        for team in f3Teams {
-        //            await database.addScuderia(name: team.0, logo: team.1, points: team.2, idFormula: f3Id)
-        //        }
+        let f3Teams = [
+            ("TRIDENT", "trident_logo", 176.0, 800.0, "Itália", 8, 15, 45, "Equipe italiana tradicional na Fórmula 3, com vasta experiência no desenvolvimento de pilotos jovens."),
+            ("Campos Racing", "campos_logo", 130.0, 600.0, "Espanha", 5, 12, 35, "Equipe espanhola com sólida tradição nas categorias de base do automobilismo mundial."),
+            ("MP Motorsport", "mp_logo", 126.0, 700.0, "Holanda", 6, 11, 38, "Equipe holandesa reconhecida por sua consistência e excelência técnica na Fórmula 3."),
+            ("Van Amersfoort Racing", "var_logo", 106.0, 500.0, "Holanda", 3, 8, 25, "Equipe holandesa tradicional com ampla experiência no desenvolvimento de jovens talentos."),
+            ("Rodin Motorsport", "rodin_logo", 90.0, 300.0, "Reino Unido", 2, 6, 18, "Equipe britânica que compete na Fórmula 3 com foco no desenvolvimento técnico e esportivo."),
+            ("ART Grand Prix", "art_logo", 90.0, 900.0, "França", 10, 18, 55, "Equipe francesa de grande tradição nas categorias de base, com excelente histórico de títulos."),
+            ("Hitech TGR", "hitech_logo", 37.0, 400.0, "Reino Unido", 1, 4, 12, "Equipe britânica conhecida por sua abordagem técnica e profissional na Fórmula 3."),
+            ("AIX Racing", "aix_logo", 27.0, 100.0, "Emirados Árabes Unidos", 0, 2, 6, "Equipe recente na Fórmula 3, buscando estabelecer-se como uma força competitiva."),
+            ("DAMS Lucas Oil", "dams_logo", 10.0, 200.0, "França", 1, 1, 8, "Equipe francesa tradicional que compete na Fórmula 3 com foco no desenvolvimento de pilotos."),
+            ("PREMA Racing", "prema_logo", 8.0, 1500.0, "Itália", 25, 35, 80, "Equipe italiana de elite, múltipla campeã mundial nas categorias de base do automobilismo.")
+        ]
+        
+        for team in f3Teams {
+            await database.addScuderia(
+                name: team.0,
+                logo: team.1,
+                points: team.2,
+                historicPoints: Int16(team.3),
+                idFormula: f3Id,
+                country: team.4,
+                pole: Int16(team.5),
+                victory: Int16(team.6),
+                podium: Int16(team.7),
+                details: team.8
+            )
+        }
     }
     
     private func seedAllDrivers() async {
@@ -203,44 +226,64 @@ class CloudKitSeed {
         dateFormatter.dateFormat = "yyyy-MM-dd"
         
         let formulas = await database.getAllFormulas()
-        guard let f2Id = formulas.first(where: { $0.name == "Formula 2" })?.id else {
+        guard let f2Id = formulas.first(where: { $0.name == "Formula 2" })?.id,
+              let f3Id = formulas.first(where: { $0.name == "Formula 3" })?.id,
+              let f1AcademyId = formulas.first(where: { $0.name == "F1 Academy" })?.id else {
             print("Formulas not found")
             return
         }
-        //
-        //        let f1AcademyDrivers = [
-        //            ("Maya Weug", "Spain", 47, "Campos Racing", 64.0),
-        //            ("Lia Pin", "France", 1, "MP Motorsport", 63.0),
-        //            ("Sophia Flörsch", "Germany", 2, "PREMA Racing", 55.0),
-        //            ("Palou Toni", "Spain", 3, "Rodin Motorsport", 44.0),
-        //            ("Larson Kyle", "United States", 4, "MP Motorsport", 28.0),
-        //            ("Llorca Marc", "Spain", 5, "Campos Racing", 23.0),
-        //            ("Hauger Dennis", "Norway", 6, "Hitech TGR", 13.0),
-        //            ("Gada Reema", "United Arab Emirates", 7, "PREMA Racing", 12.0),
-        //            ("Felipe Drugovich", "Brazil", 8, "ART Grand Prix", 10.0),
-        //            ("Ferris Jack", "United Kingdom", 9, "Rodin Motorsport", 9.0),
-        //            ("Aurelia Nobels", "Belgium", 10, "ART Grand Prix", 3.0),
-        //            ("Lia Block", "United States", 11, "Rodin Motorsport", 2.0),
-        //            ("Caterina Ciacci", "Italy", 12, "Hitech TGR", 2.0),
-        //            ("Ana Segura", "Mexico", 13, "Campos Racing", 1.0),
-        //            ("Chloe Chong", "United States", 14, "Hitech TGR", 1.0)
-        //        ]
-        //
-        //        for driver in f1AcademyDrivers {
-        //            if let scuderia = allScuderias.first(where: { $0.name == driver.3 && $0.idFormula == f1AcademyId }) {
-        //                await database.addDriver(
-        //                    name: driver.0,
-        //                    country: driver.1,
-        //                    number: Int16(driver.2),
-        //                    points: driver.4,
-        //                    scuderia: scuderia.id,
-        //                    idFormula: f1AcademyId
-        //                )
-        //            }
-        //        }
+        
+        let f1AcademyDrivers = [
+            ("Maya Weug", "Spain", 47, 64, "Campos Racing", "1.65", "2004-03-18", "Karting World Championship U18 - 2019", "Primeira mulher a vencer uma corrida da Ferrari Driver Academy. Campeã mundial de kart em 2019, Maya é uma das pilotos mais promissoras da F1 Academy."),
+            ("Lia Pin", "France", 1, 63, "MP Motorsport", "1.68", "2005-02-14", "French F4 Championship - 2022", "Piloto francesa com excelente histórico no kart e na F4 francesa. Conhecida por sua velocidade e determinação nas pistas."),
+            ("Sophia Flörsch", "Germany", 2, 55, "PREMA Racing", "1.70", "2000-12-01", "ADAC F4 Championship - 2016", "Piloto alemã experiente com passagem por várias categorias internacionais. Conhecida por sua resiliência e velocidade."),
+            ("Palou Toni", "Spain", 3, 44, "Rodin Motorsport", "1.72", "2004-08-22", "Spanish F4 Championship - 2021", "Jovem piloto espanhol com grande potencial, destacando-se nas categorias de base do automobilismo."),
+            ("Larson Kyle", "United States", 4, 28, "MP Motorsport", "1.75", "2005-05-10", "US F4 Championship - 2022", "Piloto americano com sólida formação no automobilismo nacional dos EUA, buscando projeção internacional."),
+            ("Llorca Marc", "Spain", 5, 23, "Campos Racing", "1.71", "2004-11-30", "Spanish F4 Championship - 2022", "Piloto espanhol em ascensão, com bons resultados nas categorias de base na Espanha."),
+            ("Hauger Dennis", "Norway", 6, 13, "Hitech TGR", "1.78", "2003-03-17", "ADAC F4 Championship - 2019", "Piloto norueguês com experiência internacional, ex-campeão de F4 e com passagem pela F3."),
+            ("Gada Reema", "United Arab Emirates", 7, 12, "PREMA Racing", "1.67", "2006-01-25", "UAE Karting Championship - 2020", "Piloto dos Emirados Árabes Unidos, primeira mulher de seu país a competir em categorias internacionais de monopostos."),
+            ("Felipe Drugovich", "Brazil", 8, 10, "ART Grand Prix", "1.80", "2000-05-23", "Formula 2 Championship - 2022", "Ex-campeão da Fórmula 2 em 2022, piloto brasileiro com vasta experiência internacional."),
+            ("Ferris Jack", "United Kingdom", 9, 9, "Rodin Motorsport", "1.76", "2004-09-12", "British F4 Championship - 2021", "Piloto britânico jovem com bons resultados nas categorias de base do Reino Unido."),
+            ("Aurelia Nobels", "Belgium", 10, 3, "ART Grand Prix", "1.69", "2005-07-18", "Belgian F4 Championship - 2022", "Piloto belga em desenvolvimento, com potencial para crescer na F1 Academy."),
+            ("Lia Block", "United States", 11, 2, "Rodin Motorsport", "1.73", "2006-04-05", "US Karting Championship - 2021", "Jovem piloto americana com background no kart e nas categorias de base dos EUA."),
+            ("Caterina Ciacci", "Italy", 12, 2, "Hitech TGR", "1.66", "2005-10-28", "Italian F4 Championship - 2023", "Piloto italiana promissora, com bons resultados nas categorias de base da Itália."),
+            ("Ana Segura", "Mexico", 13, 1, "Campos Racing", "1.64", "2006-06-15", "Mexican F4 Championship - 2023", "Piloto mexicana representando seu país na F1 Academy, com sólida formação no automobilismo nacional."),
+            ("Chloe Chong", "United States", 14, 1, "Hitech TGR", "1.68", "2005-12-03", "US F4 Championship - 2023", "Jovem piloto americana com potencial para crescer na F1 Academy e alcançar categorias superiores.")
+        ]
+        
+        func imageName(for fullName: String) -> String {
+            return fullName
+                .lowercased()
+                .replacingOccurrences(of: " ", with: "_")
+                .replacingOccurrences(of: "í", with: "i")
+                .replacingOccurrences(of: "é", with: "e")
+                .replacingOccurrences(of: "ã", with: "a")
+                .replacingOccurrences(of: "ó", with: "o")
+                .replacingOccurrences(of: "ç", with: "c")
+        }
+        
+        for driver in f1AcademyDrivers {
+            let date = dateFormatter.date(from: driver.6) ?? Date()
+            let driverImage = imageName(for: driver.0)
+            let scuderiaImage = imageName(for: driver.4)
+            await database.addDriver(
+                name: driver.0,
+                country: driver.1,
+                number: Int16(driver.2),
+                points: Int16(driver.3),
+                scuderia: driver.4,
+                idFormula: f1AcademyId,
+                photo: driverImage,
+                scuderiaLogo: scuderiaImage,
+                height: driver.5,
+                birthDate: date,
+                championship: driver.7,
+                details: driver.8
+            )
+        }
         
         let f2Drivers = [
-            ("Leonardo Fornaroli", "Argentina", 1, 66, "Invicta Racing", "1.80", "2004-12-03", "Campeonato de Fórmula 3 da FIA de 2024", "Campeão da Fórmula 3 da FIA em 2024, com duas pole positions e sete pódios. Em 2023, terminou em 11º na F3 e foi o novato mais bem colocado no Europeu de Fórmula Regional, ficando em 8º com 83 pontos. Em 2025, passou a correr pela Champions Invicta Racing, após participar do teste pós-temporada e da etapa final em Yas Marina com a Rodin Motorsport."),
+            ("Leonardo Fornaroli", "Argentina", 1, 66, "Invicta Racing", "1.80", "2004-12-03", "Campeonato de Fórmula 3 da FIA - 2024", "Campeão da Fórmula 3 da FIA em 2024, com duas pole positions e sete pódios. Em 2023, terminou em 11º na F3 e foi o novato mais bem colocado no Europeu de Fórmula Regional, ficando em 8º com 83 pontos. Em 2025, passou a correr pela Champions Invicta Racing, após participar do teste pós-temporada e da etapa final em Yas Marina com a Rodin Motorsport."),
             ("Roman Stanek", "Czech Republic", 2, 12, "Invicta Racing", "1.78", "2004-02-25", "ADAC Formula 4 Rookie Championship de 2019", "Campeão da categoria de novatos na ADAC Formula 4 em 2019, com três vitórias e nove pódios. Em 2022 terminou em 5º lugar na FIA Fórmula 3 com a Trident, vencendo uma corrida e conquistando uma pole. Subiu para a Fórmula 2 em 2023 com a Trident, registrou sua primeira vitória na Corrida Sprint de Melbourne em 2024, e em 2025 está na Invicta Racing ao lado de Leonardo Fornaroli."),
             ("Josep Maria Martí", "Spain", 3, 49, "Campos Racing", "1.85", "2005-06-13", "Campeão Rookie na Fórmula Regional Asiática em 2022", "Campeão da categoria de novatos na F4 Española em 2021, com duas vitórias, nove pódios e três poles; em 2022 vice-campeão da Fórmula Regional Asiática; em 2023 obteve três vitórias e quatro pódios na FIA F3, terminando em 5º; em 2024 estreou na Fórmula 2 com a Campos Racing, somando uma vitória em Abu Dhabi e quatro pódios, e continuará na F2 em 2025."),
             ("Arvid Lindblad", "United Kingdom", 4, 79, "Campos Racing", "1.85", "2007-08-08", "Formula Regional Oceania Championship de 2025", "Campeão da Fórmula Regional Oceania em 2025 com a M2 Competition; foi campeão do WSK Super Master Series OK‑J e das WSK Euro Series no kart; em 2023 conquistou a Macau F4 World Cup; em 2024 foi estreante de destaque na FIA F3, vencendo quatro corridas e ficando em 4º no geral, além de levar o prêmio Aramco Best Rookie; em 2025 subiu à Fórmula 2 com a Campos Racing."),
@@ -264,17 +307,6 @@ class CloudKitSeed {
             ("Rafael Villagómez", "Mexico", 25, 10, "Van Amersfoort Racing", "1.68", "2001-11-10", "Não possui vitórias em campeonatos de monopostos", "Piloto mexicano que estreou na Fórmula 2 em 2024 com a Van Amersfoort Racing. Competiu em F4, Euroformula e FIA Fórmula 3 antes de subir para a F2."),
         ]
         
-        func imageName(for fullName: String) -> String {
-            return fullName
-                .lowercased()
-                .replacingOccurrences(of: " ", with: "_")
-                .replacingOccurrences(of: "í", with: "i")
-                .replacingOccurrences(of: "é", with: "e")
-                .replacingOccurrences(of: "ã", with: "a")
-                .replacingOccurrences(of: "ó", with: "o")
-                .replacingOccurrences(of: "ç", with: "c")
-        }
-        
         for driver in f2Drivers {
             let date = dateFormatter.date(from: driver.6) ?? Date()
                 let driverImage = imageName(for: driver.0)
@@ -296,50 +328,67 @@ class CloudKitSeed {
             
         }
         
-
+        let f3Drivers = [
+            ("Brando Badoer", "Italy", 1, 105, "PREMA Racing", "1.74", "2006-01-18", "Italian F4 Championship - 2023", "Piloto italiano filho do ex-F1 Luca Badoer, com pedigree no automobilismo e grande potencial na F3."),
+            ("Noel León", "Spain", 2, 95, "PREMA Racing", "1.76", "2006-02-14", "Spanish F4 Championship - 2023", "Piloto espanhol promissor com sólida formação nas categorias de base espanholas."),
+            ("Ugo Ugochukwu", "United States", 3, 88, "PREMA Racing", "1.70", "2007-03-23", "US F4 Championship - 2023", "Jovem piloto americano com grande potencial, um dos mais jovens e promissores da F3."),
+            
+            ("Tim Tramnitz", "Germany", 4, 82, "TRIDENT", "1.82", "2005-06-08", "German F4 Championship - 2022", "Piloto alemão experiente com sólida formação nas categorias de base alemãs."),
+            ("Mari Boya", "Spain", 5, 75, "TRIDENT", "1.78", "2005-09-28", "Spanish F4 Championship - 2022", "Piloto espanhol promissor com bons resultados nas categorias nacionais."),
+            ("Leonardo Fornaroli", "Argentina", 6, 68, "TRIDENT", "1.80", "2004-12-03", "Argentine F4 Championship - 2021", "Piloto argentino experiente, representando a América do Sul na F3."),
+            
+            ("Nikola Tsolov", "Bulgaria", 7, 79, "ART Grand Prix", "1.77", "2005-11-20", "Bulgarian Karting Championship - 2020", "Piloto búlgaro talentoso, primeiro de seu país a competir na F3 com resultados consistentes."),
+            ("Laurens van Hoepen", "Netherlands", 8, 65, "ART Grand Prix", "1.83", "2005-05-17", "Dutch F4 Championship - 2022", "Piloto holandês com sólida formação nas categorias de base da Holanda."),
+            ("Sami Meguetounif", "France", 9, 58, "ART Grand Prix", "1.83", "2004-05-24", "French F4 Championship - 2021", "Piloto francês experiente com passagem por várias categorias europeias."),
+            
+            ("Charlie Wurz", "Austria", 10, 62, "Hitech TGR", "1.78", "2005-04-22", "Austrian F4 Championship - 2022", "Piloto austríaco filho do ex-F1 Alexander Wurz, com excelente pedigree no automobilismo."),
+            ("Martinius Stenshorne", "Norway", 11, 55, "Hitech TGR", "1.80", "2005-02-25", "Norwegian F4 Championship - 2022", "Piloto norueguês com grande potencial, destacando-se nas categorias de base."),
+            ("Max Esterson", "United States", 12, 48, "Hitech TGR", "1.82", "2002-10-09", "US F4 Championship - 2020", "Piloto americano experiente com sólida formação no automobilismo dos EUA."),
+            
+            ("Tuukka Taponen", "Finland", 13, 51, "MP Motorsport", "1.79", "2005-09-12", "Finnish F4 Championship - 2022", "Piloto finlandês com tradição familiar no automobilismo, mostrando grande velocidade."),
+            ("Kacper Sztuka", "Poland", 14, 45, "MP Motorsport", "1.81", "2005-08-30", "Polish F4 Championship - 2022", "Piloto polonês em ascensão, representando seu país na F3 com bons resultados."),
+            ("Alex Dunne", "Ireland", 15, 42, "MP Motorsport", "1.81", "2005-11-11", "Irish F4 Championship - 2022", "Piloto irlandês irmão de Alexander Dunne, com talento natural para o automobilismo."),
+            
+            ("Rafael Camara", "Brazil", 16, 58, "Campos Racing", "1.75", "2006-03-15", "Brazilian F4 Championship - 2023", "Piloto brasileiro promissor, campeão da F4 brasileira e com grande potencial para o futuro."),
+            ("Gabriel Biller", "Denmark", 17, 38, "Campos Racing", "1.74", "2005-10-03", "Danish F4 Championship - 2022", "Piloto dinamarquês em desenvolvimento, representando seu país na F3."),
+            ("Luke Browning", "United Kingdom", 18, 35, "Campos Racing", "1.79", "2002-01-31", "British F4 Championship - 2020", "Piloto britânico experiente com sólida formação nas categorias de base."),
+            
+            ("Noel Ramzi", "Singapore", 19, 45, "Rodin Motorsport", "1.73", "2005-12-18", "Asian F4 Championship - 2023", "Piloto de Singapura com sólida formação nas categorias asiáticas."),
+            ("Callum Voisin", "United Kingdom", 20, 41, "Rodin Motorsport", "1.76", "2005-07-14", "British F4 Championship - 2022", "Piloto britânico jovem e promissor, com bons resultados nas categorias de base."),
+            ("Tasanapol Inthraphuvasak", "Thailand", 21, 28, "Rodin Motorsport", "1.69", "2005-12-28", "Thai F4 Championship - 2022", "Piloto tailandês pioneiro, primeiro de seu país a competir na F3."),
+            
+            ("William Alatalo", "Finland", 22, 32, "Van Amersfoort Racing", "1.77", "2005-04-12", "Finnish F4 Championship - 2023", "Piloto finlandês jovem em desenvolvimento na F3."),
+            ("Arvid Lindblad", "United Kingdom", 23, 29, "Van Amersfoort Racing", "1.85", "2007-08-08", "British F4 Championship - 2023", "Piloto britânico jovem e muito promissor, com grande potencial."),
+            ("Joshua Dufek", "Austria", 24, 18, "Van Amersfoort Racing", "1.78", "2005-06-25", "Austrian F4 Championship - 2023", "Piloto austríaco jovem com potencial para crescer na F3."),
+            
+            ("Domenico Lovera", "Italy", 25, 24, "DAMS Lucas Oil", "1.77", "2005-11-11", "Italian F4 Championship - 2022", "Piloto italiano em desenvolvimento nas categorias de base."),
+            ("Matías Zagazeta", "Peru", 26, 15, "DAMS Lucas Oil", "1.76", "2005-06-19", "Peruvian F4 Championship - 2022", "Piloto peruano pioneiro, representando a América do Sul na F3."),
+            ("Sebastian Montoya", "Colombia", 27, 12, "DAMS Lucas Oil", "1.78", "2005-04-11", "Colombian F4 Championship - 2022", "Piloto colombiano filho do ex-F1 Juan Pablo Montoya, com pedigree no automobilismo."),
+            
+            ("Nikita Bedrin", "Italy", 28, 20, "AIX Racing", "1.75", "2005-08-15", "Italian F4 Championship - 2023", "Piloto italiano jovem com potencial para crescer na F3."),
+            ("James Wharton", "Australia", 29, 16, "AIX Racing", "1.81", "2005-03-07", "Australian F4 Championship - 2022", "Piloto australiano promissor, representando a Oceania na F3."),
+            ("Sophia Flörsch", "Germany", 30, 8, "AIX Racing", "1.70", "2000-12-01", "German F4 Championship - 2016", "Piloto alemã experiente com passagem por várias categorias internacionais, pioneira na F3.")
+        ]
         
-        //        let f3Drivers = [
-        //            ("Rafael Camara", "Brazil", 1, "Campos Racing", 105.0),
-        //            ("Nikola Tsolov", "Bulgaria", 2, "ART Grand Prix", 79.0),
-        //            ("Tim Tramnitz", "Germany", 3, "TRIDENT", 70.0),
-        //            ("Charlie Wurz", "Austria", 4, "Hitech TGR", 56.0),
-        //            ("Tuukka Taponen", "Finland", 5, "MP Motorsport", 51.0),
-        //            ("Kacper Sztuka", "Poland", 6, "MP Motorsport", 45.0),
-        //            ("Noel Ramzi", "Singapore", 7, "Rodin Motorsport", 45.0),
-        //            ("Martinius Stenshorne", "Norway", 8, "Hitech TGR", 43.0),
-        //            ("Callum Voisin", "United Kingdom", 9, "Rodin Motorsport", 41.0),
-        //            ("Gabriel Biller", "Denmark", 10, "Campos Racing", 38.0),
-        //            ("Laurens van Hoepen", "Netherlands", 11, "ART Grand Prix", 37.0),
-        //            ("Mari Boya", "Spain", 12, "TRIDENT", 36.0),
-        //            ("Sami Meguetounif", "France", 13, "Van Amersfoort Racing", 36.0),
-        //            ("Domenico Lovera", "Italy", 14, "DAMS Lucas Oil", 18.0),
-        //            ("Nikita Bedrin", "Italy", 15, "AIX Racing", 17.0),
-        //            ("James Wharton", "Australia", 16, "PREMA Racing", 15.0),
-        //            ("Tasanapol Inthraphuvasak", "Thailand", 17, "Rodin Motorsport", 15.0),
-        //            ("Alex Dunne", "Ireland", 18, "MP Motorsport", 11.0),
-        //            ("Max Esterson", "United States", 19, "Hitech TGR", 11.0),
-        //            ("Ugo Ugochukwu", "United States", 20, "PREMA Racing", 10.0),
-        //            ("Matías Zagazeta", "Peru", 21, "DAMS Lucas Oil", 6.0),
-        //            ("Arvid Lindblad", "United Kingdom", 22, "PREMA Racing", 4.0),
-        //            ("Leonardo Fornaroli", "Argentina", 23, "TRIDENT", 4.0),
-        //            ("Luke Browning", "United Kingdom", 24, "Campos Racing", 3.0),
-        //            ("James Wharton", "Australia", 25, "PREMA Racing", 0.0),
-        //            ("William Alatalo", "Finland", 26, "Van Amersfoort Racing", 0.0),
-        //            ("Brando Badoer", "Italy", 27, "PREMA Racing", 0.0)
-        //        ]
-        //
-        //        for driver in f3Drivers {
-        //            if let scuderia = allScuderias.first(where: { $0.name == driver.3 && $0.idFormula == f3Id }) {
-        //                await database.addDriver(
-        //                    name: driver.0,
-        //                    country: driver.1,
-        //                    number: Int16(driver.2),
-        //                    points: driver.4,
-        //                    scuderia: scuderia.id,
-        //                    idFormula: f3Id
-        //                )
-        //            }
-        //        }
+        for driver in f3Drivers {
+            let date = dateFormatter.date(from: driver.6) ?? Date()
+            let driverImage = imageName(for: driver.0)
+            let scuderiaImage = imageName(for: driver.4)
+            await database.addDriver(
+                name: driver.0,
+                country: driver.1,
+                number: Int16(driver.2),
+                points: Int16(driver.3),
+                scuderia: driver.4,
+                idFormula: f3Id,
+                photo: driverImage,
+                scuderiaLogo: scuderiaImage,
+                height: driver.5,
+                birthDate: date,
+                championship: driver.7,
+                details: driver.8
+            )
+        }
     }
     
     private func seedTracks() async {
@@ -395,7 +444,7 @@ class CloudKitSeed {
             ("Pole Position", "Posição de Largada", "A primeira posição no grid de largada, concedida ao piloto mais rápido na classificação.", "polePosition_image"),
             ("Fastest Lap", "Volta Mais Rápida", "O tempo de volta mais rápido registrado durante uma corrida, muitas vezes recompensado com um ponto extra no campeonato.", "fastestLap_image"),
             ("Did Not Finish (DNF)", "Não Completou", "Quando um piloto não consegue completar a corrida devido a falha mecânica, acidente ou outros problemas.", "dnf_image"),
-            ("Did Not Starte (DNS)", "Não Largou", "Quando um piloto não consegue iniciar a corrida.", "dns_image"),
+            ("Did Not Started (DNS)", "Não Largou", "Quando um piloto não consegue iniciar a corrida.", "dns_image"),
             ("Disqualified (DSQ)", "Desclassificado", "Quando um piloto é excluído dos resultados da corrida por violar regras.", "dsq_image"),
             ("Safety Car (SC)", "Carro de Segurança", "Um carro enviado à pista para reduzir a velocidade do pelotão em condições perigosas.", "safetyCar_image"),
             ("Virtual Safety Car (VSC)", "Carro Virtual de Segurança", "Um sistema eletrônico que limita a velocidade dos pilotos durante períodos de advertência.", "virtualSafetyCar_image"),
@@ -432,29 +481,32 @@ class CloudKitSeed {
         }
         
         let formulas = await database.getAllFormulas()
-        guard let f2Id = formulas.first(where: { $0.name == "Formula 2" })?.id else {
+        
+        guard let f2Id = formulas.first(where: { $0.name == "Formula 2" })?.id,
+              let f3Id = formulas.first(where: { $0.name == "Formula 3" })?.id,
+              let f1AcademyId = formulas.first(where: { $0.name == "F1 Academy" })?.id else {
             print("Formulas not found")
             return
         }
         
-        //        let f1AcademyRules = [
-        //            ("Race Weekend Format", "Each weekend consists of one practice session, one qualifying session, and two races."),
-        //            ("Points System", "Points awarded to the top 10 finishers in each race, with 25 points for the winner."),
-        //            ("Car Specifications", "All drivers use identical Tatuus T-318 Formula 4 cars with Autotecnica engines."),
-        //            ("Driver Eligibility", "Championship exclusively for female drivers aged 16 and above."),
-        //            ("Tire Regulations", "All drivers must use the same tire compound provided by Pirelli."),
-        //            ("Fuel Regulations", "All cars carry standardized fuel loads with no refueling during races."),
-        //            ("Safety Equipment", "Drivers must wear approved helmets, HANS devices, and fire-resistant suits."),
-        //            ("Race Duration", "Races run for 30 minutes plus one additional lap after time expires.")
-        //        ]
-        //
-        //        for rule in f1AcademyRules {
-        //            await database.addRule(
-        //                name: rule.0,
-        //                details: rule.1,
-        //                idFormula: f1AcademyId
-        //            )
-        //        }
+        let f1AcademyRules = [
+            ("Race Weekend Format", "Each weekend consists of one practice session, one qualifying session, and two races."),
+            ("Points System", "Points awarded to the top 10 finishers in each race, with 25 points for the winner."),
+            ("Car Specifications", "All drivers use identical Tatuus T-318 Formula 4 cars with Autotecnica engines."),
+            ("Driver Eligibility", "Championship exclusively for female drivers aged 16 and above."),
+            ("Tire Regulations", "All drivers must use the same tire compound provided by Pirelli."),
+            ("Fuel Regulations", "All cars carry standardized fuel loads with no refueling during races."),
+            ("Safety Equipment", "Drivers must wear approved helmets, HANS devices, and fire-resistant suits."),
+            ("Race Duration", "Races run for 30 minutes plus one additional lap after time expires.")
+        ]
+        
+        for rule in f1AcademyRules {
+            await database.addRule(
+                name: rule.0,
+                details: rule.1,
+                idFormula: f1AcademyId
+            )
+        }
         
         let f2Rules = [
             ("Race Weekend Format", "Each weekend includes practice, qualifying, one Corrida Sprint, and one feature race."),
@@ -477,36 +529,36 @@ class CloudKitSeed {
             )
         }
         
-        //        let f3Rules = [
-        //            ("Race Weekend Format", "Each weekend consists of one practice session, one qualifying session, and two races."),
-        //            ("Points System", "Points awarded to the top 10 finishers in each race, with 25 points for the winner."),
-        //            ("Car Specifications", "All teams use identical Dallara F3 2019 chassis with Mecachrome 3.4L V6 engines."),
-        //            ("DRS Usage", "Drivers can use DRS in designated zones when within 1 second of the car ahead."),
-        //            ("Tire Regulations", "Pirelli provides one tire compound per weekend. All drivers must use the same compound."),
-        //            ("Fuel Regulations", "No refueling allowed during races. Cars start with enough fuel for the entire race."),
-        //            ("Reverse Grid", "Race 2 grid is determined by reverse order of top 8 from Race 1 results."),
-        //            ("Race Duration", "Both races run for approximately 40 minutes plus one additional lap."),
-        //            ("Age Restrictions", "Drivers must be at least 16 years old to compete in the championship."),
-        //            ("Engine Allocation", "Teams are allocated a specific number of engines per season to control costs.")
-        //        ]
-        //
-        //        for rule in f3Rules {
-        //            await database.addRule(
-        //                name: rule.0,
-        //                details: rule.1,
-        //                idFormula: f3Id
-        //            )
-        //        }
+        let f3Rules = [
+            ("Race Weekend Format", "Each weekend consists of one practice session, one qualifying session, and two races."),
+            ("Points System", "Points awarded to the top 10 finishers in each race, with 25 points for the winner."),
+            ("Car Specifications", "All teams use identical Dallara F3 2019 chassis with Mecachrome 3.4L V6 engines."),
+            ("DRS Usage", "Drivers can use DRS in designated zones when within 1 second of the car ahead."),
+            ("Tire Regulations", "Pirelli provides one tire compound per weekend. All drivers must use the same compound."),
+            ("Fuel Regulations", "No refueling allowed during races. Cars start with enough fuel for the entire race."),
+            ("Reverse Grid", "Race 2 grid is determined by reverse order of top 8 from Race 1 results."),
+            ("Race Duration", "Both races run for approximately 40 minutes plus one additional lap."),
+            ("Age Restrictions", "Drivers must be at least 16 years old to compete in the championship."),
+            ("Engine Allocation", "Teams are allocated a specific number of engines per season to control costs.")
+        ]
+        
+        for rule in f3Rules {
+            await database.addRule(
+                name: rule.0,
+                details: rule.1,
+                idFormula: f3Id
+            )
+        }
     }
     
     private func seedEvents() async {
         print("Seeding events...")
         
-        let existingEvents = await database.getAllEvents()
-        if !existingEvents.isEmpty {
-            print("Events already exist, skipping...")
-            return
-        }
+//        let existingEvents = await database.getAllEvents()
+//        if !existingEvents.isEmpty {
+//            print("Events already exist, skipping...")
+//            return
+//        }
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
@@ -514,22 +566,59 @@ class CloudKitSeed {
         
         let formulas = await database.getAllFormulas()
         
-        guard let f2Id = formulas.first(where: { $0.name == "Formula 2" })?.id else {
+        guard let f2Id = formulas.first(where: { $0.name == "Formula 2" })?.id,
+              let f3Id = formulas.first(where: { $0.name == "Formula 3" })?.id,
+              let f1AcademyId = formulas.first(where: { $0.name == "F1 Academy" })?.id else {
             print("Formulas not found")
             return
         }
         
-        //         let f1AcademyEvents = [
-        //             ("Bahrain Grand Prix", "2025-03-02", "2025-03-03"),
-        //             ("Arábia Sauditan Grand Prix", "2025-03-09", "2025-03-10"),
-        //             ("Miami Grand Prix", "2025-05-04", "2025-05-05"),
-        //             ("Monaco Grand Prix", "2025-05-25", "2025-05-26"),
-        //             ("Spanish Grand Prix", "2025-06-22", "2025-06-23"),
-        //             ("Hungarian Grand Prix", "2025-07-20", "2025-07-21"),
-        //             ("Belgian Grand Prix", "2025-07-27", "2025-07-28"),
-        //             ("Netherlands Grand Prix", "2025-08-24", "2025-08-25"),
-        //             ("Qatar Grand Prix", "2025-11-30", "2025-12-01")
-        //         ]
+        let f1AcademyEvents = [
+            // Bahrain GP (round 1)
+            (1, "Bahrain", "Treino Livre", "2025-03-02", "10:30", "11:00"),
+            (1, "Bahrain", "Classificação", "2025-03-02", "15:00", "15:30"),
+            (1, "Bahrain", "Corrida 1", "2025-03-03", "12:00", "12:30"),
+            
+            // Saudi Arabian GP (round 2)
+            (2, "Arábia Saudita", "Treino Livre", "2025-03-09", "12:30", "13:00"),
+            (2, "Arábia Saudita", "Classificação", "2025-03-09", "17:00", "17:30"),
+            (2, "Arábia Saudita", "Corrida 1", "2025-03-10", "14:00", "14:30"),
+            
+            // Miami GP (round 3)
+            (3, "Estados Unidos", "Treino Livre", "2025-05-04", "16:30", "17:00"),
+            (3, "Estados Unidos", "Classificação", "2025-05-04", "20:00", "20:30"),
+            (3, "Estados Unidos", "Corrida 1", "2025-05-05", "17:00", "17:30"),
+            
+            // Monaco GP (round 4)
+            (4, "Mônaco", "Treino Livre", "2025-05-25", "08:30", "09:00"),
+            (4, "Mônaco", "Classificação", "2025-05-25", "12:00", "12:30"),
+            (4, "Mônaco", "Corrida 1", "2025-05-26", "10:00", "10:30"),
+            
+            // Spanish GP (round 5)
+            (5, "Espanha", "Treino Livre", "2025-06-22", "09:30", "10:00"),
+            (5, "Espanha", "Classificação", "2025-06-22", "13:00", "13:30"),
+            (5, "Espanha", "Corrida 1", "2025-06-23", "11:00", "11:30"),
+            
+            // Hungarian GP (round 6)
+            (6, "Hungria", "Treino Livre", "2025-07-20", "08:30", "09:00"),
+            (6, "Hungria", "Classificação", "2025-07-20", "12:00", "12:30"),
+            (6, "Hungria", "Corrida 1", "2025-07-21", "10:00", "10:30"),
+            
+            // Belgian GP (round 7)
+            (7, "Bélgica", "Treino Livre", "2025-07-27", "09:30", "10:00"),
+            (7, "Bélgica", "Classificação", "2025-07-27", "13:00", "13:30"),
+            (7, "Bélgica", "Corrida 1", "2025-07-28", "11:00", "11:30"),
+            
+            // Netherlands GP (round 8)
+            (8, "Holanda", "Treino Livre", "2025-08-24", "09:30", "10:00"),
+            (8, "Holanda", "Classificação", "2025-08-24", "13:00", "13:30"),
+            (8, "Holanda", "Corrida 1", "2025-08-25", "11:00", "11:30"),
+            
+            // Qatar GP (round 9)
+            (9, "Catar", "Treino Livre", "2025-11-30", "11:30", "12:00"),
+            (9, "Catar", "Classificação", "2025-11-30", "15:00", "15:30"),
+            (9, "Catar", "Corrida 1", "2025-12-01", "13:00", "13:30")
+        ]
         
         
         let f2Events = [
@@ -620,29 +709,95 @@ class CloudKitSeed {
         ]
         
         
-        //         let f3Events = [
-        //             ("Bahrain Grand Prix", "2025-03-01", "2025-03-03"),
-        //             ("Australian Grand Prix", "2025-03-22", "2025-03-24"),
-        //             ("Imola Grand Prix", "2025-05-17", "2025-05-19"),
-        //             ("Monaco Grand Prix", "2025-05-24", "2025-05-26"),
-        //             ("Spanish Grand Prix", "2025-06-21", "2025-06-23"),
-        //             ("Austrian Grand Prix", "2025-06-28", "2025-06-30"),
-        //             ("British Grand Prix", "2025-07-05", "2025-07-07"),
-        //             ("Hungarian Grand Prix", "2025-07-19", "2025-07-21"),
-        //             ("Belgian Grand Prix", "2025-07-26", "2025-07-28"),
-        //             ("Netherlands Grand Prix", "2025-08-23", "2025-08-25")
-        //         ]
+        let f3Events = [
+            // Bahrain GP (round 1)
+            (1, "Bahrain", "Treino Livre", "2025-03-01", "09:00", "09:30"),
+            (1, "Bahrain", "Classificação", "2025-03-01", "13:00", "13:30"),
+            (1, "Bahrain", "Corrida 1", "2025-03-02", "11:00", "11:45"),
+            (1, "Bahrain", "Corrida 2", "2025-03-03", "09:00", "09:45"),
+            
+            // Australian GP (round 2)
+            (2, "Austrália", "Treino Livre", "2025-03-22", "23:00", "23:30"),
+            (2, "Austrália", "Classificação", "2025-03-22", "07:30", "08:00"),
+            (2, "Austrália", "Corrida 1", "2025-03-23", "00:15", "01:00"),
+            (2, "Austrália", "Corrida 2", "2025-03-24", "21:30", "22:15"),
+            
+            // Imola GP (round 3)
+            (3, "Itália", "Treino Livre", "2025-05-17", "07:00", "07:30"),
+            (3, "Itália", "Classificação", "2025-05-17", "12:00", "12:30"),
+            (3, "Itália", "Corrida 1", "2025-05-18", "10:15", "11:00"),
+            (3, "Itália", "Corrida 2", "2025-05-19", "06:00", "06:45"),
+            
+            // Monaco GP (round 4)
+            (4, "Mônaco", "Treino Livre", "2025-05-24", "02:00", "02:30"),
+            (4, "Mônaco", "Classificação", "2025-05-24", "11:00", "11:30"),
+            (4, "Mônaco", "Corrida 1", "2025-05-25", "11:10", "11:55"),
+            (4, "Mônaco", "Corrida 2", "2025-05-26", "05:40", "06:25"),
+            
+            // Spanish GP (round 5)
+            (5, "Espanha", "Treino Livre", "2025-06-21", "07:00", "07:30"),
+            (5, "Espanha", "Classificação", "2025-06-21", "12:00", "12:30"),
+            (5, "Espanha", "Corrida 1", "2025-06-22", "10:15", "11:00"),
+            (5, "Espanha", "Corrida 2", "2025-06-23", "06:00", "06:45"),
+            
+            // Austrian GP (round 6)
+            (6, "Áustria", "Treino Livre", "2025-06-28", "09:00", "09:30"),
+            (6, "Áustria", "Classificação", "2025-06-28", "13:55", "14:25"),
+            (6, "Áustria", "Corrida 1", "2025-06-29", "12:15", "13:00"),
+            (6, "Áustria", "Corrida 2", "2025-06-30", "08:00", "08:45"),
+            
+            // British GP (round 7)
+            (7, "Reino Unido", "Treino Livre", "2025-07-05", "08:30", "09:00"),
+            (7, "Reino Unido", "Classificação", "2025-07-05", "13:00", "13:30"),
+            (7, "Reino Unido", "Corrida 1", "2025-07-06", "11:30", "12:15"),
+            (7, "Reino Unido", "Corrida 2", "2025-07-07", "08:00", "08:45"),
+            
+            // Hungarian GP (round 8)
+            (8, "Hungria", "Treino Livre", "2025-07-19", "07:00", "07:30"),
+            (8, "Hungria", "Classificação", "2025-07-19", "12:00", "12:30"),
+            (8, "Hungria", "Corrida 1", "2025-07-20", "10:15", "11:00"),
+            (8, "Hungria", "Corrida 2", "2025-07-21", "06:00", "06:45"),
+            
+            // Belgian GP (round 9)
+            (9, "Bélgica", "Treino Livre", "2025-07-26", "08:00", "08:30"),
+            (9, "Bélgica", "Classificação", "2025-07-26", "13:00", "13:30"),
+            (9, "Bélgica", "Corrida 1", "2025-07-27", "11:00", "11:45"),
+            (9, "Bélgica", "Corrida 2", "2025-07-28", "08:00", "08:45"),
+            
+            // Netherlands GP (round 10)
+            (10, "Holanda", "Treino Livre", "2025-08-23", "08:00", "08:30"),
+            (10, "Holanda", "Classificação", "2025-08-23", "13:00", "13:30"),
+            (10, "Holanda", "Corrida 1", "2025-08-24", "11:00", "11:45"),
+            (10, "Holanda", "Corrida 2", "2025-08-25", "08:00", "08:45")
+        ]
         
-        //         for event in f1AcademyEvents {
-        //             let date = dateFormatter.date(from: event.1)
-        //             let startTime = dateFormatter.date(from: event.2)
-        //             await database.addEvent(
-        //                 name: event.0,
-        //                 date: date,
-        //                 startTime: startTime,
-        //                 idFormula: f1AcademyId
-        //             )
-        //         }
+        for event in f1AcademyEvents {
+            let date = dateFormatter.date(from: event.3)
+            
+            await database.addEvent(
+                roundNumber: Int16(event.0),
+                country: event.1,
+                name: event.2,
+                date: date,
+                startTime: event.4,
+                endTime: event.5,
+                idFormula: f1AcademyId
+            )
+        }
+        
+        for event in f3Events {
+            let date = dateFormatter.date(from: event.3)
+            
+            await database.addEvent(
+                roundNumber: Int16(event.0),
+                country: event.1,
+                name: event.2,
+                date: date,
+                startTime: event.4,
+                endTime: event.5,
+                idFormula: f3Id
+            )
+        }
         
         
         for event in f2Events {
@@ -658,18 +813,6 @@ class CloudKitSeed {
                 idFormula: f2Id
             )
         }
-        
-        //
-        //          for event in f3Events {
-        //             let date = dateFormatter.date(from: event.1)
-        //             let startTime = dateFormatter.date(from: event.2)
-        //             await database.addEvent(
-        //                 name: event.0,
-        //                 date: date,
-        //                 startTime: startTime,
-        //                 idFormula: f3Id
-        //             )
-        //         }
     }
     
     private func seedComponents() async {

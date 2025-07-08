@@ -10,6 +10,8 @@ import UIKit
 class GlossaryDetailsViewController: UIViewController {
     
     var term: GlossaryModel?
+    var allTerms: [GlossaryModel] = []
+    let database = Database.shared
     
     lazy var component: GlossaryDetails = {
         guard let termUnwrapped = term else {
@@ -70,6 +72,35 @@ class GlossaryDetailsViewController: UIViewController {
         setupGestures()
         setup()
         addGradientGlossary()
+        loadAllTerms()
+        setupSwipeGesture()
+    }
+    
+    private func setupSwipeGesture() {
+        let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture(_:)))
+        swipeGesture.direction = .right
+        view.addGestureRecognizer(swipeGesture)
+    }
+    
+    @objc private func handleSwipeGesture(_ gesture: UISwipeGestureRecognizer) {
+        if gesture.direction == .right {
+            navigationController?.popViewController(animated: true)
+        }
+    }
+    
+    private func loadAllTerms() {
+        if !allTerms.isEmpty {
+            component.exploreCell.configure(with: allTerms)
+            return
+        }
+        
+        Task {
+            allTerms = await database.getAllGlossaryTerms()
+            
+            await MainActor.run {
+                component.exploreCell.configure(with: allTerms)
+            }
+        }
     }
     
     private func setupGestures() {
@@ -79,12 +110,6 @@ class GlossaryDetailsViewController: UIViewController {
         let swipeRightGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture(_:)))
         swipeRightGesture.direction = .right
         view.addGestureRecognizer(swipeRightGesture)
-    }
-    
-    @objc private func handleSwipeGesture(_ gesture: UISwipeGestureRecognizer) {
-        if gesture.direction == .right {
-            navigationController?.popViewController(animated: true)
-        }
     }
     
     @objc private func handleEdgePanGesture(_ gesture: UIScreenEdgePanGestureRecognizer) {

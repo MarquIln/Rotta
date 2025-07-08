@@ -1,11 +1,12 @@
 
 import UIKit
 
-class ScuderiaTableViewController: UIViewController {
+class ScuderiaTableViewController: UIViewController, FormulaFilterable {
     
     
     private let service = ScuderiaService()
     let database = Database.shared
+    private var currentFormula: FormulaType = .formula2
     
     private var scuderias: [ScuderiaModel] = [ ]
 
@@ -38,23 +39,45 @@ class ScuderiaTableViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupView()
+        currentFormula = Database.shared.getSelectedFormula()
         
-//        scuderiaTableView.tableView.delegate = self
-//        scuderiaTableView.tableView.dataSource = self
+        setupView()
         
         addGradientGlossary()
         loadScuderia()
+        FormulaColorManager.shared.addDelegate(self)
+        setupSwipeGesture()
+    }
+    
+    private func setupSwipeGesture() {
+        let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture(_:)))
+        swipeGesture.direction = .right
+        view.addGestureRecognizer(swipeGesture)
+    }
+    
+    @objc private func handleSwipeGesture(_ gesture: UISwipeGestureRecognizer) {
+        if gesture.direction == .right {
+            navigationController?.popViewController(animated: true)
+        }
+    }
+    
+    deinit {
+        FormulaColorManager.shared.removeDelegate(self)
     }
     
     private func loadScuderia() {
         Task {
-            scuderias = await database.getAllScuderias()
+            scuderias = await database.getScuderias(for: currentFormula)
             
             await MainActor.run {
                 self.scuderiaTableView.reloadData()
             }
         }
+    }
+    
+    func updateData(for formula: FormulaType) {
+        currentFormula = formula
+        loadScuderia()
     }
 
     lazy var backButton: UIButton = {
@@ -128,7 +151,13 @@ extension ScuderiaTableViewController: ScuderiaTableViewDelegate {
           detailsVC.component.configure(with: scuderias[index])
             navigationController?.pushViewController(detailsVC, animated: true)
     }
-    
-    
+}
+
+extension ScuderiaTableViewController: FormulaColorManagerDelegate {
+    func formulaColorsDidChange() {
+        DispatchQueue.main.async {
+            self.addGradientGlossary()
+        }
+    }
 }
 

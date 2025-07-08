@@ -9,13 +9,16 @@ import UIKit
 
 class ScuderiaDetailsViewController: UIViewController {
     
-    var scuderia: ScuderiaModel?
+    var scuderia: ScuderiaModel? {
+        didSet {
+            if let scuderia = scuderia {
+                component.configure(with: scuderia)
+            }
+        }
+    }
     
     lazy var component: ScuderiaDetails = {
-        guard let scuderiaUnwrapped = scuderia else {
-            fatalError("ScuderiaModel não pode ser nil ao criar o componente.")
-        }
-        var component = ScuderiaDetails()
+        let component = ScuderiaDetails()
         component.translatesAutoresizingMaskIntoConstraints = false
         return component
     }()
@@ -60,11 +63,6 @@ class ScuderiaDetailsViewController: UIViewController {
             self.gradientView.addGradientGlossary()
         }
     }
-
-        override func viewWillAppear(_ animated: Bool) {
-            super.viewWillAppear(animated)
-            navigationController?.setNavigationBarHidden(false, animated: animated)
-        }
         
         override func viewDidLoad() {
             super.viewDidLoad()
@@ -73,6 +71,28 @@ class ScuderiaDetailsViewController: UIViewController {
             setupGestures()
             setup()
             addGradientGlossary()
+            setupSwipeGesture()
+        }
+        
+        private func setupSwipeGesture() {
+            let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture(_:)))
+            swipeGesture.direction = .right
+            view.addGestureRecognizer(swipeGesture)
+        }
+        
+        @objc private func handleSwipeGesture(_ gesture: UISwipeGestureRecognizer) {
+            if gesture.direction == .right {
+                navigationController?.popViewController(animated: true)
+            }
+        }
+        
+        override func viewWillAppear(_ animated: Bool) {
+            super.viewWillAppear(animated)
+            navigationController?.setNavigationBarHidden(false, animated: animated)
+            
+            if let scuderia = scuderia {
+                component.configure(with: scuderia)
+            }
         }
         
         private func setupGestures() {
@@ -82,12 +102,6 @@ class ScuderiaDetailsViewController: UIViewController {
             let swipeRightGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture(_:)))
             swipeRightGesture.direction = .right
             view.addGestureRecognizer(swipeRightGesture)
-        }
-        
-        @objc private func handleSwipeGesture(_ gesture: UISwipeGestureRecognizer) {
-            if gesture.direction == .right {
-                navigationController?.popViewController(animated: true)
-            }
         }
         
         @objc private func handleEdgePanGesture(_ gesture: UIScreenEdgePanGestureRecognizer) {
@@ -102,10 +116,6 @@ class ScuderiaDetailsViewController: UIViewController {
             default:
                 break
             }
-        }
-    
-        override func viewWillDisappear(_ animated: Bool) {
-            navigationController?.isNavigationBarHidden = true
         }
         
         @objc private func customBackTapped() {

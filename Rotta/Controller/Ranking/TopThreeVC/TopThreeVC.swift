@@ -10,6 +10,7 @@ import UIKit
 class TopThreeVC: UIViewController {
     var drivers: [DriverModel] = []
     var scuderias: [ScuderiaModel] = []
+    var currentFormula: FormulaType = .formula2
 
     let database = Database.shared
 
@@ -21,6 +22,9 @@ class TopThreeVC: UIViewController {
                 action: #selector(seeAllDrivers)
             )
         )
+        view.onSeeAllTapped = { [weak self] in
+            self?.seeAllDrivers()
+        }
 
         return view
     }()
@@ -28,7 +32,8 @@ class TopThreeVC: UIViewController {
     @objc func seeAllDrivers() {
         let vc = DriverRankingVC()
         vc.drivers = drivers
-        navigationController?.pushViewController(vc, animated: false)
+        vc.updateData(for: currentFormula)
+        navigationController?.pushViewController(vc, animated: true)
     }
 
     lazy var scuderiaPodium: ScuderiaPodium = {
@@ -39,6 +44,9 @@ class TopThreeVC: UIViewController {
                 action: #selector(seeAllScuderias)
             )
         )
+        view.onSeeAllTapped = { [weak self] in
+            self?.seeAllScuderias()
+        }
 
         return view
     }()
@@ -46,13 +54,14 @@ class TopThreeVC: UIViewController {
     @objc func seeAllScuderias() {
         let vc = ScuderiaRankingVC()
         vc.scuderias = scuderias
-        navigationController?.pushViewController(vc, animated: false)
+        vc.updateData(for: currentFormula)
+        navigationController?.pushViewController(vc, animated: true)
     }
 
     lazy var stackView: UIStackView = {
         let view = UIStackView(arrangedSubviews: [driverPodium, scuderiaPodium])
         view.axis = .vertical
-        view.distribution = .fill
+        view.distribution = .fillEqually
         view.spacing = 16
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -60,17 +69,35 @@ class TopThreeVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        currentFormula = Database.shared.getSelectedFormula()
+        
         setup()
         loadDrivers()
         loadScuderias()
+        setupSwipeGesture()
+    }
+    
+    private func setupSwipeGesture() {
+        let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture(_:)))
+        swipeGesture.direction = .right
+        view.addGestureRecognizer(swipeGesture)
+    }
+    
+    @objc private func handleSwipeGesture(_ gesture: UISwipeGestureRecognizer) {
+        if gesture.direction == .right {
+            navigationController?.popViewController(animated: true)
+        }
     }
 
     private func loadDrivers() {
+        driverPodium.showLoadingSkeleton()
         Task {
-            drivers = await database.getAllDrivers()
+            drivers = await database.getDrivers(for: currentFormula)
 
             drivers.sort { $0.points > $1.points }
             await MainActor.run {
+                self.driverPodium.hideLoadingSkeleton()
                 if drivers.count > 0 {
                     self.driverPodium.firstPlaceView.configure(
                         with: drivers[0],
@@ -97,11 +124,13 @@ class TopThreeVC: UIViewController {
     }
 
     private func loadScuderias() {
+        scuderiaPodium.showLoadingSkeleton()
         Task {
-            scuderias = await database.getAllScuderias()
+            scuderias = await database.getScuderias(for: currentFormula)
 
             scuderias.sort { $0.points > $1.points }
             await MainActor.run {
+                self.scuderiaPodium.hideLoadingSkeleton()
                 if scuderias.count > 0 {
                     self.scuderiaPodium.firstPlaceView.configure(
                         with: scuderias[0],

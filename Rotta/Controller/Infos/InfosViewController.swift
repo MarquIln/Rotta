@@ -8,11 +8,13 @@
 import UIKit
 
 class InfosViewController: UIViewController {
+    private var currentFormula: FormulaType = .formula2
+    
     private let cardsData: [(title: String, subtitle: String, image: UIImage)] = [
         (
             title: "Glossário",
             subtitle: "Entenda os principais termos utilizados na Fórmula 2",
-            image: .glossaryCategoryInfos
+            image: .glossaryCategoryInfos,
         ),
         (
             title: "Scuderias",
@@ -22,6 +24,11 @@ class InfosViewController: UIViewController {
         (
             title: "Pilotos",
             subtitle: "Conheça os pilotos da Fórmula 2",
+            image: .componentsCategoryInfos
+        ),
+        (
+            title: "Peças",
+            subtitle: "Conheça as peças que compõem os carros da Fórmula 2",
             image: .componentsCategoryInfos
         )
     ]
@@ -36,6 +43,7 @@ class InfosViewController: UIViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .clear
         collectionView.showsHorizontalScrollIndicator = false
+        collectionView.showsVerticalScrollIndicator = false
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(CardInfosCell.self, forCellWithReuseIdentifier: CardInfosCell.identifier)
@@ -45,31 +53,25 @@ class InfosViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundPrimary
+        
+        currentFormula = Database.shared.getSelectedFormula()
+        
         setup()
+        setupSwipeGesture()
     }
     
-    //    @objc private func cardInfoTapped(_ sender: CardInfosButton) {
-    //        print("CardInfosButton foi tocado!")
-    //    }
+    private func setupSwipeGesture() {
+        let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture(_:)))
+        swipeGesture.direction = .right
+        view.addGestureRecognizer(swipeGesture)
+    }
     
-//    @objc private func cardInfoTapped(_ sender: UIButton) {
-//        let index = sender.tag
-//        let selectedCard = cardsData[index]
-//
-//        switch selectedCard.title {
-//        case "Glossário":
-//            let vc = GlossaryTableViewController()
-//            navigationController?.pushViewController(vc, animated: true)
-//
-//        case "Scuderias":
-//            let vc = ScuderiaTableViewController()
-//            navigationController?.pushViewController(vc, animated: true)
-//
-//        default:
-//            print("Card \(selectedCard.title) ainda não tem ação associada.")
-//        }
-//    }
-    
+    @objc private func handleSwipeGesture(_ gesture: UISwipeGestureRecognizer) {
+        if gesture.direction == .right {
+            navigationController?.popViewController(animated: true)
+        }
+    }
+
     @objc private func cardInfoTapped(_ sender: UIButton) {
         let index = sender.tag
         guard index < cardsData.count else { return }
@@ -79,14 +81,26 @@ class InfosViewController: UIViewController {
         switch selectedCard.title {
         case "Glossário":
             let vc = GlossaryTableViewController()
+            if let filterableVC = vc as? FormulaFilterable {
+                filterableVC.updateData(for: currentFormula)
+            }
             navigationController?.pushViewController(vc, animated: true)
 
         case "Scuderias":
             let vc = ScuderiaTableViewController()
+            vc.updateData(for: currentFormula)
             navigationController?.pushViewController(vc, animated: true)
 
         case "Pilotos":
             let vc = DriverTableViewController()
+            vc.updateData(for: currentFormula)
+            navigationController?.pushViewController(vc, animated: true)
+            
+        case "Peças":
+            let vc = CarComponentsListVC()
+            if let filterableVC = vc as? FormulaFilterable {
+                filterableVC.updateData(for: currentFormula)
+            }
             navigationController?.pushViewController(vc, animated: true)
 
         default:
@@ -106,8 +120,8 @@ extension InfosViewController: ViewCodeProtocol {
     func setupConstraints() {
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16)
         ])
     }
@@ -156,5 +170,22 @@ extension InfosViewController: UICollectionViewDelegateFlowLayout {
         let height = collectionView.bounds.height
         let width = collectionView.bounds.width * 0.93
         return CGSize(width: width, height: height)
+    }
+}
+
+extension InfosViewController: FormulaFilterable {
+    func updateData(for formula: FormulaType) {
+        currentFormula = formula
+        // Atualizar os dados conforme a fórmula selecionada
+        // Por exemplo, você pode alterar os subtítulos dos cards para refletir a fórmula
+        updateCardsData(for: formula)
+        collectionView.reloadData()
+    }
+    
+    private func updateCardsData(for formula: FormulaType) {
+        // Esta é uma implementação de exemplo
+        // Você pode modificar os dados dos cards baseado na fórmula
+        // Por exemplo, alterar os subtítulos para mostrar informações específicas da fórmula
+        print("Atualizando dados para: \(formula.displayName)")
     }
 }

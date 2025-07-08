@@ -12,7 +12,7 @@ class Database {
     static var shared = Database()
     
     private let container = CKContainer(identifier: "iCloud.Rotta.CloudRotta")
-    private var privateDatabase: CKDatabase {
+    private var publicDatabase: CKDatabase {
         return container.publicCloudDatabase
     }
     
@@ -25,6 +25,11 @@ class Database {
     private let ruleService = RuleService()
     private let glossaryService = GlossaryService()
     private let trackService = TrackService()
+
+    private let userDefaults = UserDefaults.standard
+    let appleUserIdentifierKey = "appleUserIdentifier"
+    private let selectedFormulaKey = "selectedFormula"
+    private let profileImageKey = "profileImage"
     
     private init() {}
     
@@ -177,25 +182,101 @@ class Database {
         await glossaryService.add(title: title, details: details, subtitle: subtitle, image: image)
     }
     
-    func deleteAllRecords(of recordTypes: [String]) async {
-        for type in recordTypes {
-            let predicate = NSPredicate(value: true)
-            let query = CKQuery(recordType: type, predicate: predicate)
-            do {
-                let resultados = try await privateDatabase.records(matching: query)
-                let recordIDs = resultados.matchResults.compactMap { try? $0.1.get().recordID }
-                if !recordIDs.isEmpty {
-                    _ = try await privateDatabase.modifyRecords(saving: [], deleting: recordIDs)
-                    print("Deleted \(recordIDs.count) records of type \(type)")
+    // MARK: - Convenience Methods with FormulaType
+    
+    func getDrivers(for formula: FormulaType) async -> [DriverModel] {
+        let formulas = await getAllFormulas()
+        guard let targetFormula = formulas.first(where: { $0.name == formula.rawValue }) else {
+            return []
+        }
+        return await getDriversByFormula(idFormula: targetFormula.id)
+    }
+    
+    func getScuderias(for formula: FormulaType) async -> [ScuderiaModel] {
+        let formulas = await getAllFormulas()
+        guard let targetFormula = formulas.first(where: { $0.name == formula.rawValue }) else {
+            return []
+        }
+        return await getScuderiasByFormula(idFormula: targetFormula.id)
+    }
+    
+    func getEvents(for formula: FormulaType) async -> [EventModel] {
+        let formulas = await getAllFormulas()
+        guard let targetFormula = formulas.first(where: { $0.name == formula.rawValue }) else {
+            return []
+        }
+        return await getAllEventsByFormula(by: targetFormula.id)
+    }
+    
+    func getRules(for formula: FormulaType) async -> [RuleModel] {
+        let formulas = await getAllFormulas()
+        guard let targetFormula = formulas.first(where: { $0.name == formula.rawValue }) else {
+            return []
+        }
+        return await getAllRulesByFormula(by: targetFormula.id)
+    }
+    
+    func getCars(for formula: FormulaType) async -> [CarModel] {
+        let formulas = await getAllFormulas()
+        guard let targetFormula = formulas.first(where: { $0.name == formula.rawValue }) else {
+            return []
+        }
+        return await getAllCarsByFormula(by: targetFormula.id)
+    }
+    
+    func getTracks(for formula: FormulaType) async -> [TrackModel] {
+        let formulas = await getAllFormulas()
+        guard let targetFormula = formulas.first(where: { $0.name == formula.rawValue }) else {
+            return []
+        }
+        return await getAllTracksByFormula(by: targetFormula.id)
+    }
+
+    // MARK: - User Preferences Functions
+    func saveSelectedFormula(_ formula: FormulaType) {
+        userDefaults.set(formula.rawValue, forKey: selectedFormulaKey)
+        if var user = UserService.shared.getLoggedUser() {
+            user.currentFormula = formula.rawValue
+            Task {
+                do {
+                    try await UserService.shared.updateUser(user)
+                } catch {
+                    print("Failed to update user with new formula: \(error)")
                 }
-            } catch {
-                print("Error deleting records for type \(type): \(error.localizedDescription)")
             }
         }
     }
 
-    func resetCloudKit() async {
-        let types = ["Formula", "Driver", "Scuderia", "Event", "Car", "Component", "Rule", "Glossary", "Track"]
-        await deleteAllRecords(of: types)
+    func getSelectedFormula() -> FormulaType {
+        if let user = UserService.shared.getLoggedUser() {
+            if let formula = FormulaType(rawValue: user.currentFormula ?? "Formula 2") {
+                return formula
+            }
+        }
+        guard let formulaString = userDefaults.string(forKey: selectedFormulaKey),
+              let formula = FormulaType(rawValue: formulaString) else {
+            return .formula2
+        }
+        return formula
+    }
+
+    func hasSelectedFormula() -> Bool {
+        return userDefaults.string(forKey: selectedFormulaKey) != nil
+    }
+
+    func clearSelectedFormula() {
+        userDefaults.removeObject(forKey: selectedFormulaKey)
+    }
+
+    func saveProfileImageData(_ data: Data) {
+        userDefaults.set(data, forKey: profileImageKey)
+    }
+
+    func getProfileImageData() -> Data? {
+        return userDefaults.data(forKey: profileImageKey)
+    }
+
+    func clearProfileImageData() {
+        userDefaults.removeObject(forKey: profileImageKey)
     }
 }

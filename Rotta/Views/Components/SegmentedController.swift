@@ -51,6 +51,12 @@ class SegmentedControll: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    func setup() {
+        self.backgroundColor = .fillsUnselected
+        addSubviews()
+        setupConstraints()
+    }
 
     private func configureSegments() {
         for btn in buttons {
@@ -111,13 +117,6 @@ class SegmentedControll: UIView {
 }
 
 extension SegmentedControll: ViewCodeProtocol {
-    func setup() {
-        self.backgroundColor = .fillsUnselected
-//        self.layer.cornerRadius = 20
-        addSubviews()
-        setupConstraints()
-    }
-
     func addSubviews() {
         addSubview(indicatorView)
         addSubview(stackView)

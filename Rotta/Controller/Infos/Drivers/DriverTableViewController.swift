@@ -7,9 +7,16 @@
 
 import UIKit
 
-class DriverTableViewController: UIViewController {
+class DriverTableViewController: UIViewController, DriverTableViewDelegate, FormulaFilterable {
+    
+    func driverTableView(_ tableView: DriverTableView, didSelectDriver driver: DriverModel) {
+        let detailsVC = DriverPageViewController(driver: driver)
+        navigationController?.pushViewController(detailsVC, animated: true)
+    }
+    
     var drivers: [DriverModel] = []
     let database = Database.shared
+    private var currentFormula: FormulaType = .formula2
 
     private lazy var headerView: DriverHeader = {
         let headerView = DriverHeader()
@@ -38,14 +45,38 @@ class DriverTableViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        currentFormula = Database.shared.getSelectedFormula()
+        
         setupView()
+        
+        driverTableView.delegate = self
+        
         addGradientGlossary()
         loadDrivers()
+        FormulaColorManager.shared.addDelegate(self)
+        setupSwipeGesture()
+    }
+    
+    private func setupSwipeGesture() {
+        let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture(_:)))
+        swipeGesture.direction = .right
+        view.addGestureRecognizer(swipeGesture)
+    }
+    
+    @objc private func handleSwipeGesture(_ gesture: UISwipeGestureRecognizer) {
+        if gesture.direction == .right {
+            navigationController?.popViewController(animated: true)
+        }
+    }
+    
+    deinit {
+        FormulaColorManager.shared.removeDelegate(self)
     }
     
     private func loadDrivers() {
         Task {
-            drivers = await database.getAllDrivers()
+            drivers = await database.getDrivers(for: currentFormula)
             
             await MainActor.run {
                 self.driverTableView.configure(with: drivers)
@@ -53,8 +84,13 @@ class DriverTableViewController: UIViewController {
         }
     }
     
+    func updateData(for formula: FormulaType) {
+        currentFormula = formula
+        loadDrivers()
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
-        navigationController?.isNavigationBarHidden = true
+        super.viewWillDisappear(animated)
     }
 
     lazy var backButton: UIButton = {
@@ -125,14 +161,22 @@ extension DriverTableViewController: UITableViewDelegate, UITableViewDataSource,
         let driver = drivers[indexPath.row]
         
         cell.config(with: driver, cellIndex: indexPath.row)
+        cell.tag = indexPath.row
         cell.delegate = self
         return cell
     }
 
     func didTapChevron(in cell: DriverCell) {
-        print("Chevron da célula tocado")
-//        let vc = DriverDetailsViewController()
-//        navigationController?.pushViewController(vc, animated: true)
+        let detailsVC = DriverPageViewController(driver: drivers[cell.tag])
+        navigationController?.pushViewController(detailsVC, animated: true)
+    }
+}
+
+extension DriverTableViewController: FormulaColorManagerDelegate {
+    func formulaColorsDidChange() {
+        DispatchQueue.main.async {
+            self.addGradientGlossary()
+        }
     }
 }
 
